@@ -76,7 +76,8 @@ export function ImageGallery({ id, images, slots, onChange }: ImageGalleryProps)
     <div className="flex flex-col gap-2">
       {images.length > 0 && (
         <DndContext
-          id={id}
+          // dnd-kit s'en sert comme id DOM : il ne doit pas être celui de l'input fichier.
+          id={`${id}-dnd`}
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={onDragEnd}
