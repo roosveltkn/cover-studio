@@ -1,51 +1,75 @@
 # Cover Studio
 
-Free, open-source cover generator for your app. Import a screenshot and get a ready-to-share
-PNG for your README, portfolio, LinkedIn or social previews: layout, mockups and colors are
-generated for you.
+Générateur gratuit et open source de covers pour vos applications : importez vos captures d'écran,
+choisissez un modèle et une couleur de marque, exportez un PNG prêt à partager (README GitHub,
+Product Hunt, LinkedIn, portfolio).
 
-- **Private by design**: everything runs in your browser, no image is ever uploaded.
-- **No account, no watermark, no export limit.**
-- **5 templates**, a brand color derived from your interface, 6 export formats
-  (Cover, Open Graph, GitHub, X / Twitter, Product Hunt, square) with an optional 2× mode.
-- **Available in English and French** (`/en`, `/fr`).
-- **100 % static**: no backend, host the build anywhere.
+_English: a free, open-source cover generator for your app. Drop in screenshots, pick a template and a brand colour, export a ready-to-share PNG. Everything runs in your browser._
 
-## Getting started
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![CI](https://github.com/RoosveltK/cover-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/RoosveltK/cover-studio/actions/workflows/ci.yml)
+
+## Fonctionnalités
+
+- 5 modèles (showcase, spotlight, bento, perspective, mobile-trio)
+- Captures multiples, réordonnables par glisser-déposer
+- Une couleur de marque : toute la palette en est dérivée
+- Textes, icône de l'application, typographie et tailles réglables
+- Export PNG en plusieurs formats et en haute résolution
+- Interface en français et en anglais, thème clair / sombre
+- **100 % côté client** : aucune image n'est envoyée à un serveur, aucun compte requis
+
+## Démarrage rapide
+
+Prérequis : [Node.js](https://nodejs.org) 20 ou plus et [pnpm](https://pnpm.io) 10.
 
 ```bash
+git clone https://github.com/RoosveltK/cover-studio.git
+cd cover-studio
 pnpm install
 pnpm dev
 ```
 
-Then open <http://localhost:3000>.
+Ouvrez <http://localhost:3000>.
 
-| Command | What it does |
-|---|---|
-| `pnpm dev` | development server |
-| `pnpm build` | static export in `out/` |
-| `pnpm typecheck` | TypeScript check |
-| `pnpm lint` | ESLint |
-| `pnpm i18n:check` | checks that all translations are complete |
+## Scripts
 
-## Deploying
+| Commande          | Rôle                                                   |
+| ----------------- | ------------------------------------------------------ |
+| `pnpm dev`        | serveur de développement                               |
+| `pnpm build`      | build de production (export statique dans `out/`)      |
+| `pnpm lint`       | ESLint                                                 |
+| `pnpm typecheck`  | vérification TypeScript                                |
+| `pnpm format`     | formatage Prettier                                     |
+| `pnpm i18n:check` | cohérence des traductions (clés, variables, textes en dur) |
 
-The build is a static export (`output: "export"`): upload the `out/` folder to any static host.
-Set the public URL at build time so absolute URLs (Open Graph, sitemap, structured data) are
-correct:
+## Stack
 
-```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.tld pnpm build
+[Next.js](https://nextjs.org) (App Router, export statique) · React 19 · TypeScript ·
+Tailwind CSS 4 · shadcn/ui · Zustand · html-to-image · dnd-kit.
+
+## Structure du projet
+
+```
+app/          pages (landing, éditeur) et métadonnées SEO
+components/   éditeur, landing et composants UI
+templates/    un dossier par modèle de cover + registre (registry.ts)
+mockups/      cadres navigateur et téléphone (SVG / CSS)
+stores/       état de l'éditeur (Zustand)
+lib/          logique pure : couleurs, images, export
+i18n/         traducteur maison ; textes dans messages/{fr,en}.json
+docs/         spécifications (SPECS.md) et internationalisation (I18N.md)
 ```
 
-## Contributing
+## Contribuer
 
-Issues and pull requests are welcome.
+Les contributions sont les bienvenues : nouveaux modèles, formats d'export, langues, corrections.
+Lisez [CONTRIBUTING.md](./CONTRIBUTING.md), en particulier la section
+[Ajouter un modèle](./CONTRIBUTING.md#ajouter-un-modèle), et le
+[code de conduite](./CODE_OF_CONDUCT.md).
 
-- Before opening a PR, run `pnpm typecheck && pnpm lint && pnpm i18n:check`.
-- To add a language or a template, see [docs/I18N.md](docs/I18N.md) and
-  [docs/SPECS.md](docs/SPECS.md) (written in French).
+Une faille de sécurité ? Voir [SECURITY.md](./SECURITY.md).
 
-## License
+## Licence
 
-MIT.
+[MIT](./LICENSE) © Roosvelt Kenne

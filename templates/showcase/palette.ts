@@ -17,7 +17,7 @@ export type ShowcasePalette = {
 
 /**
  * Opacité du voile noir selon la distance normalisée au coin haut-droite,
- * calibrée sur les covers de référence du gabarit (docs/examples).
+ * calibrée sur les covers de référence du gabarit.
  */
 const SHADE_STOPS: [distance: number, alpha: number][] = [
   [0, 0],

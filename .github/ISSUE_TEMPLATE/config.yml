@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question ou idée
+    url: https://github.com/RoosveltK/cover-studio/discussions
+    about: Posez vos questions et partagez vos idées dans les Discussions.
+  - name: Faille de sécurité
+    url: https://github.com/RoosveltK/cover-studio/security/advisories/new
+    about: Signalez-la en privé, pas dans une issue publique.
