@@ -4,6 +4,13 @@ import type { CoverConfig } from "@/types/cover"
 
 export const EXPORT_NODE_ID = "cover-export-node"
 
+/** Le code est une clé du namespace `errors` : l'appelant traduit le message. */
+export class ExportError extends Error {
+  constructor(readonly code: "previewNotFound" | "captureRefused") {
+    super(code)
+  }
+}
+
 /** Seule la police du template est embarquée, et une seule fois par session. */
 let fontCSS: Promise<string> | undefined
 
@@ -38,7 +45,7 @@ export async function exportCover(
   scale: 1 | 2 = 1
 ) {
   const node = document.getElementById(EXPORT_NODE_ID)
-  if (!node) throw new Error("Aperçu introuvable.")
+  if (!node) throw new ExportError("previewNotFound")
 
   await document.fonts.ready
   const fontEmbedCSS = await templateFontCSS(node)
@@ -56,11 +63,7 @@ export async function exportCover(
   } catch {
     blob = null
   }
-  if (!blob) {
-    throw new Error(
-      "Le navigateur a refusé la capture (mémoire insuffisante ?). Essayez sur un ordinateur."
-    )
-  }
+  if (!blob) throw new ExportError("captureRefused")
 
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")

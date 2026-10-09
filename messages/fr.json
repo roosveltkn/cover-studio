@@ -1,0 +1,193 @@
+{
+  "meta": {
+    "siteDescription": "Générez une cover de présentation pour votre application à partir de vos captures, sans compte et sans serveur.",
+    "ogImageAlt": "Logo Cover Studio",
+    "editorTitle": "Éditeur"
+  },
+  "localeSwitcher": {
+    "label": "Langue"
+  },
+  "landing": {
+    "heroTitle": "Une cover pro pour votre app, à partir de vos captures",
+    "heroText": "Importez une capture de votre application : la mise en page, les mockups et les couleurs sont générés pour vous. Il ne reste qu'à écrire le texte.",
+    "startTitle": "Commencez par une capture",
+    "startText": "Desktop ou mobile : la couleur de marque est déduite de votre interface. Vous pourrez ajouter d'autres captures dans l'éditeur.",
+    "imageLabel": "Capture de votre application",
+    "createButton": "Créer ma cover",
+    "promiseLocal": "Vos images restent dans votre navigateur",
+    "promiseNoAccount": "Sans compte",
+    "promiseFree": "Gratuit et open source",
+    "howTitle": "Comment ça marche",
+    "step1Title": "Importez une capture",
+    "step1Text": "Puis ajoutez-en d'autres et choisissez leur ordre dans l'éditeur.",
+    "step2Title": "Personnalisez",
+    "step2Text": "Nom, description, fonctionnalités et couleur de marque.",
+    "step3Title": "Téléchargez",
+    "step3Text": "Un PNG 2400 × 1500 prêt pour votre README, portfolio ou LinkedIn."
+  },
+  "editor": {
+    "settingsLabel": "Réglages",
+    "previewLabel": "Aperçu de la cover",
+    "backHome": "Retour à l'accueil",
+    "toggleTheme": "Changer de thème",
+    "themeTooltip": "Thème (D)",
+    "download": "Télécharger",
+    "railLabel": "Sections de l'éditeur",
+    "railTemplates": "Modèles",
+    "railContent": "Texte",
+    "railColors": "Couleurs",
+    "railMockups": "Captures",
+    "railExport": "Export"
+  },
+  "panels": {
+    "templatesTitle": "Modèles",
+    "templatesDescription": "Vos captures et vos textes, mis en page de 5 façons.",
+    "contentTitle": "Texte",
+    "contentDescription": "Pastille, nom, description et fonctionnalités.",
+    "colorsTitle": "Couleurs",
+    "colorsDescription": "Une seule couleur : toute la palette en découle.",
+    "mockupsTitle": "Captures",
+    "mockupsDescription": "Jusqu'à 6 captures, placées selon leur ordre. Rien n'est envoyé en ligne.",
+    "exportTitle": "Télécharger",
+    "exportDescription": "Export PNG en taille réelle."
+  },
+  "export": {
+    "format": "Format",
+    "hint": "{hint}. Le fond du modèle s'étend pour atteindre le format, rien n'est rogné.",
+    "hdLabel": "Haute résolution (2×)",
+    "hdHint": "Pour les écrans Retina",
+    "size": "Taille",
+    "file": "Fichier",
+    "pixels": "{width} × {height} px",
+    "generating": "Génération…",
+    "downloadPng": "Télécharger le PNG",
+    "privacy": "Tout est généré dans votre navigateur : aucune image n'est envoyée à un serveur.",
+    "toastSuccess": "Cover téléchargée",
+    "toastSuccessDescription": "{filename} · {seconds} s",
+    "toastError": "Export impossible"
+  },
+  "exportSizes": {
+    "coverLabel": "Cover",
+    "coverHint": "Portfolio, README",
+    "ogLabel": "Open Graph",
+    "ogHint": "Liens partagés, LinkedIn",
+    "githubLabel": "GitHub",
+    "githubHint": "Aperçu social du dépôt",
+    "xLabel": "X / Twitter",
+    "xHint": "Image de post 16:9",
+    "productHuntLabel": "Product Hunt",
+    "productHuntHint": "Galerie",
+    "squareLabel": "Carré",
+    "squareHint": "Instagram, LinkedIn"
+  },
+  "templates": {
+    "showcaseName": "Showcase",
+    "showcaseDescription": "Texte à gauche, navigateur et téléphone",
+    "spotlightName": "Spotlight",
+    "spotlightDescription": "Centré et clair, style lancement",
+    "bentoName": "Bento",
+    "bentoDescription": "Grille de tuiles arrondies",
+    "perspectiveName": "Perspective",
+    "perspectiveDescription": "Scène sombre, mockups inclinés en 3D",
+    "mobileTrioName": "Mobile trio",
+    "mobileTrioDescription": "Trois téléphones, pour les apps mobiles"
+  },
+  "slots": {
+    "browser": "Navigateur",
+    "phone": "Téléphone",
+    "phoneCenter": "Téléphone central",
+    "phoneLeft": "Téléphone gauche",
+    "phoneRight": "Téléphone droit"
+  },
+  "fields": {
+    "badgeLabel": "Pastille",
+    "badgePlaceholder": "SaaS · Productivité",
+    "badgeHelp": "Affichée en majuscules espacées.",
+    "nameMainLabel": "Nom",
+    "nameMainPlaceholder": "Mon",
+    "nameAccentLabel": "Suite du nom (accent)",
+    "nameAccentPlaceholder": "App",
+    "nameAccentHelp": "Optionnel, affichée dans la couleur d'accent.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Ce que fait l'application, en une ou deux phrases.",
+    "descriptionHelp": "160 caractères maximum recommandés (3 lignes).",
+    "chipsLabel": "Fonctionnalités",
+    "chipsPlaceholder": "Ajouter puis Entrée",
+    "footerLabel": "Pied de page",
+    "footerPlaceholder": "monapp.com · Tech Lead",
+    "browserUrlLabel": "URL du navigateur",
+    "browserUrlPlaceholder": "monapp.com",
+    "brandColorLabel": "Couleur de marque",
+    "brandColorHelp": "Le fond, le halo, les chips et l'accent en sont dérivés.",
+    "iconLabel": "Icône de l'application",
+    "iconHelp": "Carrée de préférence, 512 × 512 px ou plus. Affichée à côté du nom, hors des 6 captures.",
+    "galleryLabel": "Captures",
+    "galleryHelp": "Glissez pour changer l'ordre : il décide de l'emplacement de chaque capture.",
+    "browserThemeLabel": "Thème du navigateur",
+    "themeAuto": "Auto",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "required": "Ce champ est obligatoire.",
+    "useIconColor": "Utiliser la couleur de l'icône",
+    "galleryUsesOne": "{template} utilise {count} capture : {slots}.",
+    "galleryUsesOther": "{template} utilise {count} captures : {slots}."
+  },
+  "fileInput": {
+    "reading": "Lecture…",
+    "import": "Importer une image",
+    "dropHint": "ou glisser-déposer · {formats} · 10 Mo max",
+    "remove": "Retirer {name}"
+  },
+  "gallery": {
+    "dragStart": "{name} saisie, position {position}.",
+    "dragOver": "{name} au-dessus de la position {position}.",
+    "dragEnd": "{name} déposée en position {position}.",
+    "dragCancel": "Déplacement de {name} annulé.",
+    "instructions": "Espace pour saisir la capture, flèches pour la déplacer, Espace pour la déposer, Échap pour annuler.",
+    "move": "Déplacer {name}, position {position}",
+    "remove": "Retirer {name}",
+    "unused": "Non utilisée par ce modèle",
+    "portrait": "Portrait",
+    "landscape": "Paysage",
+    "defaultName": "capture",
+    "reading": "Lecture…",
+    "add": "Ajouter des captures",
+    "remainingOne": "{count} restante",
+    "remainingOther": "{count} restantes",
+    "limit": "{max} captures maximum.",
+    "fileError": "{name} : {message}"
+  },
+  "swatch": {
+    "hex": "Hex",
+    "hexAria": "Code hexadécimal",
+    "suggested": "Couleurs suggérées",
+    "colorAria": "Couleur {color}"
+  },
+  "pills": {
+    "remove": "Retirer {pill}"
+  },
+  "mockups": {
+    "desktopPlaceholder": "Capture desktop",
+    "mobilePlaceholder": "Capture mobile"
+  },
+  "errors": {
+    "previewNotFound": "Aperçu introuvable.",
+    "captureRefused": "Le navigateur a refusé la capture (mémoire insuffisante ?). Essayez sur un ordinateur.",
+    "unsupportedFormat": "Format non pris en charge. Utilisez {formats}.",
+    "imageTooLarge": "Image trop lourde : 10 Mo maximum.",
+    "readFailed": "Lecture du fichier impossible.",
+    "corrupt": "Image illisible ou corrompue.",
+    "importFailed": "Import impossible."
+  },
+  "defaults": {
+    "badge": "Catégorie · Secteur",
+    "nameMain": "Mon",
+    "nameAccent": "App",
+    "description": "Décrivez en une phrase ce que fait votre application et à qui elle s'adresse.",
+    "chipKeyFeature": "Fonctionnalité clé",
+    "chipResponsive": "Responsive",
+    "chipOpenSource": "Open source",
+    "footer": "monapp.com",
+    "browserUrl": "monapp.com"
+  }
+}

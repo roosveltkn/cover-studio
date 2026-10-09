@@ -31,13 +31,13 @@ export function assignSlots(images: ImageAsset[], slots: Slot[]) {
   return assigned
 }
 
-/** Libellé de l'emplacement occupé par chaque capture (null si inutilisée). */
-export function slotLabels(images: ImageAsset[], slots: Slot[]) {
-  const labels: (string | null)[] = images.map(() => null)
+/** Clé du libellé de l'emplacement occupé par chaque capture (null si inutilisée). */
+export function slotLabelKeys(images: ImageAsset[], slots: Slot[]) {
+  const keys: (Slot["labelKey"] | null)[] = images.map(() => null)
   assignSlots(images, slots).forEach((index, slot) => {
-    if (index !== null) labels[index] = slots[slot].label
+    if (index !== null) keys[index] = slots[slot].labelKey
   })
-  return labels
+  return keys
 }
 
 /** Place les captures dans les emplacements du template. */

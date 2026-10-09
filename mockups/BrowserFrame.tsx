@@ -1,6 +1,7 @@
 import { ImageIcon, Lock } from "lucide-react"
 import type { CSSProperties } from "react"
 
+import { useTranslations } from "@/i18n/provider"
 import type { ImageAsset } from "@/types/cover"
 
 const THEMES = {
@@ -46,6 +47,7 @@ export function BrowserFrame({
   favicon,
   style,
 }: BrowserFrameProps) {
+  const tMockups = useTranslations("mockups")
   const t = THEMES[theme]
 
   return (
@@ -130,7 +132,7 @@ export function BrowserFrame({
         ) : (
           <Placeholder
             color={t.placeholderText}
-            label="Capture desktop"
+            label={tMockups("desktopPlaceholder")}
             iconSize={72}
           />
         )}

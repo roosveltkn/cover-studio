@@ -1,19 +1,28 @@
+import type { MessageKey } from "@/i18n/translator"
+
 export type ExportSize = {
   id: string
-  label: string
+  /** Clé du libellé dans le namespace `exportSizes`. */
+  labelKey: MessageKey<"exportSizes">
   /** Usage typique, affiché sous le libellé. */
-  hint: string
+  hintKey: MessageKey<"exportSizes">
   width: number
   height: number
 }
 
 export const EXPORT_SIZES: ExportSize[] = [
-  { id: "cover", label: "Cover", hint: "Portfolio, README", width: 2400, height: 1500 },
-  { id: "og", label: "Open Graph", hint: "Liens partagés, LinkedIn", width: 1200, height: 630 },
-  { id: "github", label: "GitHub", hint: "Aperçu social du dépôt", width: 1280, height: 640 },
-  { id: "x", label: "X / Twitter", hint: "Image de post 16:9", width: 1600, height: 900 },
-  { id: "product-hunt", label: "Product Hunt", hint: "Galerie", width: 1270, height: 760 },
-  { id: "square", label: "Carré", hint: "Instagram, LinkedIn", width: 1080, height: 1080 },
+  { id: "cover", labelKey: "coverLabel", hintKey: "coverHint", width: 2400, height: 1500 },
+  { id: "og", labelKey: "ogLabel", hintKey: "ogHint", width: 1200, height: 630 },
+  { id: "github", labelKey: "githubLabel", hintKey: "githubHint", width: 1280, height: 640 },
+  { id: "x", labelKey: "xLabel", hintKey: "xHint", width: 1600, height: 900 },
+  {
+    id: "product-hunt",
+    labelKey: "productHuntLabel",
+    hintKey: "productHuntHint",
+    width: 1270,
+    height: 760,
+  },
+  { id: "square", labelKey: "squareLabel", hintKey: "squareHint", width: 1080, height: 1080 },
 ]
 
 export function getExportSize(id: string | undefined) {

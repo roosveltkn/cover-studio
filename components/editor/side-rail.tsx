@@ -2,16 +2,17 @@
 
 import { Download, Image, LayoutTemplate, Palette, Type, type LucideIcon } from "lucide-react"
 
+import { useTranslations } from "@/i18n/provider"
 import { cn } from "@/lib/utils"
 
 import type { PanelId } from "./panels"
 
-const ITEMS: { id: PanelId; label: string; icon: LucideIcon }[] = [
-  { id: "templates", label: "Modèles", icon: LayoutTemplate },
-  { id: "content", label: "Texte", icon: Type },
-  { id: "colors", label: "Couleurs", icon: Palette },
-  { id: "mockups", label: "Captures", icon: Image },
-  { id: "export", label: "Export", icon: Download },
+const ITEMS: { id: PanelId; label: `rail${Capitalize<PanelId>}`; icon: LucideIcon }[] = [
+  { id: "templates", label: "railTemplates", icon: LayoutTemplate },
+  { id: "content", label: "railContent", icon: Type },
+  { id: "colors", label: "railColors", icon: Palette },
+  { id: "mockups", label: "railMockups", icon: Image },
+  { id: "export", label: "railExport", icon: Download },
 ]
 
 type SideRailProps = {
@@ -20,9 +21,11 @@ type SideRailProps = {
 }
 
 export function SideRail({ active, onSelect }: SideRailProps) {
+  const t = useTranslations("editor")
+
   return (
     <nav
-      aria-label="Sections de l'éditeur"
+      aria-label={t("railLabel")}
       className="flex shrink-0 gap-1 overflow-x-auto border-b md:overflow-visible bg-[var(--rail)] p-2 md:w-[76px] md:flex-col md:border-r md:border-b-0"
     >
       {ITEMS.map(({ id, label, icon: Icon }) => {
@@ -48,7 +51,7 @@ export function SideRail({ active, onSelect }: SideRailProps) {
             >
               <Icon className="size-5" />
             </span>
-            {label}
+            {t(label)}
           </button>
         )
       })}

@@ -9,21 +9,21 @@ import { ShowcaseTemplate } from "./showcase/Template"
 import { SpotlightTemplate } from "./spotlight/Template"
 
 const BROWSER_AND_PHONE: Slot[] = [
-  { kind: "desktop", label: "Navigateur", key: "desktopImage" },
-  { kind: "mobile", label: "Téléphone", key: "mobileImage" },
+  { kind: "desktop", labelKey: "browser", key: "desktopImage" },
+  { kind: "mobile", labelKey: "phone", key: "mobileImage" },
 ]
 
 const THREE_PHONES: Slot[] = [
-  { kind: "mobile", label: "Téléphone central", key: "mobileImage" },
-  { kind: "mobile", label: "Téléphone gauche", key: "mobileImage2" },
-  { kind: "mobile", label: "Téléphone droit", key: "mobileImage3" },
+  { kind: "mobile", labelKey: "phoneCenter", key: "mobileImage" },
+  { kind: "mobile", labelKey: "phoneLeft", key: "mobileImage2" },
+  { kind: "mobile", labelKey: "phoneRight", key: "mobileImage3" },
 ]
 
 export const templates: Template[] = [
   {
     id: "showcase",
-    name: "Showcase",
-    description: "Texte à gauche, navigateur et téléphone",
+    nameKey: "showcaseName",
+    descriptionKey: "showcaseDescription",
     size: COVER_SIZE,
     component: ShowcaseTemplate,
     schema: baseSchema,
@@ -31,8 +31,8 @@ export const templates: Template[] = [
   },
   {
     id: "spotlight",
-    name: "Spotlight",
-    description: "Centré et clair, style lancement",
+    nameKey: "spotlightName",
+    descriptionKey: "spotlightDescription",
     size: COVER_SIZE,
     component: SpotlightTemplate,
     schema: baseSchema,
@@ -40,8 +40,8 @@ export const templates: Template[] = [
   },
   {
     id: "bento",
-    name: "Bento",
-    description: "Grille de tuiles arrondies",
+    nameKey: "bentoName",
+    descriptionKey: "bentoDescription",
     size: COVER_SIZE,
     component: BentoTemplate,
     schema: baseSchema,
@@ -49,8 +49,8 @@ export const templates: Template[] = [
   },
   {
     id: "perspective",
-    name: "Perspective",
-    description: "Scène sombre, mockups inclinés en 3D",
+    nameKey: "perspectiveName",
+    descriptionKey: "perspectiveDescription",
     size: COVER_SIZE,
     component: PerspectiveTemplate,
     schema: baseSchema,
@@ -58,8 +58,8 @@ export const templates: Template[] = [
   },
   {
     id: "mobile-trio",
-    name: "Mobile trio",
-    description: "Trois téléphones, pour les apps mobiles",
+    nameKey: "mobileTrioName",
+    descriptionKey: "mobileTrioDescription",
     size: COVER_SIZE,
     component: MobileTrioTemplate,
     schema: mobileTrioSchema,

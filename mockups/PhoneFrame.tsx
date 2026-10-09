@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react"
 
+import { useTranslations } from "@/i18n/provider"
 import { Placeholder } from "@/mockups/BrowserFrame"
 import type { ImageAsset } from "@/types/cover"
 
@@ -20,6 +21,7 @@ type PhoneFrameProps = {
 }
 
 export function PhoneFrame({ image, scale = 1, imagePosition = "top", style }: PhoneFrameProps) {
+  const t = useTranslations("mockups")
   const statusColor = image?.topColor ?? "#ffffff"
   const s = (value: number) => value * scale
 
@@ -69,7 +71,7 @@ export function PhoneFrame({ image, scale = 1, imagePosition = "top", style }: P
                 }}
               />
             ) : (
-              <Placeholder color="#a0a0a8" label="Capture mobile" iconSize={s(48)} />
+              <Placeholder color="#a0a0a8" label={t("mobilePlaceholder")} iconSize={s(48)} />
             )}
           </div>
           <div

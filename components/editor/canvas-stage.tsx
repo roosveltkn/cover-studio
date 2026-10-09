@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import { useLocale, useTranslations } from "@/i18n/provider"
 import { getExportSize } from "@/lib/export-sizes"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
@@ -11,6 +12,9 @@ import { CoverPreview, coverCanvas } from "./cover-preview"
 const PADDING = 24
 
 export function CanvasStage() {
+  const t = useTranslations("editor")
+  const tSizes = useTranslations("exportSizes")
+  const locale = useLocale()
   const config = useCoverStore((state) => state.config)
   const stageRef = useRef<HTMLDivElement>(null)
   const template = getTemplate(config.template)
@@ -42,7 +46,7 @@ export function CanvasStage() {
   return (
     <section
       ref={stageRef}
-      aria-label="Aperçu de la cover"
+      aria-label={t("previewLabel")}
       className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-[var(--stage)]"
     >
       {scale > 0 && (
@@ -51,8 +55,10 @@ export function CanvasStage() {
         </div>
       )}
       <div className="absolute right-4 bottom-4 hidden rounded-full md:block bg-background/90 px-3 py-1 text-xs font-medium text-muted-foreground tabular-nums shadow-sm ring-1 ring-foreground/10 backdrop-blur">
-        {output.label} · {output.width} × {output.height} ·{" "}
-        {Math.round(((scale * canvas.width) / output.width) * 100)} %
+        {tSizes(output.labelKey)} · {output.width} × {output.height} ·{" "}
+        {new Intl.NumberFormat(locale, { style: "percent" }).format(
+          Math.round((scale * canvas.width) / output.width * 100) / 100
+        )}
       </div>
     </section>
   )

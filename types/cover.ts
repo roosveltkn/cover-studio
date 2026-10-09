@@ -1,5 +1,7 @@
 import type { ComponentType } from "react"
 
+import type { MessageKey } from "@/i18n/translator"
+
 export type ImageAsset = {
   id: string
   dataUrl: string
@@ -53,7 +55,8 @@ export type CoverConfig = {
 /** Emplacement de capture prévu par un template. */
 export type Slot = {
   kind: "desktop" | "mobile"
-  label: string
+  /** Clé du libellé dans le namespace `slots`. */
+  labelKey: MessageKey<"slots">
   /** Champ des mockups placés où le template lit cette capture. */
   key: "desktopImage" | "mobileImage" | "mobileImage2" | "mobileImage3"
 }
@@ -72,39 +75,43 @@ export type PlacedConfig = Omit<CoverConfig, "mockups"> & { mockups: PlacedMocku
 
 export type SectionId = "content" | "colors" | "mockups" | "export"
 
+/** Clé de message du namespace `fields` : le schéma ne porte aucun texte traduit. */
+type FieldKey = MessageKey<"fields">
+
 type FieldBase = {
   /** Chemin pointé dans CoverConfig, ex. "content.badge". */
   path: string
-  label: string
+  label: FieldKey
   section: SectionId
-  help?: string
+  help?: FieldKey
 }
 
 export type FieldSchema =
   | (FieldBase & {
       type: "text"
-      placeholder?: string
+      placeholder?: FieldKey
       maxLength?: number
       required?: boolean
     })
   | (FieldBase & {
       type: "textarea"
-      placeholder?: string
+      placeholder?: FieldKey
       maxLength?: number
     })
-  | (FieldBase & { type: "list"; placeholder?: string })
+  | (FieldBase & { type: "list"; placeholder?: FieldKey })
   | (FieldBase & { type: "color"; presets?: string[] })
   | (FieldBase & { type: "gallery" })
   | (FieldBase & { type: "icon" })
   | (FieldBase & {
       type: "segmented"
-      options: { value: string; label: string }[]
+      options: { value: string; label: FieldKey }[]
     })
 
 export type Template = {
   id: string
-  name: string
-  description: string
+  /** Clés des textes dans le namespace `templates`. */
+  nameKey: MessageKey<"templates">
+  descriptionKey: MessageKey<"templates">
   size: { width: number; height: number }
   component: ComponentType<{ config: PlacedConfig }>
   schema: FieldSchema[]

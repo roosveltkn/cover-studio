@@ -10,44 +10,37 @@ import {
   UserX,
   type LucideIcon,
 } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import { FileInput } from "@/components/canva/file-input"
 import { FitPreview } from "@/components/editor/fit-preview"
+import { LocaleSwitcher } from "@/components/locale-switcher"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { useRouter } from "@/i18n/navigation"
+import { useLocale, useTranslations } from "@/i18n/provider"
 import { isPortrait } from "@/lib/slots"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
-import { DEFAULT_CONFIG } from "@/templates/showcase/defaults"
+import { defaultConfig } from "@/templates/showcase/defaults"
 import type { ImageAsset } from "@/types/cover"
 
-const STEPS: { icon: LucideIcon; title: string; text: string }[] = [
-  {
-    icon: ImageUp,
-    title: "Importez une capture",
-    text: "Puis ajoutez-en d'autres et choisissez leur ordre dans l'éditeur.",
-  },
-  {
-    icon: Palette,
-    title: "Personnalisez",
-    text: "Nom, description, fonctionnalités et couleur de marque.",
-  },
-  {
-    icon: Download,
-    title: "Téléchargez",
-    text: "Un PNG 2400 × 1500 prêt pour votre README, portfolio ou LinkedIn.",
-  },
+// Textes dans le namespace `landing` : seules les icônes et les clés vivent ici.
+const STEPS: { icon: LucideIcon; title: "step1Title" | "step2Title" | "step3Title"; text: "step1Text" | "step2Text" | "step3Text" }[] = [
+  { icon: ImageUp, title: "step1Title", text: "step1Text" },
+  { icon: Palette, title: "step2Title", text: "step2Text" },
+  { icon: Download, title: "step3Title", text: "step3Text" },
 ]
 
-const PROMISES: { icon: LucideIcon; label: string }[] = [
-  { icon: Lock, label: "Vos images restent dans votre navigateur" },
-  { icon: UserX, label: "Sans compte" },
-  { icon: Sparkles, label: "Gratuit et open source" },
+const PROMISES: { icon: LucideIcon; label: "promiseLocal" | "promiseNoAccount" | "promiseFree" }[] = [
+  { icon: Lock, label: "promiseLocal" },
+  { icon: UserX, label: "promiseNoAccount" },
+  { icon: Sparkles, label: "promiseFree" },
 ]
 
 export function Landing() {
+  const t = useTranslations("landing")
+  const locale = useLocale()
   const router = useRouter()
   const startFrom = useCoverStore((state) => state.startFrom)
   const [image, setImage] = useState<ImageAsset>()
@@ -63,11 +56,12 @@ export function Landing() {
     router.push("/editor")
   }
 
+  const base = defaultConfig(locale)
   const previewConfig = {
-    ...DEFAULT_CONFIG,
-    template: image && isPortrait(image) ? "mobile-trio" : DEFAULT_CONFIG.template,
-    style: { brandColor: image?.dominant ?? DEFAULT_CONFIG.style.brandColor },
-    mockups: { ...DEFAULT_CONFIG.mockups, images: image ? [image] : [] },
+    ...base,
+    template: image && isPortrait(image) ? "mobile-trio" : base.template,
+    style: { brandColor: image?.dominant ?? base.style.brandColor },
+    mockups: { ...base.mockups, images: image ? [image] : [] },
   }
 
   return (
@@ -77,6 +71,7 @@ export function Landing() {
           <Sparkles className="size-4" />
         </span>
         <span className="font-semibold">Cover Studio</span>
+        <LocaleSwitcher className="ml-auto" />
       </header>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-12 px-4 pb-16">
@@ -84,12 +79,9 @@ export function Landing() {
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
             <div className="flex flex-col gap-4">
               <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-5xl">
-                Une cover pro pour votre app, à partir de vos captures
+                {t("heroTitle")}
               </h1>
-              <p className="max-w-lg text-base text-white/85 sm:text-lg">
-                Importez une capture de votre application : la mise en page, les mockups et
-                les couleurs sont générés pour vous. Il ne reste qu&apos;à écrire le texte.
-              </p>
+              <p className="max-w-lg text-base text-white/85 sm:text-lg">{t("heroText")}</p>
             </div>
             <div className="overflow-hidden rounded-xl shadow-[0_24px_60px_rgba(20,0,60,0.35)] ring-1 ring-white/20">
               <FitPreview template={getTemplate(previewConfig.template)} config={previewConfig} />
@@ -104,28 +96,25 @@ export function Landing() {
         >
           <div className="flex flex-col gap-1">
             <h2 id="start-title" className="text-xl font-semibold tracking-tight">
-              Commencez par une capture
+              {t("startTitle")}
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Desktop ou mobile : la couleur de marque est déduite de votre interface. Vous
-              pourrez ajouter d&apos;autres captures dans l&apos;éditeur.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("startText")}</p>
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="landing-image" className="text-[13px] font-semibold">
-              Capture de votre application
+              {t("imageLabel")}
             </Label>
             <FileInput id="landing-image" value={image} onChange={setImage} />
           </div>
           <Button size="lg" className="h-11 w-full text-base" disabled={!image} onClick={start}>
-            Créer ma cover
+            {t("createButton")}
             <ArrowRight data-icon="inline-end" />
           </Button>
           <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
             {PROMISES.map(({ icon: Icon, label }) => (
               <li key={label} className="flex items-center gap-1.5">
                 <Icon className="size-3.5" />
-                {label}
+                {t(label)}
               </li>
             ))}
           </ul>
@@ -133,7 +122,7 @@ export function Landing() {
 
         <section aria-labelledby="how-title" className="flex flex-col gap-5">
           <h2 id="how-title" className="text-xl font-semibold tracking-tight">
-            Comment ça marche
+            {t("howTitle")}
           </h2>
           <ol className="grid gap-4 sm:grid-cols-3">
             {STEPS.map(({ icon: Icon, title, text }, index) => (
@@ -146,9 +135,9 @@ export function Landing() {
                 </span>
                 <span className="flex flex-col gap-1">
                   <span className="text-sm font-semibold">
-                    {index + 1}. {title}
+                    {index + 1}. {t(title)}
                   </span>
-                  <span className="text-sm text-muted-foreground">{text}</span>
+                  <span className="text-sm text-muted-foreground">{t(text)}</span>
                 </span>
               </li>
             ))}

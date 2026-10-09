@@ -1,8 +1,9 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
+import { useRouter } from "@/i18n/navigation"
+import { useTranslations } from "@/i18n/provider"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 
 import { CanvasStage } from "./canvas-stage"
@@ -11,6 +12,7 @@ import { SideRail } from "./side-rail"
 import { TopBar } from "./top-bar"
 
 export function Editor() {
+  const t = useTranslations("editor")
   const router = useRouter()
   const [panel, setPanel] = useState<PanelId>("templates")
   // Les captures ne sont pas persistées : sans elles à l'arrivée (accès direct,
@@ -43,7 +45,7 @@ export function Editor() {
           <SideRail active={panel} onSelect={setPanel} />
         </div>
         <aside
-          aria-label="Réglages"
+          aria-label={t("settingsLabel")}
           className="order-3 min-h-0 flex-1 overflow-y-auto bg-background md:order-2 md:w-[350px] md:flex-none md:border-r"
         >
           <Panel id={panel} />

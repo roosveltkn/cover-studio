@@ -4,6 +4,7 @@ import { Check } from "lucide-react"
 import { HexColorInput, HexColorPicker } from "react-colorful"
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useTranslations } from "@/i18n/provider"
 import { cn } from "@/lib/utils"
 
 type SwatchProps = {
@@ -15,6 +16,8 @@ type SwatchProps = {
 
 /** Swatch libellé ouvrant un flyout de sélection (pattern « Color selection » de Canva). */
 export function Swatch({ id, value, onChange, presets = [] }: SwatchProps) {
+  const t = useTranslations("swatch")
+
   return (
     <div className="flex flex-col gap-3">
       <Popover>
@@ -31,12 +34,12 @@ export function Swatch({ id, value, onChange, presets = [] }: SwatchProps) {
         <PopoverContent side="right" align="start" className="w-64 gap-3 p-3">
           <HexColorPicker color={value} onChange={onChange} className="canva-picker" />
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground">Hex</span>
+            <span className="text-xs font-semibold text-muted-foreground">{t("hex")}</span>
             <HexColorInput
               color={value}
               onChange={onChange}
               prefixed
-              aria-label="Code hexadécimal"
+              aria-label={t("hexAria")}
               className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 font-mono text-sm uppercase outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
           </div>
@@ -44,7 +47,7 @@ export function Swatch({ id, value, onChange, presets = [] }: SwatchProps) {
       </Popover>
 
       {presets.length > 0 && (
-        <div role="group" aria-label="Couleurs suggérées" className="grid grid-cols-5 gap-2">
+        <div role="group" aria-label={t("suggested")} className="grid grid-cols-5 gap-2">
           {presets.map((preset) => {
             const selected = preset.toLowerCase() === value.toLowerCase()
             return (
@@ -52,7 +55,7 @@ export function Swatch({ id, value, onChange, presets = [] }: SwatchProps) {
                 key={preset}
                 type="button"
                 title={preset}
-                aria-label={`Couleur ${preset}`}
+                aria-label={t("colorAria", { color: preset })}
                 aria-pressed={selected}
                 onClick={() => onChange(preset)}
                 className={cn(

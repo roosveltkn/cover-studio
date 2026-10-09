@@ -4,7 +4,8 @@ import { Trash2, Upload } from "lucide-react"
 import { useState, type DragEvent } from "react"
 
 import { Button } from "@/components/ui/button"
-import { ACCEPTED_TYPES, ImageError, formatList, readImage } from "@/lib/image"
+import { useTranslations } from "@/i18n/provider"
+import { ACCEPTED_TYPES, describeImageError, formatList, readImage } from "@/lib/image"
 import { cn } from "@/lib/utils"
 import type { ImageAsset } from "@/types/cover"
 
@@ -26,6 +27,8 @@ export function FileInput({
   types = ACCEPTED_TYPES,
   contain = false,
 }: FileInputProps) {
+  const t = useTranslations("fileInput")
+  const tErrors = useTranslations("errors")
   const [error, setError] = useState<string>()
   const [dragging, setDragging] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -37,7 +40,7 @@ export function FileInput({
     try {
       onChange(await readImage(file, types))
     } catch (err) {
-      setError(err instanceof ImageError ? err.message : "Import impossible.")
+      setError(describeImageError(err, tErrors))
     } finally {
       setLoading(false)
     }
@@ -70,7 +73,7 @@ export function FileInput({
         <Button
           variant="ghost"
           size="icon"
-          aria-label={`Retirer ${value.name}`}
+          aria-label={t("remove", { name: value.name })}
           onClick={() => onChange(undefined)}
         >
           <Trash2 />
@@ -96,10 +99,10 @@ export function FileInput({
       >
         <Upload className="size-5 text-muted-foreground" />
         <span className="text-sm font-semibold">
-          {loading ? "Lecture…" : "Importer une image"}
+          {loading ? t("reading") : t("import")}
         </span>
         <span className="text-xs text-muted-foreground">
-          ou glisser-déposer · {formatList(types)} · 10 Mo max
+          {t("dropHint", { formats: formatList(types) })}
         </span>
         <input
           id={id}

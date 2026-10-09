@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { useLocale, useTranslations } from "@/i18n/provider"
+import { pluralSuffix } from "@/i18n/translator"
 import { ICON_TYPES } from "@/lib/image"
 import { getPath } from "@/lib/path"
 import { useCoverStore } from "@/stores/cover-store"
@@ -17,21 +19,27 @@ import type { FieldSchema, ImageAsset } from "@/types/cover"
 
 /** Rend un champ de formulaire à partir de son schéma (SPECS §8.4). */
 export function SchemaField({ field }: { field: FieldSchema }) {
+  const t = useTranslations("fields")
+  const tSlots = useTranslations("slots")
+  const tTemplates = useTranslations("templates")
+  const locale = useLocale()
   const config = useCoverStore((state) => state.config)
   const setField = useCoverStore((state) => state.setField)
   const value = getPath(config, field.path)
   const id = `field-${field.path.replace(/\./g, "-")}`
   const set = (next: unknown) => setField(field.path, next)
+  const label = t(field.label)
+  const help = field.help ? t(field.help) : undefined
 
   switch (field.type) {
     case "text": {
       const text = (value as string | undefined) ?? ""
-      const error = field.required && !text.trim() ? "Ce champ est obligatoire." : undefined
+      const error = field.required && !text.trim() ? t("required") : undefined
       return (
         <FormField
           id={id}
-          label={field.label}
-          help={field.help}
+          label={label}
+          help={help}
           error={error}
           counter={field.maxLength ? `${text.length}/${field.maxLength}` : undefined}
         >
@@ -39,9 +47,9 @@ export function SchemaField({ field }: { field: FieldSchema }) {
             id={id}
             value={text}
             maxLength={field.maxLength}
-            placeholder={field.placeholder}
+            placeholder={field.placeholder ? t(field.placeholder) : undefined}
             aria-invalid={Boolean(error)}
-            aria-describedby={error ? `${id}-error` : field.help ? `${id}-help` : undefined}
+            aria-describedby={error ? `${id}-error` : help ? `${id}-help` : undefined}
             onChange={(event) => set(event.target.value)}
             className="h-10"
           />
@@ -54,16 +62,16 @@ export function SchemaField({ field }: { field: FieldSchema }) {
       return (
         <FormField
           id={id}
-          label={field.label}
-          help={field.help}
+          label={label}
+          help={help}
           counter={field.maxLength ? `${text.length}/${field.maxLength}` : undefined}
         >
           <Textarea
             id={id}
             value={text}
             maxLength={field.maxLength}
-            placeholder={field.placeholder}
-            aria-describedby={field.help ? `${id}-help` : undefined}
+            placeholder={field.placeholder ? t(field.placeholder) : undefined}
+            aria-describedby={help ? `${id}-help` : undefined}
             onChange={(event) => set(event.target.value)}
             className="max-h-48 min-h-24 resize-none"
           />
@@ -73,19 +81,19 @@ export function SchemaField({ field }: { field: FieldSchema }) {
 
     case "list":
       return (
-        <FormField id={id} label={field.label} help={field.help}>
+        <FormField id={id} label={label} help={help}>
           <PillsInput
             id={id}
             value={(value as string[] | undefined) ?? []}
             onChange={set}
-            placeholder={field.placeholder}
+            placeholder={field.placeholder ? t(field.placeholder) : undefined}
           />
         </FormField>
       )
 
     case "color":
       return (
-        <FormField id={id} label={field.label} help={field.help}>
+        <FormField id={id} label={label} help={help}>
           <Swatch
             id={id}
             value={(value as string | undefined) ?? "#000000"}
@@ -100,7 +108,7 @@ export function SchemaField({ field }: { field: FieldSchema }) {
       const brandColor = config.style.brandColor
       const iconColor = icon?.dominant
       return (
-        <FormField id={id} label={field.label} help={field.help}>
+        <FormField id={id} label={label} help={help}>
           <FileInput id={id} value={icon} onChange={set} types={ICON_TYPES} contain />
           {iconColor && iconColor.toLowerCase() !== brandColor.toLowerCase() && (
             <Button
@@ -114,7 +122,7 @@ export function SchemaField({ field }: { field: FieldSchema }) {
                 className="size-3.5 rounded-full ring-1 ring-foreground/15"
                 style={{ background: iconColor }}
               />
-              Utiliser la couleur de l&apos;icône
+              {t("useIconColor")}
             </Button>
           )}
         </FormField>
@@ -125,10 +133,15 @@ export function SchemaField({ field }: { field: FieldSchema }) {
       const template = getTemplate(config.template)
       const filled = template.slots.length
       return (
-        <FormField id={id} label={field.label} help={field.help}>
+        <FormField id={id} label={label} help={help}>
           <p className="text-xs text-muted-foreground">
-            {template.name} utilise {filled} capture{filled > 1 ? "s" : ""} :{" "}
-            {template.slots.map((slot) => slot.label.toLowerCase()).join(", ")}.
+            {t(`galleryUses${pluralSuffix(locale, filled)}`, {
+              template: tTemplates(template.nameKey),
+              count: filled,
+              slots: template.slots
+                .map((slot) => tSlots(slot.labelKey).toLocaleLowerCase(locale))
+                .join(", "),
+            })}
           </p>
           <ImageGallery
             id={id}
@@ -142,7 +155,7 @@ export function SchemaField({ field }: { field: FieldSchema }) {
 
     case "segmented":
       return (
-        <FormField id={id} label={field.label} help={field.help}>
+        <FormField id={id} label={label} help={help}>
           <ToggleGroup
             id={id}
             variant="outline"
@@ -157,7 +170,7 @@ export function SchemaField({ field }: { field: FieldSchema }) {
                 value={option.value}
                 className="h-9 flex-1 data-[pressed]:bg-primary/10 data-[pressed]:text-primary"
               >
-                {option.label}
+                {t(option.label)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

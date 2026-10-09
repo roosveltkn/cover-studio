@@ -3,6 +3,8 @@
 import { X } from "lucide-react"
 import { useState, type KeyboardEvent } from "react"
 
+import { useTranslations } from "@/i18n/provider"
+
 type PillsInputProps = {
   id: string
   value: string[]
@@ -12,6 +14,7 @@ type PillsInputProps = {
 
 /** Champ de pills : Entrée ajoute, × retire, Retour arrière sur champ vide retire la dernière. */
 export function PillsInput({ id, value, onChange, placeholder }: PillsInputProps) {
+  const t = useTranslations("pills")
   const [draft, setDraft] = useState("")
 
   function add() {
@@ -40,7 +43,7 @@ export function PillsInput({ id, value, onChange, placeholder }: PillsInputProps
           <span className="truncate">{pill}</span>
           <button
             type="button"
-            aria-label={`Retirer ${pill}`}
+            aria-label={t("remove", { pill })}
             onClick={() => onChange(value.filter((_, i) => i !== index))}
             className="grid size-5 place-items-center rounded-full outline-none hover:bg-foreground/10 focus-visible:ring-2 focus-visible:ring-ring"
           >

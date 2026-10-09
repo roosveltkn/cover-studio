@@ -1,3 +1,4 @@
+import type { Translator } from "@/i18n/translator"
 import type { ImageAsset } from "@/types/cover"
 
 export const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"]
@@ -7,7 +8,26 @@ export const MAX_SIZE = 10 * 1024 * 1024
 /** Plus grand côté retenu pour un SVG, vectoriel donc sans taille propre. */
 const SVG_FALLBACK_SIZE = 512
 
-export class ImageError extends Error {}
+/** Les codes sont aussi des clés du namespace `errors` : le texte vit dans les messages. */
+export type ImageErrorCode = "unsupportedFormat" | "imageTooLarge" | "readFailed" | "corrupt"
+
+export class ImageError extends Error {
+  constructor(
+    readonly code: ImageErrorCode,
+    /** Formats acceptés, pour le message `unsupportedFormat`. */
+    readonly formats?: string
+  ) {
+    super(code)
+  }
+}
+
+/** Message d'erreur d'import dans la langue de l'interface. */
+export function describeImageError(error: unknown, t: Translator<"errors">) {
+  if (!(error instanceof ImageError)) return t("importFailed")
+  return error.code === "unsupportedFormat"
+    ? t("unsupportedFormat", { formats: error.formats ?? "" })
+    : t(error.code)
+}
 
 const FORMAT_NAMES: Record<string, string> = {
   "image/png": "PNG",
@@ -23,23 +43,23 @@ export function formatList(types: string[]) {
 /** Lit un fichier image localement (aucune requête réseau). */
 export async function readImage(file: File, types = ACCEPTED_TYPES): Promise<ImageAsset> {
   if (!types.includes(file.type)) {
-    throw new ImageError(`Format non pris en charge. Utilisez ${formatList(types)}.`)
+    throw new ImageError("unsupportedFormat", formatList(types))
   }
   if (file.size > MAX_SIZE) {
-    throw new ImageError("Image trop lourde : 10 Mo maximum.")
+    throw new ImageError("imageTooLarge")
   }
 
   const dataUrl = await new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(reader.result as string)
-    reader.onerror = () => reject(new ImageError("Lecture du fichier impossible."))
+    reader.onerror = () => reject(new ImageError("readFailed"))
     reader.readAsDataURL(file)
   })
 
   const image = await new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image()
     img.onload = () => resolve(img)
-    img.onerror = () => reject(new ImageError("Image illisible ou corrompue."))
+    img.onerror = () => reject(new ImageError("corrupt"))
     img.src = dataUrl
   })
 

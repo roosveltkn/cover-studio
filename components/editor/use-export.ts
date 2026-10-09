@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { toast } from "sonner"
 
-import { coverFilename, exportCover } from "@/lib/export"
+import { useLocale, useTranslations } from "@/i18n/provider"
+import { ExportError, coverFilename, exportCover } from "@/lib/export"
 import { getExportSize } from "@/lib/export-sizes"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
@@ -11,6 +12,9 @@ import { getTemplate } from "@/templates/registry"
 import { coverCanvas } from "./cover-preview"
 
 export function useExport() {
+  const t = useTranslations("export")
+  const tErrors = useTranslations("errors")
+  const locale = useLocale()
   const config = useCoverStore((state) => state.config)
   const [exporting, setExporting] = useState(false)
   const output = getExportSize(config.export.size)
@@ -23,11 +27,21 @@ export function useExport() {
     const started = performance.now()
     try {
       await exportCover(canvas, output, filename, scale)
-      const seconds = ((performance.now() - started) / 1000).toFixed(1)
-      toast.success("Cover téléchargée", { description: `${filename} · ${seconds} s` })
+      const seconds = new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      }).format((performance.now() - started) / 1000)
+      toast.success(t("toastSuccess"), {
+        description: t("toastSuccessDescription", { filename, seconds }),
+      })
     } catch (error) {
-      toast.error("Export impossible", {
-        description: error instanceof Error ? error.message : undefined,
+      toast.error(t("toastError"), {
+        description:
+          error instanceof ExportError
+            ? tErrors(error.code)
+            : error instanceof Error
+              ? error.message
+              : undefined,
       })
     } finally {
       setExporting(false)

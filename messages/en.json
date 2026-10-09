@@ -1,0 +1,193 @@
+{
+  "meta": {
+    "siteDescription": "Generate a presentation cover for your app from your screenshots, with no account and no server.",
+    "ogImageAlt": "Cover Studio logo",
+    "editorTitle": "Editor"
+  },
+  "localeSwitcher": {
+    "label": "Language"
+  },
+  "landing": {
+    "heroTitle": "A pro cover for your app, built from your screenshots",
+    "heroText": "Import a screenshot of your app: the layout, mockups and colors are generated for you. All that's left is to write the text.",
+    "startTitle": "Start with a screenshot",
+    "startText": "Desktop or mobile: the brand color is picked up from your interface. You can add more screenshots in the editor.",
+    "imageLabel": "Screenshot of your app",
+    "createButton": "Create my cover",
+    "promiseLocal": "Your images stay in your browser",
+    "promiseNoAccount": "No account",
+    "promiseFree": "Free and open source",
+    "howTitle": "How it works",
+    "step1Title": "Import a screenshot",
+    "step1Text": "Then add more and choose their order in the editor.",
+    "step2Title": "Customize",
+    "step2Text": "Name, description, features and brand color.",
+    "step3Title": "Download",
+    "step3Text": "A 2400 × 1500 PNG ready for your README, portfolio or LinkedIn."
+  },
+  "editor": {
+    "settingsLabel": "Settings",
+    "previewLabel": "Cover preview",
+    "backHome": "Back to home",
+    "toggleTheme": "Toggle theme",
+    "themeTooltip": "Theme (D)",
+    "download": "Download",
+    "railLabel": "Editor sections",
+    "railTemplates": "Templates",
+    "railContent": "Text",
+    "railColors": "Colors",
+    "railMockups": "Screenshots",
+    "railExport": "Export"
+  },
+  "panels": {
+    "templatesTitle": "Templates",
+    "templatesDescription": "Your screenshots and texts, laid out in 5 ways.",
+    "contentTitle": "Text",
+    "contentDescription": "Badge, name, description and features.",
+    "colorsTitle": "Colors",
+    "colorsDescription": "A single color: the whole palette follows from it.",
+    "mockupsTitle": "Screenshots",
+    "mockupsDescription": "Up to 6 screenshots, placed in order. Nothing is uploaded.",
+    "exportTitle": "Download",
+    "exportDescription": "PNG export at full size."
+  },
+  "export": {
+    "format": "Format",
+    "hint": "{hint}. The template background stretches to fit the format, nothing is cropped.",
+    "hdLabel": "High resolution (2×)",
+    "hdHint": "For Retina screens",
+    "size": "Size",
+    "file": "File",
+    "pixels": "{width} × {height} px",
+    "generating": "Generating…",
+    "downloadPng": "Download PNG",
+    "privacy": "Everything is generated in your browser: no image is sent to a server.",
+    "toastSuccess": "Cover downloaded",
+    "toastSuccessDescription": "{filename} · {seconds} s",
+    "toastError": "Export failed"
+  },
+  "exportSizes": {
+    "coverLabel": "Cover",
+    "coverHint": "Portfolio, README",
+    "ogLabel": "Open Graph",
+    "ogHint": "Shared links, LinkedIn",
+    "githubLabel": "GitHub",
+    "githubHint": "Repository social preview",
+    "xLabel": "X / Twitter",
+    "xHint": "16:9 post image",
+    "productHuntLabel": "Product Hunt",
+    "productHuntHint": "Gallery",
+    "squareLabel": "Square",
+    "squareHint": "Instagram, LinkedIn"
+  },
+  "templates": {
+    "showcaseName": "Showcase",
+    "showcaseDescription": "Text on the left, browser and phone",
+    "spotlightName": "Spotlight",
+    "spotlightDescription": "Centered and light, launch style",
+    "bentoName": "Bento",
+    "bentoDescription": "Grid of rounded tiles",
+    "perspectiveName": "Perspective",
+    "perspectiveDescription": "Dark scene, mockups tilted in 3D",
+    "mobileTrioName": "Mobile trio",
+    "mobileTrioDescription": "Three phones, for mobile apps"
+  },
+  "slots": {
+    "browser": "Browser",
+    "phone": "Phone",
+    "phoneCenter": "Center phone",
+    "phoneLeft": "Left phone",
+    "phoneRight": "Right phone"
+  },
+  "fields": {
+    "badgeLabel": "Badge",
+    "badgePlaceholder": "SaaS · Productivity",
+    "badgeHelp": "Shown in spaced capitals.",
+    "nameMainLabel": "Name",
+    "nameMainPlaceholder": "My",
+    "nameAccentLabel": "Name continuation (accent)",
+    "nameAccentPlaceholder": "App",
+    "nameAccentHelp": "Optional, shown in the accent color.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "What the app does, in one or two sentences.",
+    "descriptionHelp": "160 characters maximum recommended (3 lines).",
+    "chipsLabel": "Features",
+    "chipsPlaceholder": "Add then press Enter",
+    "footerLabel": "Footer",
+    "footerPlaceholder": "myapp.com · Tech Lead",
+    "browserUrlLabel": "Browser URL",
+    "browserUrlPlaceholder": "myapp.com",
+    "brandColorLabel": "Brand color",
+    "brandColorHelp": "The background, glow, chips and accent are derived from it.",
+    "iconLabel": "App icon",
+    "iconHelp": "Square preferably, 512 × 512 px or larger. Shown next to the name, not counted among the 6 screenshots.",
+    "galleryLabel": "Screenshots",
+    "galleryHelp": "Drag to change the order: it decides where each screenshot goes.",
+    "browserThemeLabel": "Browser theme",
+    "themeAuto": "Auto",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "required": "This field is required.",
+    "useIconColor": "Use the icon color",
+    "galleryUsesOne": "{template} uses {count} screenshot: {slots}.",
+    "galleryUsesOther": "{template} uses {count} screenshots: {slots}."
+  },
+  "fileInput": {
+    "reading": "Reading…",
+    "import": "Import an image",
+    "dropHint": "or drag and drop · {formats} · 10 MB max",
+    "remove": "Remove {name}"
+  },
+  "gallery": {
+    "dragStart": "{name} picked up, position {position}.",
+    "dragOver": "{name} over position {position}.",
+    "dragEnd": "{name} dropped at position {position}.",
+    "dragCancel": "Move of {name} cancelled.",
+    "instructions": "Press Space to pick up the screenshot, arrow keys to move it, Space to drop it, Escape to cancel.",
+    "move": "Move {name}, position {position}",
+    "remove": "Remove {name}",
+    "unused": "Not used by this template",
+    "portrait": "Portrait",
+    "landscape": "Landscape",
+    "defaultName": "screenshot",
+    "reading": "Reading…",
+    "add": "Add screenshots",
+    "remainingOne": "{count} left",
+    "remainingOther": "{count} left",
+    "limit": "{max} screenshots maximum.",
+    "fileError": "{name}: {message}"
+  },
+  "swatch": {
+    "hex": "Hex",
+    "hexAria": "Hex code",
+    "suggested": "Suggested colors",
+    "colorAria": "Color {color}"
+  },
+  "pills": {
+    "remove": "Remove {pill}"
+  },
+  "mockups": {
+    "desktopPlaceholder": "Desktop screenshot",
+    "mobilePlaceholder": "Mobile screenshot"
+  },
+  "errors": {
+    "previewNotFound": "Preview not found.",
+    "captureRefused": "The browser refused the capture (not enough memory?). Try on a computer.",
+    "unsupportedFormat": "Unsupported format. Use {formats}.",
+    "imageTooLarge": "Image too large: 10 MB maximum.",
+    "readFailed": "Could not read the file.",
+    "corrupt": "Unreadable or corrupted image.",
+    "importFailed": "Import failed."
+  },
+  "defaults": {
+    "badge": "Category · Industry",
+    "nameMain": "My",
+    "nameAccent": "App",
+    "description": "Describe in one sentence what your app does and who it is for.",
+    "chipKeyFeature": "Key feature",
+    "chipResponsive": "Responsive",
+    "chipOpenSource": "Open source",
+    "footer": "myapp.com",
+    "browserUrl": "myapp.com"
+  }
+}

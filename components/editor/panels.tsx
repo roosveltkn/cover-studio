@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react"
 
+import { useTranslations } from "@/i18n/provider"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
 import type { SectionId } from "@/types/cover"
@@ -12,19 +13,10 @@ import { SchemaField } from "./schema-field"
 
 export type PanelId = "templates" | SectionId
 
-const TITLES: Record<PanelId, { title: string; description: string }> = {
-  templates: { title: "Modèles", description: "Vos captures et vos textes, mis en page de 5 façons." },
-  content: { title: "Texte", description: "Pastille, nom, description et fonctionnalités." },
-  colors: { title: "Couleurs", description: "Une seule couleur : toute la palette en découle." },
-  mockups: {
-    title: "Captures",
-    description: "Jusqu'à 6 captures, placées selon leur ordre. Rien n'est envoyé en ligne.",
-  },
-  export: { title: "Télécharger", description: "Export PNG en taille réelle." },
-}
-
 export function Panel({ id }: { id: PanelId }) {
-  const { title, description } = TITLES[id]
+  const t = useTranslations("panels")
+  const title = t(`${id}Title`)
+  const description = t(`${id}Description`)
   const templateId = useCoverStore((state) => state.config.template)
 
   return (
@@ -55,6 +47,7 @@ function Rows({ children }: { children: ReactNode }) {
 }
 
 function TemplatesPanel() {
+  const t = useTranslations("templates")
   const config = useCoverStore((state) => state.config)
   const setField = useCoverStore((state) => state.setField)
   const active = getTemplate(config.template).id
@@ -81,8 +74,8 @@ function TemplatesPanel() {
               <FitPreview template={template} config={{ ...config, template: template.id }} />
             </span>
             <span className="flex flex-col">
-              <span className="text-sm font-semibold">{template.name}</span>
-              <span className="text-xs text-muted-foreground">{template.description}</span>
+              <span className="text-sm font-semibold">{t(template.nameKey)}</span>
+              <span className="text-xs text-muted-foreground">{t(template.descriptionKey)}</span>
             </span>
           </button>
         )

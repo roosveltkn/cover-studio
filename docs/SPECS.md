@@ -26,7 +26,7 @@ Les développeurs ont besoin de visuels de présentation pour leurs applications
 ### 2.2 Hors V1
 - Plusieurs templates
 - Autres ratios d'export
-- Localisation / multi-langues
+- ~~Localisation / multi-langues~~ : livrée en fr/en, voir [I18N.md](./I18N.md)
 - CLI et GitHub Action
 - Comptes utilisateurs, sauvegarde cloud, backend
 
@@ -281,7 +281,7 @@ Un template ajouté = un dossier dans `src/templates/` + une entrée dans le reg
 | **V1** | Template unique, contenu complet, couleur de marque, 2 captures, export PNG 2400×1500 |
 | **V1.1** | Thème navigateur, override de la couleur du nom, halo et grille, recadrage vertical |
 | **V2** | Inversion de layout, ratios supplémentaires, échelle 2×, système multi-templates, premiers templates communautaires |
-| **Plus tard** | CLI / GitHub Action, localisation, export WebP |
+| **Plus tard** | CLI / GitHub Action, export WebP |
 
 ## 14. Risques
 
