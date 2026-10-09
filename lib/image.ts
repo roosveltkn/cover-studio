@@ -1,14 +1,29 @@
 import type { ImageAsset } from "@/types/cover"
 
 export const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"]
+/** Les icônes acceptent aussi le SVG, courant pour les logos. */
+export const ICON_TYPES = [...ACCEPTED_TYPES, "image/svg+xml"]
 export const MAX_SIZE = 10 * 1024 * 1024
+/** Plus grand côté retenu pour un SVG, vectoriel donc sans taille propre. */
+const SVG_FALLBACK_SIZE = 512
 
 export class ImageError extends Error {}
 
+const FORMAT_NAMES: Record<string, string> = {
+  "image/png": "PNG",
+  "image/jpeg": "JPEG",
+  "image/webp": "WebP",
+  "image/svg+xml": "SVG",
+}
+
+export function formatList(types: string[]) {
+  return types.map((type) => FORMAT_NAMES[type] ?? type).join(", ")
+}
+
 /** Lit un fichier image localement (aucune requête réseau). */
-export async function readImage(file: File): Promise<ImageAsset> {
-  if (!ACCEPTED_TYPES.includes(file.type)) {
-    throw new ImageError("Format non pris en charge. Utilisez PNG, JPEG ou WebP.")
+export async function readImage(file: File, types = ACCEPTED_TYPES): Promise<ImageAsset> {
+  if (!types.includes(file.type)) {
+    throw new ImageError(`Format non pris en charge. Utilisez ${formatList(types)}.`)
   }
   if (file.size > MAX_SIZE) {
     throw new ImageError("Image trop lourde : 10 Mo maximum.")
@@ -31,12 +46,23 @@ export async function readImage(file: File): Promise<ImageAsset> {
   return {
     id: crypto.randomUUID(),
     dataUrl,
-    width: image.naturalWidth,
-    height: image.naturalHeight,
+    ...dimensions(image, file.type === "image/svg+xml"),
     name: file.name,
     ...sampleColors(image),
     dominant: dominantColor(image),
   }
+}
+
+/**
+ * Un SVG est vectoriel : sa taille intrinsèque (souvent 150 × 150 par défaut
+ * dans les navigateurs) n'a pas de sens. On garde ses proportions sur 512 px.
+ */
+function dimensions(image: HTMLImageElement, vector: boolean) {
+  const width = image.naturalWidth || SVG_FALLBACK_SIZE
+  const height = image.naturalHeight || SVG_FALLBACK_SIZE
+  if (!vector) return { width, height }
+  const scale = SVG_FALLBACK_SIZE / Math.max(width, height)
+  return { width: Math.round(width * scale), height: Math.round(height * scale) }
 }
 
 /** Échantillonne la luminance moyenne et la couleur de la bande haute. */

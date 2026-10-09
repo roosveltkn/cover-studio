@@ -1,6 +1,6 @@
 import { createContext, useContext, type CSSProperties } from "react"
 
-import type { CoverConfig } from "@/types/cover"
+import type { CoverConfig, ImageAsset } from "@/types/cover"
 
 export type TextColors = {
   text: string
@@ -82,19 +82,32 @@ export function TextBlock({
         </div>
       )}
 
-      <h1
+      <div
         style={{
-          margin: "38px 0 0",
-          fontSize,
-          fontWeight: 700,
-          lineHeight: 1.08,
-          letterSpacing: "-0.02em",
-          overflowWrap: "anywhere",
+          marginTop: 38,
+          maxWidth: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: centered ? "center" : "flex-start",
+          gap: Math.round(fontSize * 0.3),
         }}
       >
-        {content.nameMain}
-        {content.nameAccent && <span style={{ color: colors.accent }}>{content.nameAccent}</span>}
-      </h1>
+        {content.icon && <AppIcon image={content.icon} size={Math.round(fontSize * 1.1)} />}
+        <h1
+          style={{
+            margin: 0,
+            minWidth: 0,
+            fontSize,
+            fontWeight: 700,
+            lineHeight: 1.08,
+            letterSpacing: "-0.02em",
+            overflowWrap: "anywhere",
+          }}
+        >
+          {content.nameMain}
+          {content.nameAccent && <span style={{ color: colors.accent }}>{content.nameAccent}</span>}
+        </h1>
+      </div>
 
       {content.description && (
         <p
@@ -124,6 +137,35 @@ export function TextBlock({
         />
       )}
     </div>
+  )
+}
+
+/** Icône d'app aux coins arrondis façon iOS (≈ 22 % du côté). */
+export function AppIcon({
+  image,
+  size,
+  style,
+}: {
+  image: ImageAsset
+  size: number
+  style?: CSSProperties
+}) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={image.dataUrl}
+      alt=""
+      style={{
+        width: size,
+        height: size,
+        flexShrink: 0,
+        objectFit: "cover",
+        borderRadius: size * 0.225,
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.12)",
+        display: "block",
+        ...style,
+      }}
+    />
   )
 }
 

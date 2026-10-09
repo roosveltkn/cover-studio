@@ -71,6 +71,7 @@ export function ShowcaseTemplate({ config }: { config: PlacedConfig }) {
         <BrowserFrame
           image={mockups.desktopImage}
           url={content.browserUrl}
+          favicon={content.icon}
           theme={resolveBrowserTheme(mockups)}
           width={BROWSER.width}
           contentHeight={browserContentHeight(mockups.desktopImage, BROWSER.width, BROWSER_CONTENT)}

@@ -70,6 +70,7 @@ export function PerspectiveTemplate({ config }: { config: PlacedConfig }) {
         <BrowserFrame
           image={mockups.desktopImage}
           url={content.browserUrl}
+          favicon={content.icon}
           theme={resolveBrowserTheme(mockups)}
           width={BROWSER.width}
           contentHeight={contentHeight}

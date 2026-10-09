@@ -20,6 +20,8 @@ export type CoverConfig = {
   /** Identifiant du template dans le registre. */
   template: string
   content: {
+    /** Icône de l'application, affichée à côté du nom. */
+    icon?: ImageAsset
     badge: string
     nameMain: string
     nameAccent?: string
@@ -93,6 +95,7 @@ export type FieldSchema =
   | (FieldBase & { type: "list"; placeholder?: string })
   | (FieldBase & { type: "color"; presets?: string[] })
   | (FieldBase & { type: "gallery" })
+  | (FieldBase & { type: "icon" })
   | (FieldBase & {
       type: "segmented"
       options: { value: string; label: string }[]

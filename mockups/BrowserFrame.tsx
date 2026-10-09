@@ -31,6 +31,8 @@ type BrowserFrameProps = {
   width: number
   contentHeight: number
   cropY?: number
+  /** Icône de l'app, affichée en favicon dans la barre d'adresse. */
+  favicon?: ImageAsset
   style?: CSSProperties
 }
 
@@ -41,6 +43,7 @@ export function BrowserFrame({
   width,
   contentHeight,
   cropY = 0,
+  favicon,
   style,
 }: BrowserFrameProps) {
   const t = THEMES[theme]
@@ -97,6 +100,14 @@ export function BrowserFrame({
           }}
         >
           <Lock size={18} strokeWidth={2.5} color="#d4a017" />
+          {favicon && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={favicon.dataUrl}
+              alt=""
+              style={{ width: 22, height: 22, borderRadius: 5, objectFit: "cover", flexShrink: 0 }}
+            />
+          )}
           <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
             {url}
           </span>

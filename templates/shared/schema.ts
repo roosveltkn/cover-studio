@@ -70,6 +70,13 @@ export const baseSchema: FieldSchema[] = [
     presets: COLOR_PRESETS,
   },
   {
+    type: "icon",
+    section: "mockups",
+    path: "content.icon",
+    label: "Icône de l'application",
+    help: "Carrée de préférence, 512 × 512 px ou plus. Affichée à côté du nom, hors des 6 captures.",
+  },
+  {
     type: "gallery",
     section: "mockups",
     path: "mockups.images",

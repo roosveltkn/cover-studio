@@ -104,6 +104,7 @@ export function BentoTemplate({ config }: { config: PlacedConfig }) {
           <BrowserFrame
             image={mockups.desktopImage}
             url={content.browserUrl}
+            favicon={content.icon}
             theme={resolveBrowserTheme(mockups)}
             width={browserWidth}
             contentHeight={browserHeight}

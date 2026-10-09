@@ -50,7 +50,11 @@ export const useCoverStore = create<CoverState>()(
       skipHydration: true,
       // Les images ne sont pas persistées en V1 (poids).
       partialize: ({ config }) => ({
-        config: { ...config, mockups: { ...config.mockups, images: [] } },
+        config: {
+          ...config,
+          content: { ...config.content, icon: undefined },
+          mockups: { ...config.mockups, images: [] },
+        },
       }),
       merge: (persisted, current) => {
         const saved = (persisted as Partial<CoverState> | undefined)?.config
@@ -60,7 +64,11 @@ export const useCoverStore = create<CoverState>()(
           config: {
             ...current.config,
             ...saved,
-            content: { ...current.config.content, ...saved.content },
+            content: {
+              ...current.config.content,
+              ...saved.content,
+              icon: current.config.content.icon,
+            },
             style: { ...current.config.style, ...saved.style },
             // Les captures en mémoire priment : elles ne sont jamais sauvegardées.
             mockups: {

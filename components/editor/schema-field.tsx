@@ -1,12 +1,15 @@
 "use client"
 
+import { FileInput } from "@/components/canva/file-input"
 import { FormField } from "@/components/canva/form-field"
 import { ImageGallery } from "@/components/canva/image-gallery"
 import { PillsInput } from "@/components/canva/pills-input"
 import { Swatch } from "@/components/canva/swatch"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { ICON_TYPES } from "@/lib/image"
 import { getPath } from "@/lib/path"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
@@ -91,6 +94,32 @@ export function SchemaField({ field }: { field: FieldSchema }) {
           />
         </FormField>
       )
+
+    case "icon": {
+      const icon = value as ImageAsset | undefined
+      const brandColor = config.style.brandColor
+      const iconColor = icon?.dominant
+      return (
+        <FormField id={id} label={field.label} help={field.help}>
+          <FileInput id={id} value={icon} onChange={set} types={ICON_TYPES} contain />
+          {iconColor && iconColor.toLowerCase() !== brandColor.toLowerCase() && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="self-start"
+              onClick={() => setField("style.brandColor", iconColor)}
+            >
+              <span
+                aria-hidden
+                className="size-3.5 rounded-full ring-1 ring-foreground/15"
+                style={{ background: iconColor }}
+              />
+              Utiliser la couleur de l&apos;icône
+            </Button>
+          )}
+        </FormField>
+      )
+    }
 
     case "gallery": {
       const template = getTemplate(config.template)

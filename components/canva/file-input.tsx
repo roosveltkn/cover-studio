@@ -4,7 +4,7 @@ import { Trash2, Upload } from "lucide-react"
 import { useState, type DragEvent } from "react"
 
 import { Button } from "@/components/ui/button"
-import { ACCEPTED_TYPES, ImageError, readImage } from "@/lib/image"
+import { ACCEPTED_TYPES, ImageError, formatList, readImage } from "@/lib/image"
 import { cn } from "@/lib/utils"
 import type { ImageAsset } from "@/types/cover"
 
@@ -12,10 +12,20 @@ type FileInputProps = {
   id: string
   value?: ImageAsset
   onChange: (value: ImageAsset | undefined) => void
+  /** Types MIME acceptés, PNG, JPEG et WebP par défaut. */
+  types?: string[]
+  /** Aperçu carré non rogné, pour une icône. */
+  contain?: boolean
 }
 
 /** Zone de dépôt puis carte fichier (FileInput + FileInputItem de Canva). */
-export function FileInput({ id, value, onChange }: FileInputProps) {
+export function FileInput({
+  id,
+  value,
+  onChange,
+  types = ACCEPTED_TYPES,
+  contain = false,
+}: FileInputProps) {
   const [error, setError] = useState<string>()
   const [dragging, setDragging] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -25,7 +35,7 @@ export function FileInput({ id, value, onChange }: FileInputProps) {
     setError(undefined)
     setLoading(true)
     try {
-      onChange(await readImage(file))
+      onChange(await readImage(file, types))
     } catch (err) {
       setError(err instanceof ImageError ? err.message : "Import impossible.")
     } finally {
@@ -46,7 +56,10 @@ export function FileInput({ id, value, onChange }: FileInputProps) {
         <img
           src={value.dataUrl}
           alt=""
-          className="size-12 shrink-0 rounded-md object-cover object-top ring-1 ring-foreground/10"
+          className={cn(
+            "size-12 shrink-0 rounded-md ring-1 ring-foreground/10",
+            contain ? "bg-muted object-contain p-1" : "object-cover object-top"
+          )}
         />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{value.name}</p>
@@ -86,12 +99,12 @@ export function FileInput({ id, value, onChange }: FileInputProps) {
           {loading ? "Lecture…" : "Importer une image"}
         </span>
         <span className="text-xs text-muted-foreground">
-          ou glisser-déposer · PNG, JPEG, WebP · 10 Mo max
+          ou glisser-déposer · {formatList(types)} · 10 Mo max
         </span>
         <input
           id={id}
           type="file"
-          accept={ACCEPTED_TYPES.join(",")}
+          accept={types.join(",")}
           className="sr-only"
           aria-invalid={Boolean(error)}
           onChange={(event) => {
