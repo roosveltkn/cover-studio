@@ -1,8 +1,11 @@
 {
   "meta": {
-    "siteDescription": "Générez une cover de présentation pour votre application à partir de vos captures, sans compte et sans serveur.",
+    "siteTitle": "Cover Studio · Générateur de cover d'app gratuit et open source",
+    "siteDescription": "Générez gratuitement une cover pro pour votre app, votre README ou LinkedIn à partir de vos captures. Open source, sans compte, 100 % dans votre navigateur.",
+    "keywords": "générateur de cover, cover d'application, mockup d'application, capture d'écran, README, Open Graph, open source, gratuit",
     "ogImageAlt": "Logo Cover Studio",
-    "editorTitle": "Éditeur"
+    "editorTitle": "Éditeur",
+    "appFeatures": "Mise en page automatique à partir d'une capture, 5 modèles, couleur de marque dérivée de l'interface, export PNG haute résolution, aucun envoi de données"
   },
   "localeSwitcher": {
     "label": "Langue"
@@ -23,7 +26,39 @@
     "step2Title": "Personnalisez",
     "step2Text": "Nom, description, fonctionnalités et couleur de marque.",
     "step3Title": "Téléchargez",
-    "step3Text": "Un PNG 2400 × 1500 prêt pour votre README, portfolio ou LinkedIn."
+    "step3Text": "Un PNG 2400 × 1500 prêt pour votre README, portfolio ou LinkedIn.",
+    "github": "GitHub",
+    "githubAria": "Voir le code source sur GitHub (s'ouvre dans un nouvel onglet)",
+    "openSourceTitle": "Open source, de bout en bout",
+    "openSourceText": "Cover Studio est publié sous licence MIT. Le code est public : lisez-le, hébergez-le vous-même, améliorez-le.",
+    "osFreeTitle": "Gratuit, sans limite",
+    "osFreeText": "Aucun compte, aucun filigrane, aucun quota d'exports.",
+    "osPrivateTitle": "Privé par conception",
+    "osPrivateText": "Tout est généré dans votre navigateur : vos captures ne quittent jamais votre appareil.",
+    "osContribTitle": "Ouvert aux contributions",
+    "osContribText": "Nouveaux modèles, traductions, corrections : les pull requests sont les bienvenues.",
+    "viewOnGithub": "Voir sur GitHub",
+    "reportIssue": "Signaler un problème"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "q1": "Cover Studio est-il vraiment gratuit ?",
+    "a1": "Oui. C'est un projet open source sous licence MIT : pas de compte, pas de filigrane et pas de limite d'exports.",
+    "q2": "Mes captures sont-elles envoyées sur un serveur ?",
+    "a2": "Non. L'import, la mise en page et l'export PNG se font entièrement dans votre navigateur. Aucune image n'est transmise.",
+    "q3": "Quels formats puis-je exporter ?",
+    "a3": "Des PNG : 2400 × 1500 pour une cover, ou les formats Open Graph, GitHub, X / Twitter, Product Hunt et carré, avec une option haute résolution 2×.",
+    "q4": "Puis-je l'héberger moi-même ou contribuer ?",
+    "a4": "Oui. Le site est entièrement statique : clonez le dépôt GitHub, lancez le build et hébergez le dossier généré où vous voulez. Les contributions sont les bienvenues."
+  },
+  "footer": {
+    "navLabel": "Liens du projet",
+    "tagline": "Une cover pro pour votre app, à partir de vos captures. Gratuit et open source.",
+    "projectTitle": "Projet",
+    "github": "Code source sur GitHub",
+    "issues": "Signaler un problème",
+    "license": "Licence MIT",
+    "copyright": "© {year} Cover Studio. Sous licence MIT."
   },
   "editor": {
     "settingsLabel": "Réglages",

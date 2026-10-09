@@ -1,6 +1,20 @@
-import { Landing } from "@/components/landing/landing"
+import { notFound } from "next/navigation"
 
-// La langue est validée et fournie par le layout : cette page n'en dépend pas.
-export default function Page() {
-  return <Landing />
+import { Landing } from "@/components/landing/landing"
+import { hasLocale } from "@/i18n/routing"
+import { landingStructuredData, serializeJsonLd } from "@/lib/structured-data"
+
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  if (!hasLocale(locale)) notFound()
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(landingStructuredData(locale)) }}
+      />
+      <Landing />
+    </>
+  )
 }

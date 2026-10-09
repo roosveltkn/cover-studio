@@ -1,8 +1,11 @@
 {
   "meta": {
-    "siteDescription": "Generate a presentation cover for your app from your screenshots, with no account and no server.",
+    "siteTitle": "Cover Studio · Free open-source app cover generator",
+    "siteDescription": "Generate a pro cover for your app, README or LinkedIn from your screenshots. Free, open source, no account, 100% in your browser.",
+    "keywords": "cover generator, app cover, app mockup, screenshot, README, Open Graph, open source, free",
     "ogImageAlt": "Cover Studio logo",
-    "editorTitle": "Editor"
+    "editorTitle": "Editor",
+    "appFeatures": "Automatic layout from a screenshot, 5 templates, brand color derived from your interface, high-resolution PNG export, no data upload"
   },
   "localeSwitcher": {
     "label": "Language"
@@ -23,7 +26,39 @@
     "step2Title": "Customize",
     "step2Text": "Name, description, features and brand color.",
     "step3Title": "Download",
-    "step3Text": "A 2400 × 1500 PNG ready for your README, portfolio or LinkedIn."
+    "step3Text": "A 2400 × 1500 PNG ready for your README, portfolio or LinkedIn.",
+    "github": "GitHub",
+    "githubAria": "View the source code on GitHub (opens in a new tab)",
+    "openSourceTitle": "Open source, end to end",
+    "openSourceText": "Cover Studio is released under the MIT license. The code is public: read it, self-host it, improve it.",
+    "osFreeTitle": "Free, no limits",
+    "osFreeText": "No account, no watermark, no export quota.",
+    "osPrivateTitle": "Private by design",
+    "osPrivateText": "Everything is generated in your browser: your screenshots never leave your device.",
+    "osContribTitle": "Open to contributions",
+    "osContribText": "New templates, translations, fixes: pull requests are welcome.",
+    "viewOnGithub": "View on GitHub",
+    "reportIssue": "Report an issue"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "q1": "Is Cover Studio really free?",
+    "a1": "Yes. It is an open-source project under the MIT license: no account, no watermark and no export limit.",
+    "q2": "Are my screenshots sent to a server?",
+    "a2": "No. Import, layout and PNG export all happen in your browser. No image is ever uploaded.",
+    "q3": "Which formats can I export?",
+    "a3": "PNG files: 2400 × 1500 for a cover, or Open Graph, GitHub, X / Twitter, Product Hunt and square formats, with an optional 2× high-resolution mode.",
+    "q4": "Can I self-host it or contribute?",
+    "a4": "Yes. The site is fully static: clone the GitHub repository, run the build and host the generated folder anywhere. Contributions are welcome."
+  },
+  "footer": {
+    "navLabel": "Project links",
+    "tagline": "A pro cover for your app, built from your screenshots. Free and open source.",
+    "projectTitle": "Project",
+    "github": "Source code on GitHub",
+    "issues": "Report an issue",
+    "license": "MIT license",
+    "copyright": "© {year} Cover Studio. Released under the MIT license."
   },
   "editor": {
     "settingsLabel": "Settings",

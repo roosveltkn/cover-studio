@@ -17,6 +17,8 @@ export async function generateMetadata({
 
   return {
     title: t("editorTitle"),
+    // L'éditeur n'a rien à indexer : sans capture importée, il renvoie vers l'accueil.
+    robots: { index: false, follow: true },
     alternates: {
       canonical: `/${locale}/editor`,
       languages: Object.fromEntries(locales.map((l) => [l, `/${l}/editor`])),

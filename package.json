@@ -1,6 +1,12 @@
 {
   "name": "visual-app-generator",
   "version": "0.0.1",
+  "description": "Free, open-source cover generator for your app: import a screenshot, get a ready-to-share PNG.",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/RoosveltK/cover-studio.git" },
+  "bugs": { "url": "https://github.com/RoosveltK/cover-studio/issues" },
+  "homepage": "https://github.com/RoosveltK/cover-studio#readme",
+  "keywords": ["cover-generator", "mockup", "screenshot", "open-graph", "nextjs", "open-source"],
   "type": "module",
   "private": true,
   "scripts": {

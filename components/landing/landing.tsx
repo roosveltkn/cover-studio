@@ -14,16 +14,23 @@ import { useEffect, useState } from "react"
 
 import { FileInput } from "@/components/canva/file-input"
 import { FitPreview } from "@/components/editor/fit-preview"
+import { GithubIcon } from "@/components/github-icon"
 import { LocaleSwitcher } from "@/components/locale-switcher"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "@/i18n/navigation"
 import { useLocale, useTranslations } from "@/i18n/provider"
+import { LINKS } from "@/lib/site"
 import { isPortrait } from "@/lib/slots"
+import { cn } from "@/lib/utils"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
 import { defaultConfig } from "@/templates/showcase/defaults"
 import type { ImageAsset } from "@/types/cover"
+
+import { Faq } from "./faq"
+import { OpenSourceSection } from "./open-source"
+import { SiteFooter } from "./site-footer"
 
 // Textes dans le namespace `landing` : seules les icônes et les clés vivent ici.
 const STEPS: { icon: LucideIcon; title: "step1Title" | "step2Title" | "step3Title"; text: "step1Text" | "step2Text" | "step3Text" }[] = [
@@ -71,7 +78,19 @@ export function Landing() {
           <Sparkles className="size-4" />
         </span>
         <span className="font-semibold">Cover Studio</span>
-        <LocaleSwitcher className="ml-auto" />
+        <div className="ml-auto flex items-center gap-2">
+          <a
+            href={LINKS.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t("githubAria")}
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1.5")}
+          >
+            <GithubIcon className="size-4" />
+            {t("github")}
+          </a>
+          <LocaleSwitcher />
+        </div>
       </header>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-12 px-4 pb-16">
@@ -143,7 +162,12 @@ export function Landing() {
             ))}
           </ol>
         </section>
+
+        <OpenSourceSection />
+        <Faq />
       </main>
+
+      <SiteFooter />
     </div>
   )
 }

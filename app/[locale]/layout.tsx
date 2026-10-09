@@ -11,6 +11,7 @@ import { MESSAGES } from "@/i18n/messages"
 import { I18nProvider } from "@/i18n/provider"
 import { OPEN_GRAPH_LOCALES, hasLocale, locales } from "@/i18n/routing"
 import { createTranslator } from "@/i18n/translator"
+import { LINKS, SITE_URL } from "@/lib/site"
 import { cn } from "@/lib/utils"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
@@ -47,17 +48,25 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
   if (!hasLocale(locale)) return {}
 
   const t = createTranslator(MESSAGES[locale], "meta")
+  const title = t("siteTitle")
   const description = t("siteDescription")
 
   return {
     // URL publique du site, nécessaire aux images Open Graph absolues.
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-    title: { default: "Cover Studio", template: "%s · Cover Studio" },
+    metadataBase: new URL(SITE_URL),
+    title: { default: title, template: "%s · Cover Studio" },
     description,
+    keywords: t("keywords").split(", "),
     applicationName: "Cover Studio",
+    authors: [{ name: "Cover Studio", url: LINKS.github }],
+    category: "design",
     alternates: {
       canonical: `/${locale}`,
-      languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
+      // x-default : la page racine, qui laisse choisir la langue.
+      languages: {
+        ...Object.fromEntries(locales.map((l) => [l, `/${l}`])),
+        "x-default": "/",
+      },
     },
     icons: {
       icon: [
@@ -71,17 +80,19 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
     },
     openGraph: {
       type: "website",
+      url: `/${locale}`,
       siteName: "Cover Studio",
-      title: "Cover Studio",
+      title,
       description,
       locale: OPEN_GRAPH_LOCALES[locale],
+      alternateLocale: locales.filter((l) => l !== locale).map((l) => OPEN_GRAPH_LOCALES[l]),
       images: [
         { url: "/cover-studio-preview.jpg", width: 840, height: 725, alt: t("ogImageAlt") },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Cover Studio",
+      title,
       description,
       images: ["/cover-studio-preview.jpg"],
     },
