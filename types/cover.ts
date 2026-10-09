@@ -75,6 +75,9 @@ export type PlacedConfig = Omit<CoverConfig, "mockups"> & { mockups: PlacedMocku
 
 export type SectionId = "content" | "colors" | "mockups" | "export"
 
+/** Panneau ouvert dans l'éditeur : les modèles, ou une section de champs. */
+export type PanelId = "templates" | SectionId
+
 /** Clé de message du namespace `fields` : le schéma ne porte aucun texte traduit. */
 type FieldKey = MessageKey<"fields">
 

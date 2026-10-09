@@ -5,12 +5,18 @@ import { defaultLocale, type Locale } from "@/i18n/routing"
 import { setPath } from "@/lib/path"
 import { isPortrait } from "@/lib/slots"
 import { DEFAULT_CONFIG, DEFAULT_TEMPLATE, localizeContent } from "@/templates/showcase/defaults"
-import type { CoverConfig, ImageAsset } from "@/types/cover"
+import type { CoverConfig, ImageAsset, PanelId } from "@/types/cover"
 
 type CoverState = {
   config: CoverConfig
   /** Langue de la page, jamais persistée : elle vient de l'URL. */
   locale: Locale
+  /**
+   * Panneau ouvert de l'éditeur. Dans le store plutôt qu'en état local : changer de
+   * langue recrée la page, et l'utilisateur doit retrouver son panneau.
+   */
+  activePanel: PanelId
+  setActivePanel: (panel: PanelId) => void
   setField: (path: string, value: unknown) => void
   startFrom: (image: ImageAsset) => void
   /** Passe les textes d'exemple dans la langue de la page, sans toucher à ceux modifiés. */
@@ -22,6 +28,8 @@ export const useCoverStore = create<CoverState>()(
     (set) => ({
       config: DEFAULT_CONFIG,
       locale: defaultLocale,
+      activePanel: "templates",
+      setActivePanel: (activePanel) => set({ activePanel }),
       setField: (path, value) =>
         set((state) => ({ config: setPath(state.config, path, value) })),
       applyLocale: (locale) =>

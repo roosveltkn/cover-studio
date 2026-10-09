@@ -5,13 +5,13 @@ import type { ReactNode } from "react"
 import { useTranslations } from "@/i18n/provider"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
-import type { SectionId } from "@/types/cover"
+import type { PanelId } from "@/types/cover"
 
 import { ExportCard } from "./export-card"
 import { FitPreview } from "./fit-preview"
 import { SchemaField } from "./schema-field"
 
-export type PanelId = "templates" | SectionId
+export type { PanelId }
 
 export function Panel({ id }: { id: PanelId }) {
   const t = useTranslations("panels")

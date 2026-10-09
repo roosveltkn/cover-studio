@@ -7,14 +7,15 @@ import { useTranslations } from "@/i18n/provider"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 
 import { CanvasStage } from "./canvas-stage"
-import { Panel, type PanelId } from "./panels"
+import { Panel } from "./panels"
 import { SideRail } from "./side-rail"
 import { TopBar } from "./top-bar"
 
 export function Editor() {
   const t = useTranslations("editor")
   const router = useRouter()
-  const [panel, setPanel] = useState<PanelId>("templates")
+  const panel = useCoverStore((state) => state.activePanel)
+  const setPanel = useCoverStore((state) => state.setActivePanel)
   // Les captures ne sont pas persistées : sans elles à l'arrivée (accès direct,
   // rechargement), on renvoie vers l'accueil. Ensuite, retirer toutes les
   // captures laisse l'éditeur ouvert, avec des emplacements vides.
