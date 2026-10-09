@@ -38,11 +38,12 @@ pnpm dev
    pnpm lint
    pnpm typecheck
    pnpm i18n:check
-   pnpm build
+   pnpm test
+   pnpm test:e2e
    pnpm format
    ```
 
-   La CI exécute les quatre premières commandes ; une PR ne peut être fusionnée que si elles passent.
+   `pnpm test:e2e` construit le site puis lance Playwright ; au premier lancement, installez le navigateur avec `pnpm exec playwright install chromium`. La CI exécute toutes ces commandes (sauf `format`) ; une PR ne peut être fusionnée que si elles passent. Les tests vivent dans `tests/` : un nouveau template est couvert automatiquement par les tests de contrat et d'export, il suffit qu'il passe.
 4. Ouvrez une PR vers `develop` (la branche de preview ; `main` ne reçoit que les releases) en remplissant le modèle. Pour tout changement visuel, joignez une
    capture d'écran ou une cover exportée avant / après.
 

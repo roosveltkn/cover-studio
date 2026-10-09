@@ -18,10 +18,12 @@ pnpm build          # static export to out/
 pnpm lint           # ESLint
 pnpm typecheck      # tsc --noEmit
 pnpm i18n:check     # translation consistency (keys, interpolation vars, hardcoded UI text)
+pnpm test           # Vitest unit tests (tests/unit)
+pnpm test:e2e       # builds then runs Playwright against out/ (tests/e2e)
 pnpm format         # Prettier (ts/tsx)
 ```
 
-CI runs lint, typecheck, i18n:check and build. There is no test suite. PRs target `develop`; `main` only receives releases. Commits follow Conventional Commits.
+CI runs lint, typecheck, i18n:check, unit tests, build and the Playwright E2E tests. All tests live in `tests/` (`tests/unit`, `tests/e2e`); `tests/unit/templates-contract.test.ts` and `tests/e2e/export.spec.ts` loop over the template registry, so a new template is covered without writing a test. E2E selectors use accessible roles and text read from `messages/*.json`, never hardcoded labels. PRs target `develop`; `main` only receives releases. Commits follow Conventional Commits.
 
 ## Architecture
 
