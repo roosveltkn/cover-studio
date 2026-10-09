@@ -23,21 +23,21 @@ export function OpenSourceSection() {
   const t = useTranslations("landing")
 
   return (
-    <section aria-labelledby="open-source-title" className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1">
-        <h2 id="open-source-title" className="text-xl font-semibold tracking-tight">
+    <section aria-labelledby="open-source-title" className="flex flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <h2 id="open-source-title" className="text-2xl font-semibold tracking-tight">
           {t("openSourceTitle")}
         </h2>
         <p className="max-w-2xl text-sm text-muted-foreground">{t("openSourceText")}</p>
       </div>
 
-      <ul className="grid gap-4 sm:grid-cols-3">
+      <ul className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3">
         {POINTS.map(({ icon: Icon, title, text }) => (
           <li
             key={title}
-            className="flex flex-col gap-3 rounded-2xl bg-background p-5 ring-1 ring-foreground/5"
+            className="flex flex-col gap-4 bg-background p-6"
           >
-            <span className="grid size-10 place-items-center rounded-xl bg-secondary text-secondary-foreground">
+            <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
               <Icon className="size-5" />
             </span>
             <span className="flex flex-col gap-1">

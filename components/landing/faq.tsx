@@ -14,15 +14,15 @@ export function Faq() {
   const t = useTranslations("faq")
 
   return (
-    <section aria-labelledby="faq-title" className="flex flex-col gap-5">
-      <h2 id="faq-title" className="text-xl font-semibold tracking-tight">
+    <section aria-labelledby="faq-title" className="flex flex-col gap-8">
+      <h2 id="faq-title" className="text-2xl font-semibold tracking-tight">
         {t("title")}
       </h2>
       <div className="flex flex-col gap-3">
         {FAQ_ITEMS.map(({ question, answer }) => (
           <details
             key={question}
-            className="group rounded-2xl bg-background px-5 ring-1 ring-foreground/5"
+            className="group rounded-xl border border-border bg-background px-5"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg py-4 text-sm font-semibold outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
               {t(question)}
