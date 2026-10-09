@@ -4,6 +4,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 
 import { useLocale, useTranslations } from "@/i18n/provider"
+import { trackCoverGenerated, trackExportFailed } from "@/lib/analytics"
 import { ExportError, coverFilename, exportCover } from "@/lib/export"
 import { getExportSize } from "@/lib/export-sizes"
 import { useCoverStore } from "@/stores/cover-store"
@@ -27,6 +28,7 @@ export function useExport() {
     const started = performance.now()
     try {
       await exportCover(canvas, output, filename, scale, config.style.fontFamily)
+      trackCoverGenerated({ template: config.template, size: output.id, scale })
       const seconds = new Intl.NumberFormat(locale, {
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
@@ -35,6 +37,7 @@ export function useExport() {
         description: t("toastSuccessDescription", { filename, seconds }),
       })
     } catch (error) {
+      trackExportFailed({ reason: error instanceof ExportError ? error.code : "unknown" })
       toast.error(t("toastError"), {
         description:
           error instanceof ExportError

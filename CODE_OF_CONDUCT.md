@@ -36,6 +36,6 @@ personne représente publiquement le projet.
 ## Signalement
 
 Signalez un comportement inacceptable aux mainteneurs via le
-[signalement privé GitHub](https://github.com/RoosveltK/cover-studio/security/advisories/new)
+[signalement privé GitHub](https://github.com/roosveltkn/cover-studio/security/advisories/new)
 ou en les contactant directement depuis leur profil GitHub. Tous les signalements sont examinés
 avec sérieux et confidentialité.

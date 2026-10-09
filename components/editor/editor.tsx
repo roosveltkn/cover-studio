@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 
 import { useRouter } from "@/i18n/navigation"
 import { useTranslations } from "@/i18n/provider"
+import { trackEditorOpened } from "@/lib/analytics"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 
 import { CanvasStage } from "./canvas-stage"
@@ -26,6 +27,10 @@ export function Editor() {
   useEffect(() => {
     hydrateCoverStore()
   }, [])
+
+  useEffect(() => {
+    if (arrivedWithImage) trackEditorOpened()
+  }, [arrivedWithImage])
 
   useEffect(() => {
     if (!arrivedWithImage) router.replace("/")

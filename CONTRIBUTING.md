@@ -7,7 +7,7 @@ publiées sous la [licence MIT](./LICENSE) du projet.
 
 ## Avant de commencer
 
-- Pour un bug : cherchez d'abord dans les [issues](https://github.com/RoosveltK/cover-studio/issues),
+- Pour un bug : cherchez d'abord dans les [issues](https://github.com/roosveltkn/cover-studio/issues),
   puis ouvrez-en une avec le modèle « Bug ».
 - Pour une nouvelle fonctionnalité : ouvrez une issue « Fonctionnalité » **avant** de coder, pour
   vérifier qu'elle entre dans le périmètre (voir `docs/SPECS.md`, section « Non-objectifs »).

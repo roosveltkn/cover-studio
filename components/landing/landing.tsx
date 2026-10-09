@@ -22,6 +22,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "@/i18n/navigation"
 import { useLocale, useTranslations } from "@/i18n/provider"
+import { trackScreenshotImported } from "@/lib/analytics"
 import { LINKS } from "@/lib/site"
 import { isPortrait } from "@/lib/slots"
 import { cn } from "@/lib/utils"
@@ -57,6 +58,11 @@ export function Landing() {
   useEffect(() => {
     router.prefetch("/editor")
   }, [router])
+
+  function importImage(next?: ImageAsset) {
+    setImage(next)
+    if (next) trackScreenshotImported({ orientation: isPortrait(next) ? "portrait" : "landscape" })
+  }
 
   function start() {
     if (!image) return
@@ -126,7 +132,7 @@ export function Landing() {
                   <Label htmlFor="landing-image" className="text-[13px] font-semibold">
                     {t("imageLabel")}
                   </Label>
-                  <FileInput id="landing-image" value={image} onChange={setImage} />
+                  <FileInput id="landing-image" value={image} onChange={importImage} />
                 </div>
                 <Button size="lg" className="h-11 w-full text-base" disabled={!image} onClick={start}>
                   {t("createButton")}

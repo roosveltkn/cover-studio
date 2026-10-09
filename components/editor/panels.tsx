@@ -3,6 +3,7 @@
 import type { ReactNode } from "react"
 
 import { useTranslations } from "@/i18n/provider"
+import { trackTemplateSelected } from "@/lib/analytics"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
 import type { PanelId } from "@/types/cover"
@@ -62,7 +63,10 @@ function TemplatesPanel() {
             key={template.id}
             type="button"
             aria-pressed={selected}
-            onClick={() => setField("template", template.id)}
+            onClick={() => {
+              setField("template", template.id)
+              if (!selected) trackTemplateSelected({ template: template.id })
+            }}
             className="group flex flex-col gap-2 rounded-xl text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/60"
           >
             <span

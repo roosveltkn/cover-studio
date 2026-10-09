@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import { GoogleAnalytics } from "@next/third-parties/google"
 import { Geist_Mono, Inter, Montserrat, Playfair_Display, Poppins, Space_Grotesk } from "next/font/google"
 import { notFound } from "next/navigation"
 
@@ -11,6 +12,7 @@ import { MESSAGES } from "@/i18n/messages"
 import { I18nProvider } from "@/i18n/provider"
 import { OPEN_GRAPH_LOCALES, hasLocale, locales } from "@/i18n/routing"
 import { createTranslator } from "@/i18n/translator"
+import { GA_ID } from "@/lib/analytics"
 import { LINKS, SITE_URL } from "@/lib/site"
 import { cn } from "@/lib/utils"
 
@@ -151,6 +153,7 @@ export default async function RootLayout({ children, params }: Readonly<Props>) 
           </ThemeProvider>
         </I18nProvider>
       </body>
+      {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
     </html>
   )
 }

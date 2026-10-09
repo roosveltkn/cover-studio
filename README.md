@@ -7,7 +7,7 @@ Product Hunt, LinkedIn, portfolio).
 _English: a free, open-source cover generator for your app. Drop in screenshots, pick a template and a brand colour, export a ready-to-share PNG. Everything runs in your browser._
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![CI](https://github.com/RoosveltK/cover-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/RoosveltK/cover-studio/actions/workflows/ci.yml)
+[![CI](https://github.com/roosveltkn/cover-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/roosveltkn/cover-studio/actions/workflows/ci.yml)
 
 ## Fonctionnalités
 
@@ -24,7 +24,7 @@ _English: a free, open-source cover generator for your app. Drop in screenshots,
 Prérequis : [Node.js](https://nodejs.org) 20 ou plus et [pnpm](https://pnpm.io) 10.
 
 ```bash
-git clone https://github.com/RoosveltK/cover-studio.git
+git clone https://github.com/roosveltkn/cover-studio.git
 cd cover-studio
 pnpm install
 pnpm dev

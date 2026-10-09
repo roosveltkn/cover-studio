@@ -6,7 +6,7 @@ Ne créez **pas** d'issue publique pour une faille de sécurité.
 
 Utilisez le signalement privé de GitHub : onglet **Security** du dépôt →
 **Report a vulnerability**
-(<https://github.com/RoosveltK/cover-studio/security/advisories/new>).
+(<https://github.com/roosveltkn/cover-studio/security/advisories/new>).
 
 Indiquez si possible : la description du problème, les étapes pour le reproduire, la version ou le
 commit concerné et l'impact estimé.
