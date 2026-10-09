@@ -1,5 +1,6 @@
 import { getFontEmbedCSS, toBlob } from "html-to-image"
 
+import { getFont } from "@/lib/fonts"
 import type { CoverConfig } from "@/types/cover"
 
 export const EXPORT_NODE_ID = "cover-export-node"
@@ -11,16 +12,20 @@ export class ExportError extends Error {
   }
 }
 
-/** Seule la police du template est embarquée, et une seule fois par session. */
-let fontCSS: Promise<string> | undefined
+/** Seule la police choisie est embarquée, une fois par session et par police. */
+const fontCSS = new Map<string, Promise<string>>()
 
-function templateFontCSS(node: HTMLElement) {
-  fontCSS ??= getFontEmbedCSS(node).then((css) =>
-    (css.match(/@font-face\s*{[^}]*}/g) ?? [])
-      .filter((rule) => /font-family:\s*['"]?Poppins/i.test(rule))
-      .join("\n")
-  )
-  return fontCSS
+function templateFontCSS(node: HTMLElement, fontId: string | undefined) {
+  const { family } = getFont(fontId)
+  let css = fontCSS.get(family)
+  if (!css) {
+    const pattern = new RegExp(`font-family:\\s*['"]?${family}['"]?\\s*;`, "i")
+    css = getFontEmbedCSS(node).then((all) =>
+      (all.match(/@font-face\s*{[^}]*}/g) ?? []).filter((rule) => pattern.test(rule)).join("\n")
+    )
+    fontCSS.set(family, css)
+  }
+  return css
 }
 
 export function coverFilename(content: CoverConfig["content"], sizeId = "cover") {
@@ -42,13 +47,14 @@ export async function exportCover(
   canvas: { width: number; height: number },
   output: { width: number; height: number },
   filename: string,
-  scale: 1 | 2 = 1
+  scale: 1 | 2 = 1,
+  fontId?: string
 ) {
   const node = document.getElementById(EXPORT_NODE_ID)
   if (!node) throw new ExportError("previewNotFound")
 
   await document.fonts.ready
-  const fontEmbedCSS = await templateFontCSS(node)
+  const fontEmbedCSS = await templateFontCSS(node, fontId)
 
   let blob: Blob | null
   try {

@@ -1,6 +1,6 @@
 "use client"
 
-import { Download, Image, LayoutTemplate, Palette, Type, type LucideIcon } from "lucide-react"
+import { Download, Image, LayoutTemplate, Palette, Type, CaseSensitive, type LucideIcon } from "lucide-react"
 
 import { useTranslations } from "@/i18n/provider"
 import { cn } from "@/lib/utils"
@@ -10,6 +10,7 @@ import type { PanelId } from "./panels"
 const ITEMS: { id: PanelId; label: `rail${Capitalize<PanelId>}`; icon: LucideIcon }[] = [
   { id: "templates", label: "railTemplates", icon: LayoutTemplate },
   { id: "content", label: "railContent", icon: Type },
+  { id: "typography", label: "railTypography", icon: CaseSensitive },
   { id: "colors", label: "railColors", icon: Palette },
   { id: "mockups", label: "railMockups", icon: Image },
   { id: "export", label: "railExport", icon: Download },

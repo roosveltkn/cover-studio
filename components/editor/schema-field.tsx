@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { useLocale, useTranslations } from "@/i18n/provider"
 import { pluralSuffix } from "@/i18n/translator"
+import { FONTS, SCALE_MAX, SCALE_MIN, SCALE_STEP, fontStack, getFont } from "@/lib/fonts"
 import { ICON_TYPES } from "@/lib/image"
 import { getPath } from "@/lib/path"
 import { useCoverStore } from "@/stores/cover-store"
@@ -102,6 +103,62 @@ export function SchemaField({ field }: { field: FieldSchema }) {
           />
         </FormField>
       )
+
+    case "font": {
+      const current = getFont(value as string | undefined).id
+      return (
+        <FormField id={id} label={label} help={help}>
+          <div id={id} role="radiogroup" aria-label={label} className="grid grid-cols-2 gap-2">
+            {FONTS.map((font) => (
+              <button
+                key={font.id}
+                type="button"
+                role="radio"
+                aria-checked={font.id === current}
+                onClick={() => set(font.id)}
+                style={{ fontFamily: fontStack(font.id) }}
+                className={
+                  "h-11 rounded-lg border px-3 text-left text-sm outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 " +
+                  (font.id === current
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "hover:bg-foreground/5")
+                }
+              >
+                {font.label}
+              </button>
+            ))}
+          </div>
+        </FormField>
+      )
+    }
+
+    case "scale": {
+      const scale = (value as number | undefined) ?? 1
+      return (
+        <FormField id={id} label={label} help={help} counter={`${Math.round(scale * 100)} %`}>
+          <div className="flex items-center gap-3">
+            <input
+              id={id}
+              type="range"
+              min={SCALE_MIN}
+              max={SCALE_MAX}
+              step={SCALE_STEP}
+              value={scale}
+              onChange={(event) => set(Number(event.target.value))}
+              className="h-2 flex-1 cursor-pointer accent-primary"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={scale === 1}
+              onClick={() => set(1)}
+            >
+              {t("scaleReset")}
+            </Button>
+          </div>
+        </FormField>
+      )
+    }
 
     case "icon": {
       const icon = value as ImageAsset | undefined

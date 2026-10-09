@@ -1,6 +1,15 @@
 import { createContext, useContext, type CSSProperties } from "react"
 
-import type { CoverConfig, ImageAsset } from "@/types/cover"
+import { DEFAULT_FONT, fontStack } from "@/lib/fonts"
+import type { CoverConfig, ImageAsset, TextElement } from "@/types/cover"
+
+/** Police et tailles choisies par l'utilisateur, lues par les blocs de texte. */
+export const TypographyContext = createContext<CoverConfig["style"] | null>(null)
+
+/** Multiplicateur de taille d'un élément de texte (1 si non réglé). */
+export function useTextScale(element: TextElement) {
+  return useContext(TypographyContext)?.textScale?.[element] ?? 1
+}
 
 export type TextColors = {
   text: string
@@ -43,7 +52,10 @@ export function TextBlock({
 }: TextBlockProps) {
   const name = `${content.nameMain}${content.nameAccent ?? ""}`
   const fontSize =
-    name.length <= 12 ? nameSize : Math.max(nameSize * 0.66, (nameSize * 12) / name.length)
+    (name.length <= 12 ? nameSize : Math.max(nameSize * 0.66, (nameSize * 12) / name.length)) *
+    useTextScale("name")
+  const badgeScale = useTextScale("badge")
+  const descriptionScale = useTextScale("description")
   const centered = align === "center"
 
   return (
@@ -61,15 +73,15 @@ export function TextBlock({
       {content.badge && (
         <div
           style={{
-            height: 61,
+            height: 61 * badgeScale,
             display: "flex",
             alignItems: "center",
-            padding: "0 27px",
+            padding: `0 ${27 * badgeScale}px`,
             borderRadius: 999,
             border: `2px solid ${colors.badgeBorder}`,
             background: colors.badgeBg,
             color: colors.badgeText ?? colors.text,
-            fontSize: 22,
+            fontSize: 22 * badgeScale,
             fontWeight: 500,
             letterSpacing: "0.16em",
             textTransform: "uppercase",
@@ -113,7 +125,7 @@ export function TextBlock({
         <p
           style={{
             margin: "22px 0 0",
-            fontSize: 31,
+            fontSize: 31 * descriptionScale,
             lineHeight: 1.45,
             color: colors.muted,
             display: "-webkit-box",
@@ -183,6 +195,7 @@ export function Chips({
   justify?: "flex-start" | "center"
   style?: CSSProperties
 }) {
+  const scale = useTextScale("chips")
   return (
     <div
       style={{
@@ -197,15 +210,15 @@ export function Chips({
         <span
           key={`${chip}-${index}`}
           style={{
-            height: 58,
+            height: 58 * scale,
             display: "inline-flex",
             alignItems: "center",
-            padding: "0 24px",
+            padding: `0 ${24 * scale}px`,
             borderRadius: radius,
             background: colors.chipBg,
             color: colors.chipText ?? colors.text,
             border: colors.chipBorder ? `2px solid ${colors.chipBorder}` : undefined,
-            fontSize: 22,
+            fontSize: 22 * scale,
             fontWeight: 500,
             letterSpacing: "0.01em",
             whiteSpace: "nowrap",
@@ -230,18 +243,19 @@ export function Footer({
   color: string
   style: CSSProperties
 }) {
+  const scale = useTextScale("footer")
   if (!text) return null
   return (
     <div
       style={{
         position: "absolute",
-        fontSize: 26,
         fontWeight: 500,
         color,
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
         ...style,
+        fontSize: (typeof style.fontSize === "number" ? style.fontSize : 26) * scale,
       }}
     >
       {text}
@@ -269,6 +283,7 @@ export function CoverRoot({
   children: React.ReactNode
 }) {
   const canvas = useContext(CanvasContext) ?? size
+  const typography = useContext(TypographyContext)
 
   return (
     <div
@@ -276,7 +291,7 @@ export function CoverRoot({
         ...canvas,
         position: "relative",
         overflow: "hidden",
-        fontFamily: "var(--font-poppins), sans-serif",
+        fontFamily: fontStack(typography?.fontFamily ?? DEFAULT_FONT),
         ...style,
       }}
     >

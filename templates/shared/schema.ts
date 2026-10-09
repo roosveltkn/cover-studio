@@ -61,6 +61,17 @@ export const baseSchema: FieldSchema[] = [
     label: "browserUrlLabel",
     placeholder: "browserUrlPlaceholder",
   },
+  { type: "font", section: "typography", path: "style.fontFamily", label: "fontFamilyLabel" },
+  { type: "scale", section: "typography", path: "style.textScale.badge", label: "scaleBadgeLabel" },
+  { type: "scale", section: "typography", path: "style.textScale.name", label: "scaleNameLabel" },
+  {
+    type: "scale",
+    section: "typography",
+    path: "style.textScale.description",
+    label: "scaleDescriptionLabel",
+  },
+  { type: "scale", section: "typography", path: "style.textScale.chips", label: "scaleChipsLabel" },
+  { type: "scale", section: "typography", path: "style.textScale.footer", label: "scaleFooterLabel" },
   {
     type: "color",
     section: "colors",

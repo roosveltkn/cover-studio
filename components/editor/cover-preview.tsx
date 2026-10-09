@@ -1,7 +1,7 @@
 import { EXPORT_NODE_ID } from "@/lib/export"
 import { canvasFor, getExportSize } from "@/lib/export-sizes"
 import { placeImages } from "@/lib/slots"
-import { CanvasContext } from "@/templates/shared/text-block"
+import { CanvasContext, TypographyContext } from "@/templates/shared/text-block"
 import type { CoverConfig, Template } from "@/types/cover"
 
 type CoverPreviewProps = {
@@ -37,7 +37,9 @@ export function CoverPreview({
       <div style={{ ...canvas, transform: `scale(${scale})`, transformOrigin: "0 0" }}>
         <div id={exportable ? EXPORT_NODE_ID : undefined} style={canvas}>
           <CanvasContext value={canvas}>
-            <Component config={placeImages(config, template)} />
+            <TypographyContext value={config.style}>
+              <Component config={placeImages(config, template)} />
+            </TypographyContext>
           </CanvasContext>
         </div>
       </div>

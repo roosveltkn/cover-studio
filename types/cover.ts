@@ -18,6 +18,8 @@ export type ImageAsset = {
 
 export type BrowserTheme = "auto" | "light" | "dark"
 
+export type TextElement = "badge" | "name" | "description" | "chips" | "footer"
+
 export type CoverConfig = {
   /** Identifiant du template dans le registre. */
   template: string
@@ -37,6 +39,10 @@ export type CoverConfig = {
     accentColor?: string
     haloIntensity?: number
     gridOpacity?: number
+    /** Identifiant de la police (cf. lib/fonts), Poppins par défaut. */
+    fontFamily?: string
+    /** Multiplicateur de taille par élément de texte, 1 par défaut. */
+    textScale?: Partial<Record<TextElement, number>>
   }
   mockups: {
     /** Captures importées, dans l'ordre choisi par l'utilisateur. */
@@ -73,7 +79,7 @@ export type PlacedMockups = CoverConfig["mockups"] & {
 
 export type PlacedConfig = Omit<CoverConfig, "mockups"> & { mockups: PlacedMockups }
 
-export type SectionId = "content" | "colors" | "mockups" | "export"
+export type SectionId = "content" | "typography" | "colors" | "mockups" | "export"
 
 /** Panneau ouvert dans l'éditeur : les modèles, ou une section de champs. */
 export type PanelId = "templates" | SectionId
@@ -105,6 +111,8 @@ export type FieldSchema =
   | (FieldBase & { type: "color"; presets?: string[] })
   | (FieldBase & { type: "gallery" })
   | (FieldBase & { type: "icon" })
+  | (FieldBase & { type: "font" })
+  | (FieldBase & { type: "scale" })
   | (FieldBase & {
       type: "segmented"
       options: { value: string; label: FieldKey }[]

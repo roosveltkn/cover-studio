@@ -3,9 +3,9 @@
     "siteTitle": "Cover Studio · Free open-source app cover generator",
     "siteDescription": "Generate a pro cover for your app, README or LinkedIn from your screenshots. Free, open source, no account, 100% in your browser.",
     "keywords": "cover generator, app cover, app mockup, screenshot, README, Open Graph, open source, free",
-    "ogImageAlt": "Cover Studio logo",
+    "ogImageAlt": "Cover Studio: generate a pro cover for your app",
     "editorTitle": "Editor",
-    "appFeatures": "Automatic layout from a screenshot, 5 templates, brand color derived from your interface, high-resolution PNG export, no data upload"
+    "appFeatures": "Automatic layout from a screenshot, 5 templates, brand color derived from your interface, PNG export in several formats (optional 2× resolution), no data upload"
   },
   "localeSwitcher": {
     "label": "Language"
@@ -26,7 +26,7 @@
     "step2Title": "Customize",
     "step2Text": "Name, description, features and brand color.",
     "step3Title": "Download",
-    "step3Text": "A 2400 × 1500 PNG ready for your README, portfolio or LinkedIn.",
+    "step3Text": "A PNG ready for your README, portfolio, LinkedIn or social networks, in the size of your choice.",
     "github": "GitHub",
     "toggleTheme": "Toggle theme",
     "githubAria": "View the source code on GitHub (opens in a new tab)",
@@ -71,6 +71,7 @@
     "railLabel": "Editor sections",
     "railTemplates": "Templates",
     "railContent": "Text",
+    "railTypography": "Font",
     "railColors": "Colors",
     "railMockups": "Screenshots",
     "railExport": "Export"
@@ -80,6 +81,8 @@
     "templatesDescription": "Your screenshots and texts, laid out in 5 ways.",
     "contentTitle": "Text",
     "contentDescription": "Badge, name, description and features.",
+    "typographyTitle": "Font",
+    "typographyDescription": "Typeface and size of each text element.",
     "colorsTitle": "Colors",
     "colorsDescription": "A single color: the whole palette follows from it.",
     "mockupsTitle": "Screenshots",
@@ -153,6 +156,13 @@
     "footerPlaceholder": "myapp.com · Tech Lead",
     "browserUrlLabel": "Browser URL",
     "browserUrlPlaceholder": "myapp.com",
+    "fontFamilyLabel": "Font",
+    "scaleBadgeLabel": "Badge size",
+    "scaleNameLabel": "Name size",
+    "scaleDescriptionLabel": "Description size",
+    "scaleChipsLabel": "Features size",
+    "scaleFooterLabel": "Footer size",
+    "scaleReset": "Reset",
     "brandColorLabel": "Brand color",
     "brandColorHelp": "The background, glow, chips and accent are derived from it.",
     "iconLabel": "App icon",

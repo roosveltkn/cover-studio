@@ -49,6 +49,11 @@ export function BrowserFrame({
 }: BrowserFrameProps) {
   const tMockups = useTranslations("mockups")
   const t = THEMES[theme]
+  // Une capture plus large que le cadre ne doit pas être rognée sur les côtés :
+  // on réduit la hauteur du cadre à celle de l'image mise à la largeur du cadre.
+  const fitHeight = image
+    ? Math.min(contentHeight, Math.round((width * image.height) / image.width))
+    : contentHeight
 
   return (
     <div
@@ -115,7 +120,7 @@ export function BrowserFrame({
           </span>
         </div>
       </div>
-      <div style={{ height: contentHeight, position: "relative" }}>
+      <div style={{ height: fitHeight, position: "relative" }}>
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

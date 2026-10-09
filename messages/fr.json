@@ -3,9 +3,9 @@
     "siteTitle": "Cover Studio · Générateur de cover d'app gratuit et open source",
     "siteDescription": "Générez gratuitement une cover pro pour votre app, votre README ou LinkedIn à partir de vos captures. Open source, sans compte, 100 % dans votre navigateur.",
     "keywords": "générateur de cover, cover d'application, mockup d'application, capture d'écran, README, Open Graph, open source, gratuit",
-    "ogImageAlt": "Logo Cover Studio",
+    "ogImageAlt": "Cover Studio : générez une cover pro pour votre app",
     "editorTitle": "Éditeur",
-    "appFeatures": "Mise en page automatique à partir d'une capture, 5 modèles, couleur de marque dérivée de l'interface, export PNG haute résolution, aucun envoi de données"
+    "appFeatures": "Mise en page automatique à partir d'une capture, 5 modèles, couleur de marque dérivée de l'interface, export PNG en plusieurs formats (résolution 2× en option), aucun envoi de données"
   },
   "localeSwitcher": {
     "label": "Langue"
@@ -26,7 +26,7 @@
     "step2Title": "Personnalisez",
     "step2Text": "Nom, description, fonctionnalités et couleur de marque.",
     "step3Title": "Téléchargez",
-    "step3Text": "Un PNG 2400 × 1500 prêt pour votre README, portfolio ou LinkedIn.",
+    "step3Text": "Un PNG prêt pour votre README, portfolio, LinkedIn ou réseaux sociaux, au format de votre choix.",
     "github": "GitHub",
     "toggleTheme": "Changer de thème",
     "githubAria": "Voir le code source sur GitHub (s'ouvre dans un nouvel onglet)",
@@ -71,6 +71,7 @@
     "railLabel": "Sections de l'éditeur",
     "railTemplates": "Modèles",
     "railContent": "Texte",
+    "railTypography": "Police",
     "railColors": "Couleurs",
     "railMockups": "Captures",
     "railExport": "Export"
@@ -80,6 +81,8 @@
     "templatesDescription": "Vos captures et vos textes, mis en page de 5 façons.",
     "contentTitle": "Texte",
     "contentDescription": "Pastille, nom, description et fonctionnalités.",
+    "typographyTitle": "Police",
+    "typographyDescription": "Police et taille de chaque élément de texte.",
     "colorsTitle": "Couleurs",
     "colorsDescription": "Une seule couleur : toute la palette en découle.",
     "mockupsTitle": "Captures",
@@ -153,6 +156,13 @@
     "footerPlaceholder": "monapp.com · Tech Lead",
     "browserUrlLabel": "URL du navigateur",
     "browserUrlPlaceholder": "monapp.com",
+    "fontFamilyLabel": "Police",
+    "scaleBadgeLabel": "Taille du badge",
+    "scaleNameLabel": "Taille du nom",
+    "scaleDescriptionLabel": "Taille de la description",
+    "scaleChipsLabel": "Taille des fonctionnalités",
+    "scaleFooterLabel": "Taille du pied de page",
+    "scaleReset": "Réinitialiser",
     "brandColorLabel": "Couleur de marque",
     "brandColorHelp": "Le fond, le halo, les chips et l'accent en sont dérivés.",
     "iconLabel": "Icône de l'application",
