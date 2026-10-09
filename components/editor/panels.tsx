@@ -6,7 +6,7 @@ import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
 import type { SectionId } from "@/types/cover"
 
-import { CoverPreview } from "./cover-preview"
+import { CoverPreview, coverCanvas } from "./cover-preview"
 import { ExportCard } from "./export-card"
 import { SchemaField } from "./schema-field"
 
@@ -82,7 +82,7 @@ function TemplatesPanel() {
               <CoverPreview
                 template={template}
                 config={{ ...config, template: template.id }}
-                scale={THUMB_WIDTH / template.size.width}
+                scale={THUMB_WIDTH / coverCanvas(template, config).width}
               />
             </span>
             <span className="flex flex-col">

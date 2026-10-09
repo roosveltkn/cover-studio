@@ -16,22 +16,24 @@ function templateFontCSS(node: HTMLElement) {
   return fontCSS
 }
 
-export function coverFilename(content: CoverConfig["content"]) {
+export function coverFilename(content: CoverConfig["content"], sizeId = "cover") {
   const base = `${content.nameMain}${content.nameAccent ?? ""}`
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
     .toLowerCase()
     .replace(/\s+/g, "")
     .replace(/[^a-z0-9._-]/g, "")
-  return `${base || "cover"}-cover.png`
+  return `${base || "cover"}-${sizeId}.png`
 }
 
 /**
- * Capture le template à sa taille native. La prévisualisation applique son
- * `scale()` sur un parent : le nœud capturé n'est jamais transformé.
+ * Capture le canevas à sa taille native, puis le dessine aux dimensions du
+ * format (`output` × `scale`). La prévisualisation applique son `scale()` sur
+ * un parent : le nœud capturé n'est jamais transformé.
  */
 export async function exportCover(
-  size: { width: number; height: number },
+  canvas: { width: number; height: number },
+  output: { width: number; height: number },
   filename: string,
   scale: 1 | 2 = 1
 ) {
@@ -44,8 +46,10 @@ export async function exportCover(
   let blob: Blob | null
   try {
     blob = await toBlob(node, {
-      ...size,
-      pixelRatio: scale,
+      ...canvas,
+      canvasWidth: output.width * scale,
+      canvasHeight: output.height * scale,
+      pixelRatio: 1,
       fontEmbedCSS,
       cacheBust: false,
     })

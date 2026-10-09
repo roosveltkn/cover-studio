@@ -1,5 +1,7 @@
 import { EXPORT_NODE_ID } from "@/lib/export"
+import { canvasFor, getExportSize } from "@/lib/export-sizes"
 import { placeImages } from "@/lib/slots"
+import { CanvasContext } from "@/templates/shared/text-block"
 import type { CoverConfig, Template } from "@/types/cover"
 
 type CoverPreviewProps = {
@@ -11,6 +13,11 @@ type CoverPreviewProps = {
   children?: React.ReactNode
 }
 
+/** Canevas du template au format d'export choisi. */
+export function coverCanvas(template: Template, config: CoverConfig) {
+  return canvasFor(template.size, getExportSize(config.export.size))
+}
+
 /** Rend le template à taille native et le réduit via un parent transformé. */
 export function CoverPreview({
   template,
@@ -19,14 +26,19 @@ export function CoverPreview({
   exportable,
   children,
 }: CoverPreviewProps) {
-  const { width, height } = template.size
+  const canvas = coverCanvas(template, config)
   const Component = template.component
 
   return (
-    <div className="relative shrink-0" style={{ width: width * scale, height: height * scale }}>
-      <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: "0 0" }}>
-        <div id={exportable ? EXPORT_NODE_ID : undefined} style={{ width, height }}>
-          <Component config={placeImages(config, template)} />
+    <div
+      className="relative shrink-0"
+      style={{ width: canvas.width * scale, height: canvas.height * scale }}
+    >
+      <div style={{ ...canvas, transform: `scale(${scale})`, transformOrigin: "0 0" }}>
+        <div id={exportable ? EXPORT_NODE_ID : undefined} style={canvas}>
+          <CanvasContext value={canvas}>
+            <Component config={placeImages(config, template)} />
+          </CanvasContext>
         </div>
       </div>
       {children}

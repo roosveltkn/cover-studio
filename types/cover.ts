@@ -43,6 +43,8 @@ export type CoverConfig = {
   export: {
     format: "png"
     scale: 1 | 2
+    /** Identifiant du format (cf. lib/export-sizes), "cover" par défaut. */
+    size?: string
   }
 }
 

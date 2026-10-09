@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import { getExportSize } from "@/lib/export-sizes"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
 
-import { CoverPreview } from "./cover-preview"
+import { CoverPreview, coverCanvas } from "./cover-preview"
 
 const PADDING = 24
 
@@ -13,6 +14,8 @@ export function CanvasStage() {
   const config = useCoverStore((state) => state.config)
   const stageRef = useRef<HTMLDivElement>(null)
   const template = getTemplate(config.template)
+  const canvas = coverCanvas(template, config)
+  const output = getExportSize(config.export.size)
   const [box, setBox] = useState<{ width: number; height: number }>()
 
   useEffect(() => {
@@ -30,8 +33,8 @@ export function CanvasStage() {
     ? Math.max(
         0.05,
         Math.min(
-          (box.width - PADDING * 2) / template.size.width,
-          (box.height - PADDING * 2) / template.size.height
+          (box.width - PADDING * 2) / canvas.width,
+          (box.height - PADDING * 2) / canvas.height
         )
       )
     : 0
@@ -48,7 +51,8 @@ export function CanvasStage() {
         </div>
       )}
       <div className="absolute right-4 bottom-4 hidden rounded-full md:block bg-background/90 px-3 py-1 text-xs font-medium text-muted-foreground tabular-nums shadow-sm ring-1 ring-foreground/10 backdrop-blur">
-        Ajusté · {Math.round(scale * 100)} %
+        {output.label} · {output.width} × {output.height} ·{" "}
+        {Math.round(((scale * canvas.width) / output.width) * 100)} %
       </div>
     </section>
   )

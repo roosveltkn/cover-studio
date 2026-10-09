@@ -7,6 +7,7 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { getExportSize } from "@/lib/export-sizes"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
 
@@ -15,6 +16,7 @@ import { ExportCard } from "./export-card"
 export function TopBar() {
   const { resolvedTheme, setTheme } = useTheme()
   const template = getTemplate(useCoverStore((state) => state.config.template))
+  const output = getExportSize(useCoverStore((state) => state.config.export.size))
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 bg-[linear-gradient(90deg,#00c4cc_0%,#6b43e8_55%,#7d2ae8_100%)] px-3 text-white sm:px-4">
@@ -29,7 +31,7 @@ export function TopBar() {
         <span className="flex min-w-0 flex-col leading-tight">
           <span className="truncate text-sm font-semibold">Cover Studio</span>
           <span className="truncate text-xs text-white/80">
-            {template.name} · {template.size.width} × {template.size.height}
+            {template.name} · {output.label} {output.width} × {output.height}
           </span>
         </span>
       </Link>

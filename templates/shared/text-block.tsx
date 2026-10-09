@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react"
+import { createContext, useContext, type CSSProperties } from "react"
 
 import type { CoverConfig } from "@/types/cover"
 
@@ -208,7 +208,16 @@ export function Footer({
   )
 }
 
-/** Racine commune : taille native, police du template, rognage. */
+/**
+ * Canevas du format d'export choisi. Absent : le canevas vaut la taille
+ * native du template.
+ */
+export const CanvasContext = createContext<{ width: number; height: number } | null>(null)
+
+/**
+ * Racine commune : police du template et rognage. Le fond (`style`) couvre
+ * tout le canevas du format, le contenu garde sa taille native au centre.
+ */
 export function CoverRoot({
   size,
   style,
@@ -218,17 +227,28 @@ export function CoverRoot({
   style: CSSProperties
   children: React.ReactNode
 }) {
+  const canvas = useContext(CanvasContext) ?? size
+
   return (
     <div
       style={{
-        ...size,
+        ...canvas,
         position: "relative",
         overflow: "hidden",
         fontFamily: "var(--font-poppins), sans-serif",
         ...style,
       }}
     >
-      {children}
+      <div
+        style={{
+          ...size,
+          position: "absolute",
+          left: (canvas.width - size.width) / 2,
+          top: (canvas.height - size.height) / 2,
+        }}
+      >
+        {children}
+      </div>
     </div>
   )
 }
