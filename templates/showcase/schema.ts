@@ -1,0 +1,96 @@
+import type { FieldSchema } from "@/types/cover"
+
+import { COLOR_PRESETS } from "./defaults"
+
+export const showcaseSchema: FieldSchema[] = [
+  {
+    type: "text",
+    section: "content",
+    path: "content.badge",
+    label: "Pastille",
+    placeholder: "SaaS · Productivité",
+    help: "Affichée en majuscules espacées.",
+    maxLength: 40,
+  },
+  {
+    type: "text",
+    section: "content",
+    path: "content.nameMain",
+    label: "Nom",
+    placeholder: "Mon",
+    required: true,
+    maxLength: 30,
+  },
+  {
+    type: "text",
+    section: "content",
+    path: "content.nameAccent",
+    label: "Suite du nom (accent)",
+    placeholder: "App",
+    help: "Optionnel, affichée dans la couleur d'accent.",
+    maxLength: 30,
+  },
+  {
+    type: "textarea",
+    section: "content",
+    path: "content.description",
+    label: "Description",
+    placeholder: "Ce que fait l'application, en une ou deux phrases.",
+    help: "160 caractères maximum recommandés (3 lignes).",
+    maxLength: 220,
+  },
+  {
+    type: "list",
+    section: "content",
+    path: "content.chips",
+    label: "Fonctionnalités",
+    placeholder: "Ajouter puis Entrée",
+  },
+  {
+    type: "text",
+    section: "content",
+    path: "content.footer",
+    label: "Pied de page",
+    placeholder: "monapp.com · Tech Lead",
+  },
+  {
+    type: "text",
+    section: "content",
+    path: "content.browserUrl",
+    label: "URL du navigateur",
+    placeholder: "monapp.com",
+  },
+  {
+    type: "color",
+    section: "colors",
+    path: "style.brandColor",
+    label: "Couleur de marque",
+    help: "Le fond, le halo, les chips et l'accent en sont dérivés.",
+    presets: COLOR_PRESETS,
+  },
+  {
+    type: "image",
+    section: "mockups",
+    path: "mockups.desktopImage",
+    toggle: "mockups.showDesktop",
+    label: "Capture desktop",
+  },
+  {
+    type: "image",
+    section: "mockups",
+    path: "mockups.mobileImage",
+    toggle: "mockups.showMobile",
+    label: "Capture mobile",
+  },
+  {
+    type: "segmented",
+    section: "mockups",
+    path: "mockups.browserTheme",
+    label: "Thème du navigateur",
+    options: [
+      { value: "auto", label: "Auto" },
+      { value: "light", label: "Clair" },
+      { value: "dark", label: "Sombre" },
+    ],
+  },
+]

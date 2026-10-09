@@ -48,30 +48,31 @@
 }
 
 :root {
+    /* Tokens inspirés du design system Canva (violet d'action, gris froids, rayon 8 px). */
     --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --foreground: oklch(0.213 0.004 264.5);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.213 0.004 264.5);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.213 0.004 264.5);
+    --primary: oklch(0.523 0.255 295.6);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.953 0.026 300.3);
+    --secondary-foreground: oklch(0.42 0.2 295);
+    --muted: oklch(0.959 0.005 275);
+    --muted-foreground: oklch(0.5 0.01 270);
+    --accent: oklch(0.953 0.026 300.3);
+    --accent-foreground: oklch(0.42 0.2 295);
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --border: oklch(0.931 0.005 275);
+    --input: oklch(0.88 0.006 275);
+    --ring: oklch(0.575 0.263 294.9);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
+    --radius: 0.5rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -80,27 +81,29 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --stage: oklch(0.931 0.008 275);
+    --rail: oklch(0.975 0.004 275);
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    --background: oklch(0.213 0.004 264.5);
+    --foreground: oklch(0.96 0.003 275);
+    --card: oklch(0.268 0.002 247.9);
+    --card-foreground: oklch(0.96 0.003 275);
+    --popover: oklch(0.268 0.002 247.9);
+    --popover-foreground: oklch(0.96 0.003 275);
+    --primary: oklch(0.575 0.263 294.9);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.273 0.069 294.8);
+    --secondary-foreground: oklch(0.88 0.08 298);
+    --muted: oklch(0.268 0.002 247.9);
+    --muted-foreground: oklch(0.72 0.008 270);
+    --accent: oklch(0.273 0.069 294.8);
+    --accent-foreground: oklch(0.88 0.08 298);
     --destructive: oklch(0.704 0.191 22.216);
     --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
+    --input: oklch(1 0 0 / 16%);
+    --ring: oklch(0.68 0.2 295);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -114,6 +117,8 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+    --stage: oklch(0.165 0.004 285.9);
+    --rail: oklch(0.19 0.004 270);
 }
 
 @layer base {
@@ -129,4 +134,20 @@
   html {
     @apply font-sans;
     }
+}
+/* Sélecteur de couleur (react-colorful) aux formes du flyout Canva. */
+.canva-picker.react-colorful {
+  width: 100%;
+  height: 180px;
+}
+.canva-picker .react-colorful__saturation {
+  border-radius: 8px 8px 0 0;
+}
+.canva-picker .react-colorful__hue {
+  height: 14px;
+  border-radius: 0 0 8px 8px;
+}
+.canva-picker .react-colorful__pointer {
+  width: 20px;
+  height: 20px;
 }
