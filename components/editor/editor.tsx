@@ -38,7 +38,8 @@ export function Editor() {
         <div className="order-1 flex aspect-[16/11] md:order-3 md:aspect-auto md:min-w-0 md:flex-1">
           <CanvasStage />
         </div>
-        <div className="order-2 md:order-1">
+        {/* En flex : le rail s'étire sur toute la hauteur de l'éditeur. */}
+        <div className="order-2 md:order-1 md:flex">
           <SideRail active={panel} onSelect={setPanel} />
         </div>
         <aside
