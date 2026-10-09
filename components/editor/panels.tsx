@@ -6,8 +6,8 @@ import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
 import type { SectionId } from "@/types/cover"
 
-import { CoverPreview, coverCanvas } from "./cover-preview"
 import { ExportCard } from "./export-card"
+import { FitPreview } from "./fit-preview"
 import { SchemaField } from "./schema-field"
 
 export type PanelId = "templates" | SectionId
@@ -54,15 +54,14 @@ function Rows({ children }: { children: ReactNode }) {
   return <div className="flex flex-col gap-4">{children}</div>
 }
 
-const THUMB_WIDTH = 316
-
 function TemplatesPanel() {
   const config = useCoverStore((state) => state.config)
   const setField = useCoverStore((state) => state.setField)
   const active = getTemplate(config.template).id
 
   return (
-    <Rows>
+    // Une colonne dans le panneau desktop (350 px), deux en pleine largeur mobile.
+    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
       {templates.map((template) => {
         const selected = template.id === active
         return (
@@ -75,15 +74,11 @@ function TemplatesPanel() {
           >
             <span
               className={
-                "block overflow-hidden rounded-lg ring-1 ring-foreground/10 transition-shadow group-hover:shadow-md " +
+                "block w-full overflow-hidden rounded-lg ring-1 ring-foreground/10 transition-shadow group-hover:shadow-md " +
                 (selected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "")
               }
             >
-              <CoverPreview
-                template={template}
-                config={{ ...config, template: template.id }}
-                scale={THUMB_WIDTH / coverCanvas(template, config).width}
-              />
+              <FitPreview template={template} config={{ ...config, template: template.id }} />
             </span>
             <span className="flex flex-col">
               <span className="text-sm font-semibold">{template.name}</span>
@@ -92,6 +87,6 @@ function TemplatesPanel() {
           </button>
         )
       })}
-    </Rows>
+    </div>
   )
 }

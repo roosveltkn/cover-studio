@@ -11,16 +11,15 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { FileInput } from "@/components/canva/file-input"
-import { CoverPreview } from "@/components/editor/cover-preview"
+import { FitPreview } from "@/components/editor/fit-preview"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { isPortrait } from "@/lib/slots"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
-import { COVER_SIZE } from "@/templates/shared/mockups"
 import { DEFAULT_CONFIG } from "@/templates/showcase/defaults"
 import type { ImageAsset } from "@/types/cover"
 
@@ -92,7 +91,9 @@ export function Landing() {
                 les couleurs sont générés pour vous. Il ne reste qu&apos;à écrire le texte.
               </p>
             </div>
-            <LivePreview config={previewConfig} />
+            <div className="overflow-hidden rounded-xl shadow-[0_24px_60px_rgba(20,0,60,0.35)] ring-1 ring-white/20">
+              <FitPreview template={getTemplate(previewConfig.template)} config={previewConfig} />
+            </div>
           </div>
         </section>
 
@@ -154,34 +155,6 @@ export function Landing() {
           </ol>
         </section>
       </main>
-    </div>
-  )
-}
-
-/** Aperçu du template avec les captures importées, mis à l'échelle du conteneur. */
-function LivePreview({ config }: { config: typeof DEFAULT_CONFIG }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [scale, setScale] = useState(0)
-
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-    const observer = new ResizeObserver(([entry]) =>
-      setScale(entry.contentRect.width / COVER_SIZE.width)
-    )
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <div
-      ref={ref}
-      aria-hidden
-      className="aspect-[16/10] w-full overflow-hidden rounded-xl shadow-[0_24px_60px_rgba(20,0,60,0.35)] ring-1 ring-white/20"
-    >
-      {scale > 0 && (
-        <CoverPreview template={getTemplate(config.template)} config={config} scale={scale} />
-      )}
     </div>
   )
 }
