@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Geist_Mono, Inter, Poppins } from "next/font/google"
+import { Geist_Mono, Inter, Montserrat, Playfair_Display, Poppins, Space_Grotesk } from "next/font/google"
 import { notFound } from "next/navigation"
 
 import "../globals.css"
@@ -28,8 +28,25 @@ const poppins = Poppins({
   variable: "--font-poppins",
 })
 
-/** Fond des icônes et de la barre d'adresse mobile, aligné sur le logo. */
-const BRAND_DARK = "#050712"
+// Autres polices proposées dans l'éditeur (cf. lib/fonts).
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-montserrat",
+})
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-space-grotesk",
+})
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-playfair",
+})
+
+/** Couleur de la barre d'adresse mobile, alignée sur le logo. */
+const BRAND_COLOR = "#7D2AE8"
 
 type Props = {
   children: React.ReactNode
@@ -70,11 +87,10 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
     },
     icons: {
       icon: [
-        { url: "/favicon.ico", sizes: "any" },
-        { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
-        { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-        { url: "/favicon-48.png", sizes: "48x48", type: "image/png" },
-        { url: "/cover-studio-symbol.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "48x48" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       ],
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     },
@@ -86,21 +102,25 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
       description,
       locale: OPEN_GRAPH_LOCALES[locale],
       alternateLocale: locales.filter((l) => l !== locale).map((l) => OPEN_GRAPH_LOCALES[l]),
-      images: [
-        { url: "/cover-studio-preview.jpg", width: 840, height: 725, alt: t("ogImageAlt") },
-      ],
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: t("ogImageAlt") }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["/cover-studio-preview.jpg"],
+      images: [{ url: "/og-image.png", alt: t("ogImageAlt") }],
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    },
+    formatDetection: { telephone: false, email: false, address: false },
   }
 }
 
 export const viewport: Viewport = {
-  themeColor: BRAND_DARK,
+  themeColor: BRAND_COLOR,
 }
 
 export default async function RootLayout({ children, params }: Readonly<Props>) {
@@ -116,7 +136,10 @@ export default async function RootLayout({ children, params }: Readonly<Props>) 
         fontMono.variable,
         "font-sans",
         inter.variable,
-        poppins.variable
+        poppins.variable,
+        montserrat.variable,
+        spaceGrotesk.variable,
+        playfair.variable
       )}
     >
       <body>

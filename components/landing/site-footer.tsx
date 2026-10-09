@@ -1,7 +1,6 @@
 "use client"
 
-import { Sparkles } from "lucide-react"
-
+import { Logo } from "@/components/logo"
 import { useTranslations } from "@/i18n/provider"
 import { LINKS } from "@/lib/site"
 
@@ -19,9 +18,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 sm:flex-row sm:justify-between">
         <div className="flex max-w-xs flex-col gap-3">
           <span className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-lg bg-[linear-gradient(135deg,#00c4cc,#7d2ae8)] text-white">
-              <Sparkles className="size-4" />
-            </span>
+            <Logo className="size-9" />
             <span className="font-semibold">Cover Studio</span>
           </span>
           <p className="text-sm text-muted-foreground">{t("tagline")}</p>

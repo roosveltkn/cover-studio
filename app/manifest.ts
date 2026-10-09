@@ -12,13 +12,13 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "fr",
     start_url: "/",
     display: "standalone",
-    background_color: "#050712",
-    theme_color: "#050712",
+    background_color: "#F2ECFF",
+    theme_color: "#7D2AE8",
     icons: [
-      { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
-      { src: "/cover-studio-symbol.svg", sizes: "any", type: "image/svg+xml" },
+      { src: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+      { src: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      { src: "/maskable-192x192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
+      { src: "/maskable-512x512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   }
 }

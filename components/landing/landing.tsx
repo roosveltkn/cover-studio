@@ -68,7 +68,7 @@ export function Landing() {
   const base = defaultConfig(locale)
   const previewConfig = {
     ...base,
-    template: image && isPortrait(image) ? "mobile-trio" : base.template,
+    template: image && isPortrait(image) ? "mobile-trio" : "spotlight",
     style: { brandColor: image?.dominant ?? base.style.brandColor },
     mockups: { ...base.mockups, images: image ? [image] : [] },
   }

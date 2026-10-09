@@ -25,9 +25,18 @@ export function landingStructuredData(locale: Locale) {
         inLanguage: locale,
       },
       {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "Cover Studio",
+        url: SITE_URL,
+        logo: `${SITE_URL}/android-chrome-512x512.png`,
+        sameAs: [GITHUB_URL],
+      },
+      {
         "@type": "SoftwareApplication",
         name: "Cover Studio",
         url,
+        image: `${SITE_URL}/og-image.png`,
         description: meta("siteDescription"),
         applicationCategory: "DesignApplication",
         operatingSystem: "Any (web browser)",
