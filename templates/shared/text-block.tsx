@@ -161,7 +161,6 @@ export function AppIcon({
         flexShrink: 0,
         objectFit: "cover",
         borderRadius: size * 0.225,
-        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.12)",
         display: "block",
         ...style,
       }}
