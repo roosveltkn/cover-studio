@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "^fr.*" }],
+      "destination": "/fr",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": ".+" }],
+      "destination": "/en",
+      "permanent": false
+    }
+  ]
+}
