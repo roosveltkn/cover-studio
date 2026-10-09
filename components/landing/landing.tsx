@@ -17,6 +17,7 @@ import { FitPreview } from "@/components/editor/fit-preview"
 import { GithubIcon } from "@/components/github-icon"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import { Logo } from "@/components/logo"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "@/i18n/navigation"
@@ -90,6 +91,7 @@ export function Landing() {
               {t("github")}
             </a>
             <LocaleSwitcher />
+            <ThemeToggle />
           </div>
         </div>
       </header>

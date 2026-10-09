@@ -28,6 +28,7 @@
     "step3Title": "Download",
     "step3Text": "A 2400 × 1500 PNG ready for your README, portfolio or LinkedIn.",
     "github": "GitHub",
+    "toggleTheme": "Toggle theme",
     "githubAria": "View the source code on GitHub (opens in a new tab)",
     "openSourceTitle": "Open source, end to end",
     "openSourceText": "Cover Studio is released under the MIT license. The code is public: read it, self-host it, improve it.",
