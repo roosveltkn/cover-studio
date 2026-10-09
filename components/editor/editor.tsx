@@ -12,24 +12,23 @@ import { TopBar } from "./top-bar"
 
 export function Editor() {
   const router = useRouter()
-  const [panel, setPanel] = useState<PanelId>("content")
-  const hasImage = useCoverStore(
-    (state) => Boolean(state.config.mockups.desktopImage || state.config.mockups.mobileImage)
+  const [panel, setPanel] = useState<PanelId>("templates")
+  // Les captures ne sont pas persistées : sans elles à l'arrivée (accès direct,
+  // rechargement), on renvoie vers l'accueil. Ensuite, retirer toutes les
+  // captures laisse l'éditeur ouvert, avec des emplacements vides.
+  const [arrivedWithImage] = useState(
+    () => useCoverStore.getState().config.mockups.images.length > 0
   )
 
   useEffect(() => {
     hydrateCoverStore()
   }, [])
 
-  // Les captures ne sont pas persistées : sans elles (accès direct, rechargement),
-  // on renvoie vers l'accueil pour en importer.
   useEffect(() => {
-    if (!hasImage) router.replace("/")
-    // Vérifié à l'arrivée seulement : retirer une capture ensuite reste permis.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (!arrivedWithImage) router.replace("/")
+  }, [arrivedWithImage, router])
 
-  if (!hasImage) return null
+  if (!arrivedWithImage) return null
 
   return (
     <div className="flex h-svh flex-col bg-background">

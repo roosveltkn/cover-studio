@@ -1,16 +1,15 @@
 "use client"
 
-import { FileInput } from "@/components/canva/file-input"
 import { FormField } from "@/components/canva/form-field"
+import { ImageGallery } from "@/components/canva/image-gallery"
 import { PillsInput } from "@/components/canva/pills-input"
 import { Swatch } from "@/components/canva/swatch"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { getPath } from "@/lib/path"
 import { useCoverStore } from "@/stores/cover-store"
+import { getTemplate } from "@/templates/registry"
 import type { FieldSchema, ImageAsset } from "@/types/cover"
 
 /** Rend un champ de formulaire à partir de son schéma (SPECS §8.4). */
@@ -93,32 +92,22 @@ export function SchemaField({ field }: { field: FieldSchema }) {
         </FormField>
       )
 
-    case "image": {
-      const visible = Boolean(getPath(config, field.toggle))
-      const toggleId = `${id}-visible`
+    case "gallery": {
+      const template = getTemplate(config.template)
+      const filled = template.slots.length
       return (
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor={id} className="text-[13px] font-semibold">
-              {field.label}
-            </Label>
-            <div className="flex items-center gap-2">
-              <Label htmlFor={toggleId} className="text-xs font-normal text-muted-foreground">
-                Afficher
-              </Label>
-              <Switch
-                id={toggleId}
-                checked={visible}
-                onCheckedChange={(checked) => setField(field.toggle, checked)}
-              />
-            </div>
-          </div>
-          <FileInput
+        <FormField id={id} label={field.label} help={field.help}>
+          <p className="text-xs text-muted-foreground">
+            {template.name} utilise {filled} capture{filled > 1 ? "s" : ""} :{" "}
+            {template.slots.map((slot) => slot.label.toLowerCase()).join(", ")}.
+          </p>
+          <ImageGallery
             id={id}
-            value={value as ImageAsset | undefined}
+            images={(value as ImageAsset[] | undefined) ?? []}
+            slots={template.slots}
             onChange={set}
           />
-        </div>
+        </FormField>
       )
     }
 

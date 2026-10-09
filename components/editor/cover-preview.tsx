@@ -1,4 +1,5 @@
 import { EXPORT_NODE_ID } from "@/lib/export"
+import { placeImages } from "@/lib/slots"
 import type { CoverConfig, Template } from "@/types/cover"
 
 type CoverPreviewProps = {
@@ -25,7 +26,7 @@ export function CoverPreview({
     <div className="relative shrink-0" style={{ width: width * scale, height: height * scale }}>
       <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: "0 0" }}>
         <div id={exportable ? EXPORT_NODE_ID : undefined} style={{ width, height }}>
-          <Component config={config} />
+          <Component config={placeImages(config, template)} />
         </div>
       </div>
       {children}

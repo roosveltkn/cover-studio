@@ -17,16 +17,18 @@ import { FileInput } from "@/components/canva/file-input"
 import { CoverPreview } from "@/components/editor/cover-preview"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { isPortrait } from "@/lib/slots"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
-import { showcase } from "@/templates/registry"
+import { getTemplate } from "@/templates/registry"
+import { COVER_SIZE } from "@/templates/shared/mockups"
 import { DEFAULT_CONFIG } from "@/templates/showcase/defaults"
 import type { ImageAsset } from "@/types/cover"
 
 const STEPS: { icon: LucideIcon; title: string; text: string }[] = [
   {
     icon: ImageUp,
-    title: "Importez vos captures",
-    text: "Une capture desktop, une capture mobile, ou les deux.",
+    title: "Importez une capture",
+    text: "Puis ajoutez-en d'autres et choisissez leur ordre dans l'éditeur.",
   },
   {
     icon: Palette,
@@ -49,31 +51,24 @@ const PROMISES: { icon: LucideIcon; label: string }[] = [
 export function Landing() {
   const router = useRouter()
   const startFrom = useCoverStore((state) => state.startFrom)
-  const [desktop, setDesktop] = useState<ImageAsset>()
-  const [mobile, setMobile] = useState<ImageAsset>()
-  const ready = Boolean(desktop || mobile)
+  const [image, setImage] = useState<ImageAsset>()
 
   useEffect(() => {
     router.prefetch("/editor")
   }, [router])
 
   function start() {
+    if (!image) return
     hydrateCoverStore()
-    startFrom({ desktop, mobile })
+    startFrom(image)
     router.push("/editor")
   }
 
-  const brandColor = desktop?.dominant ?? mobile?.dominant ?? DEFAULT_CONFIG.style.brandColor
   const previewConfig = {
     ...DEFAULT_CONFIG,
-    style: { brandColor },
-    mockups: {
-      ...DEFAULT_CONFIG.mockups,
-      desktopImage: desktop,
-      mobileImage: mobile,
-      showDesktop: !ready || Boolean(desktop),
-      showMobile: !ready || Boolean(mobile),
-    },
+    template: image && isPortrait(image) ? "mobile-trio" : DEFAULT_CONFIG.template,
+    style: { brandColor: image?.dominant ?? DEFAULT_CONFIG.style.brandColor },
+    mockups: { ...DEFAULT_CONFIG.mockups, images: image ? [image] : [] },
   }
 
   return (
@@ -108,27 +103,20 @@ export function Landing() {
         >
           <div className="flex flex-col gap-1">
             <h2 id="start-title" className="text-xl font-semibold tracking-tight">
-              Commencez par vos captures
+              Commencez par une capture
             </h2>
             <p className="text-sm text-muted-foreground">
-              Au moins une capture. La couleur de marque est déduite de votre interface.
+              Desktop ou mobile : la couleur de marque est déduite de votre interface. Vous
+              pourrez ajouter d&apos;autres captures dans l&apos;éditeur.
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="landing-desktop" className="text-[13px] font-semibold">
-                Capture desktop
-              </Label>
-              <FileInput id="landing-desktop" value={desktop} onChange={setDesktop} />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="landing-mobile" className="text-[13px] font-semibold">
-                Capture mobile
-              </Label>
-              <FileInput id="landing-mobile" value={mobile} onChange={setMobile} />
-            </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="landing-image" className="text-[13px] font-semibold">
+              Capture de votre application
+            </Label>
+            <FileInput id="landing-image" value={image} onChange={setImage} />
           </div>
-          <Button size="lg" className="h-11 w-full text-base" disabled={!ready} onClick={start}>
+          <Button size="lg" className="h-11 w-full text-base" disabled={!image} onClick={start}>
             Créer ma cover
             <ArrowRight data-icon="inline-end" />
           </Button>
@@ -179,7 +167,7 @@ function LivePreview({ config }: { config: typeof DEFAULT_CONFIG }) {
     const element = ref.current
     if (!element) return
     const observer = new ResizeObserver(([entry]) =>
-      setScale(entry.contentRect.width / showcase.size.width)
+      setScale(entry.contentRect.width / COVER_SIZE.width)
     )
     observer.observe(element)
     return () => observer.disconnect()
@@ -191,7 +179,9 @@ function LivePreview({ config }: { config: typeof DEFAULT_CONFIG }) {
       aria-hidden
       className="aspect-[16/10] w-full overflow-hidden rounded-xl shadow-[0_24px_60px_rgba(20,0,60,0.35)] ring-1 ring-white/20"
     >
-      {scale > 0 && <CoverPreview template={showcase} config={config} scale={scale} />}
+      {scale > 0 && (
+        <CoverPreview template={getTemplate(config.template)} config={config} scale={scale} />
+      )}
     </div>
   )
 }

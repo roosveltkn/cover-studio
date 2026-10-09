@@ -29,6 +29,7 @@ export async function readImage(file: File): Promise<ImageAsset> {
   })
 
   return {
+    id: crypto.randomUUID(),
     dataUrl,
     width: image.naturalWidth,
     height: image.naturalHeight,

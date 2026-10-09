@@ -1,6 +1,7 @@
 import type { ComponentType } from "react"
 
 export type ImageAsset = {
+  id: string
   dataUrl: string
   width: number
   height: number
@@ -16,6 +17,8 @@ export type ImageAsset = {
 export type BrowserTheme = "auto" | "light" | "dark"
 
 export type CoverConfig = {
+  /** Identifiant du template dans le registre. */
+  template: string
   content: {
     badge: string
     nameMain: string
@@ -32,10 +35,8 @@ export type CoverConfig = {
     gridOpacity?: number
   }
   mockups: {
-    desktopImage?: ImageAsset
-    mobileImage?: ImageAsset
-    showDesktop: boolean
-    showMobile: boolean
+    /** Captures importées, dans l'ordre choisi par l'utilisateur. */
+    images: ImageAsset[]
     browserTheme?: BrowserTheme
     desktopCropY?: number
   }
@@ -44,6 +45,26 @@ export type CoverConfig = {
     scale: 1 | 2
   }
 }
+
+/** Emplacement de capture prévu par un template. */
+export type Slot = {
+  kind: "desktop" | "mobile"
+  label: string
+  /** Champ des mockups placés où le template lit cette capture. */
+  key: "desktopImage" | "mobileImage" | "mobileImage2" | "mobileImage3"
+}
+
+/** Mockups tels que les templates les lisent, une fois les captures placées. */
+export type PlacedMockups = CoverConfig["mockups"] & {
+  desktopImage?: ImageAsset
+  mobileImage?: ImageAsset
+  mobileImage2?: ImageAsset
+  mobileImage3?: ImageAsset
+  showDesktop: boolean
+  showMobile: boolean
+}
+
+export type PlacedConfig = Omit<CoverConfig, "mockups"> & { mockups: PlacedMockups }
 
 export type SectionId = "content" | "colors" | "mockups" | "export"
 
@@ -69,7 +90,7 @@ export type FieldSchema =
     })
   | (FieldBase & { type: "list"; placeholder?: string })
   | (FieldBase & { type: "color"; presets?: string[] })
-  | (FieldBase & { type: "image"; toggle: string })
+  | (FieldBase & { type: "gallery" })
   | (FieldBase & {
       type: "segmented"
       options: { value: string; label: string }[]
@@ -78,7 +99,10 @@ export type FieldSchema =
 export type Template = {
   id: string
   name: string
+  description: string
   size: { width: number; height: number }
-  component: ComponentType<{ config: CoverConfig }>
+  component: ComponentType<{ config: PlacedConfig }>
   schema: FieldSchema[]
+  /** Emplacements remplis dans l'ordre de la liste des captures. */
+  slots: Slot[]
 }

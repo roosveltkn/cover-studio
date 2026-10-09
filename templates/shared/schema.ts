@@ -1,8 +1,9 @@
 import type { FieldSchema } from "@/types/cover"
 
-import { COLOR_PRESETS } from "./defaults"
+import { COLOR_PRESETS } from "@/templates/showcase/defaults"
 
-export const showcaseSchema: FieldSchema[] = [
+/** Champs communs aux templates navigateur + téléphone. */
+export const baseSchema: FieldSchema[] = [
   {
     type: "text",
     section: "content",
@@ -69,18 +70,11 @@ export const showcaseSchema: FieldSchema[] = [
     presets: COLOR_PRESETS,
   },
   {
-    type: "image",
+    type: "gallery",
     section: "mockups",
-    path: "mockups.desktopImage",
-    toggle: "mockups.showDesktop",
-    label: "Capture desktop",
-  },
-  {
-    type: "image",
-    section: "mockups",
-    path: "mockups.mobileImage",
-    toggle: "mockups.showMobile",
-    label: "Capture mobile",
+    path: "mockups.images",
+    label: "Captures",
+    help: "Glissez pour changer l'ordre : il décide de l'emplacement de chaque capture.",
   },
   {
     type: "segmented",
@@ -94,3 +88,10 @@ export const showcaseSchema: FieldSchema[] = [
     ],
   },
 ]
+
+const DESKTOP_ONLY = ["content.browserUrl", "mockups.browserTheme"]
+
+/** Mobile trio : pas de navigateur. */
+export const mobileTrioSchema: FieldSchema[] = baseSchema.filter(
+  (field) => !DESKTOP_ONLY.includes(field.path)
+)

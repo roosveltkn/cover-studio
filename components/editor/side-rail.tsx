@@ -1,12 +1,13 @@
 "use client"
 
-import { Download, Image, Palette, Type, type LucideIcon } from "lucide-react"
+import { Download, Image, LayoutTemplate, Palette, Type, type LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 import type { PanelId } from "./panels"
 
 const ITEMS: { id: PanelId; label: string; icon: LucideIcon }[] = [
+  { id: "templates", label: "Modèles", icon: LayoutTemplate },
   { id: "content", label: "Texte", icon: Type },
   { id: "colors", label: "Couleurs", icon: Palette },
   { id: "mockups", label: "Captures", icon: Image },

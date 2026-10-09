@@ -2,13 +2,14 @@ import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 
 import { setPath } from "@/lib/path"
+import { isPortrait } from "@/lib/slots"
 import { DEFAULT_CONFIG } from "@/templates/showcase/defaults"
 import type { CoverConfig, ImageAsset } from "@/types/cover"
 
 type CoverState = {
   config: CoverConfig
   setField: (path: string, value: unknown) => void
-  startFrom: (images: { desktop?: ImageAsset; mobile?: ImageAsset }) => void
+  startFrom: (image: ImageAsset) => void
 }
 
 export const useCoverStore = create<CoverState>()(
@@ -17,24 +18,24 @@ export const useCoverStore = create<CoverState>()(
       config: DEFAULT_CONFIG,
       setField: (path, value) =>
         set((state) => ({ config: setPath(state.config, path, value) })),
-      // Point de départ de l'éditeur : les captures de l'utilisateur, dont on
+      // Point de départ de l'éditeur : la capture importée sur l'accueil, dont on
       // reprend la couleur dominante comme couleur de marque.
-      startFrom: ({ desktop, mobile }) =>
+      startFrom: (image) =>
         set((state) => {
-          const brandColor = desktop?.dominant ?? mobile?.dominant
+          // Une capture portrait appelle le template dédié au mobile.
+          const template = isPortrait(image)
+            ? "mobile-trio"
+            : state.config.template === "mobile-trio"
+              ? DEFAULT_CONFIG.template
+              : state.config.template
           return {
             config: {
               ...state.config,
-              style: brandColor
-                ? { ...state.config.style, brandColor }
+              template,
+              style: image.dominant
+                ? { ...state.config.style, brandColor: image.dominant }
                 : state.config.style,
-              mockups: {
-                ...state.config.mockups,
-                desktopImage: desktop,
-                mobileImage: mobile,
-                showDesktop: Boolean(desktop),
-                showMobile: Boolean(mobile),
-              },
+              mockups: { ...state.config.mockups, images: [image] },
             },
           }
         }),
@@ -49,14 +50,7 @@ export const useCoverStore = create<CoverState>()(
       skipHydration: true,
       // Les images ne sont pas persistées en V1 (poids).
       partialize: ({ config }) => ({
-        config: {
-          ...config,
-          mockups: {
-            ...config.mockups,
-            desktopImage: undefined,
-            mobileImage: undefined,
-          },
-        },
+        config: { ...config, mockups: { ...config.mockups, images: [] } },
       }),
       merge: (persisted, current) => {
         const saved = (persisted as Partial<CoverState> | undefined)?.config
@@ -68,7 +62,11 @@ export const useCoverStore = create<CoverState>()(
             ...saved,
             content: { ...current.config.content, ...saved.content },
             style: { ...current.config.style, ...saved.style },
-            mockups: { ...current.config.mockups, ...saved.mockups },
+            // Les captures en mémoire priment : elles ne sont jamais sauvegardées.
+            mockups: {
+              ...current.config.mockups,
+              browserTheme: saved.mockups?.browserTheme ?? current.config.mockups.browserTheme,
+            },
           },
         }
       },

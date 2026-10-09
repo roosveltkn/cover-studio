@@ -4,6 +4,7 @@ export const DEFAULT_BRAND = "#7d2ae8"
 
 /** Contenu neutre de départ : l'utilisateur part de ses propres captures. */
 export const DEFAULT_CONFIG: CoverConfig = {
+  template: "showcase",
   content: {
     badge: "Catégorie · Secteur",
     nameMain: "Mon",
@@ -15,7 +16,7 @@ export const DEFAULT_CONFIG: CoverConfig = {
     browserUrl: "monapp.com",
   },
   style: { brandColor: DEFAULT_BRAND },
-  mockups: { showDesktop: true, showMobile: true, browserTheme: "auto" },
+  mockups: { images: [], browserTheme: "auto" },
   export: { format: "png", scale: 1 },
 }
 
