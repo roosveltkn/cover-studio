@@ -1,30 +1,30 @@
 {
   "meta": {
     "siteTitle": "Cover Studio · Générateur de cover d'app gratuit et open source",
-    "siteDescription": "Générez gratuitement une cover pro pour votre app, votre README ou LinkedIn à partir de vos captures. Open source, sans compte, 100 % dans votre navigateur.",
-    "keywords": "générateur de cover, cover d'application, mockup d'application, capture d'écran, README, Open Graph, open source, gratuit",
+    "siteDescription": "Générez gratuitement une cover pro pour votre app, votre README ou LinkedIn, à partir de vos captures ou de l'adresse de votre site. Open source et sans compte.",
+    "keywords": "générateur de cover, cover d'application, mockup d'application, capture d'écran, capture de site web, README, Open Graph, open source, gratuit",
     "ogImageAlt": "Cover Studio : générez une cover pro pour votre app",
     "editorTitle": "Éditeur",
-    "appFeatures": "Mise en page automatique à partir d'une capture, 5 modèles, couleur de marque dérivée de l'interface, export PNG en plusieurs formats (résolution 2× en option), aucun envoi de données"
+    "appFeatures": "Mise en page automatique à partir de vos captures, capture de votre site depuis son adresse (ordinateur et mobile), modèles multiples, couleur de marque dérivée de l'interface, export PNG en plusieurs formats (résolution 2× en option), images traitées dans le navigateur"
   },
   "localeSwitcher": {
     "label": "Langue"
   },
   "landing": {
-    "heroTitle": "Une cover pro pour votre app, à partir de vos captures",
-    "heroText": "Importez une capture de votre application : la mise en page, les mockups et les couleurs sont générés pour vous. Il ne reste qu'à écrire le texte.",
-    "startTitle": "Commencez par une capture",
-    "startText": "Desktop ou mobile, jusqu'à 4 captures. Ajoutez votre logo et choisissez la couleur de marque, ou laissez-la déduite de la première capture.",
+    "heroTitle": "Une cover pro pour votre app, à partir de vos captures ou de votre site",
+    "heroText": "Importez vos captures ou collez l'adresse de votre site : la mise en page, les mockups et les couleurs sont générés pour vous, avec {count} modèles au choix. Il ne reste qu'à écrire le texte.",
+    "startTitle": "Commencez par vos captures",
+    "startText": "Jusqu'à 4 captures, desktop ou mobile : importez-les, ou collez l'adresse de votre site pour le capturer sur ordinateur et mobile. Ajoutez votre logo et choisissez la couleur de marque, ou laissez-la déduite de la première capture.",
     "imageLabel": "Captures de votre application ({max} maximum)",
     "createButton": "Créer ma cover",
     "useScreenshotColor": "Couleur de la capture",
     "howTitle": "Comment ça marche",
-    "step1Title": "Importez une capture",
-    "step1Text": "Puis ajoutez-en d'autres et choisissez leur ordre dans l'éditeur.",
+    "step1Title": "Importez ou capturez",
+    "step1Text": "Déposez vos captures, ou collez l'adresse de votre site et choisissez les pages à capturer.",
     "step2Title": "Personnalisez",
-    "step2Text": "Nom, description, fonctionnalités et couleur de marque.",
+    "step2Text": "Choisissez un modèle, puis le nom, la description, les fonctionnalités et la couleur de marque.",
     "step3Title": "Téléchargez",
-    "step3Text": "Un PNG prêt pour votre README, portfolio, LinkedIn ou réseaux sociaux, au format de votre choix.",
+    "step3Text": "Un PNG prêt pour votre README, Product Hunt, LinkedIn ou les réseaux sociaux, au format de votre choix.",
     "github": "GitHub",
     "toggleTheme": "Changer de thème",
     "githubAria": "Voir le code source sur GitHub (s'ouvre dans un nouvel onglet)",
@@ -33,7 +33,7 @@
     "osFreeTitle": "Gratuit, sans limite",
     "osFreeText": "Aucun compte, aucun filigrane, aucun quota d'exports.",
     "osPrivateTitle": "Privé par conception",
-    "osPrivateText": "Tout est généré dans votre navigateur : vos captures ne quittent jamais votre appareil.",
+    "osPrivateText": "Vos captures sont traitées dans votre navigateur et ne quittent jamais votre appareil. La capture d'un site, facultative, n'envoie que son adresse.",
     "osContribTitle": "Ouvert aux contributions",
     "osContribText": "Nouveaux modèles, traductions, corrections : les pull requests sont les bienvenues.",
     "viewOnGithub": "Voir sur GitHub",
@@ -59,11 +59,13 @@
     "q3": "Quels formats puis-je exporter ?",
     "a3": "Des PNG : 2400 × 1500 pour une cover, ou les formats Open Graph, GitHub, X / Twitter, Product Hunt et carré, avec une option haute résolution 2×.",
     "q4": "Puis-je l'héberger moi-même ou contribuer ?",
-    "a4": "Oui. Le site est entièrement statique : clonez le dépôt GitHub, lancez le build et hébergez le dossier généré où vous voulez. Les contributions sont les bienvenues."
+    "a4": "Oui. Le site est entièrement statique : clonez le dépôt GitHub, lancez le build et hébergez le dossier généré où vous voulez. Les contributions sont les bienvenues.",
+    "q5": "Puis-je capturer mon site directement ?",
+    "a5": "Oui. Collez son adresse : Cover Studio liste ses pages, vous en choisissez 2 (capturées sur ordinateur et sur mobile) ou jusqu'à 4 sur un seul appareil, et les captures arrivent dans la galerie. Les pages derrière une connexion et les sites qui bloquent les robots ne peuvent pas être capturés : importez alors vos captures."
   },
   "footer": {
     "navLabel": "Liens du projet",
-    "tagline": "Une cover pro pour votre app, à partir de vos captures. Gratuit et open source.",
+    "tagline": "Une cover pro pour votre app, à partir de vos captures ou de votre site. Gratuit et open source.",
     "projectTitle": "Projet",
     "github": "Code source sur GitHub",
     "issues": "Signaler un problème",

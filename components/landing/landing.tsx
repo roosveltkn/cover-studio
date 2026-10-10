@@ -27,7 +27,7 @@ import { LINKS } from "@/lib/site"
 import { MAX_IMAGES, isPortrait } from "@/lib/slots"
 import { cn } from "@/lib/utils"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
-import { getTemplate } from "@/templates/registry"
+import { getTemplate, templates } from "@/templates/registry"
 import { COLOR_PRESETS, defaultConfig } from "@/templates/showcase/defaults"
 import type { ImageAsset } from "@/types/cover"
 
@@ -145,7 +145,7 @@ export function Landing() {
                   {t("heroTitle")}
                 </h1>
                 <p className="max-w-lg text-base text-muted-foreground">
-                  {t("heroText")}
+                  {t("heroText", { count: templates.length })}
                 </p>
               </div>
 
