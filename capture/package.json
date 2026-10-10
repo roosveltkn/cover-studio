@@ -15,7 +15,7 @@
     "fast-xml-parser": "^5.11.2",
     "ipaddr.js": "^2.5.0",
     "node-html-parser": "^9.0.4",
-    "puppeteer-core": "25.11.0",
+    "puppeteer-core": "25.12.0",
     "undici": "^7.30.0"
   },
   "devDependencies": {
