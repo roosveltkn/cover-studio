@@ -88,6 +88,16 @@ describe("startFrom", () => {
     expect(useCoverStore.getState().config.template).toBe("aurora")
   })
 
+  it("préfère la couleur et l'icône choisies sur l'accueil", async () => {
+    const { useCoverStore } = await loadStore()
+    const icon = landscape({ name: "icon.png" })
+    useCoverStore
+      .getState()
+      .startFrom([landscape({ dominant: "#16a34a" })], { brandColor: "#ef4444", icon })
+    expect(useCoverStore.getState().config.style.brandColor).toBe("#ef4444")
+    expect(useCoverStore.getState().config.content.icon).toEqual(icon)
+  })
+
   it("garde un template navigateur dès qu'une capture est en paysage", async () => {
     const { useCoverStore } = await loadStore()
     useCoverStore.getState().startFrom([portrait(), landscape()])

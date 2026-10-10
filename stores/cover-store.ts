@@ -10,6 +10,8 @@ import type { CoverConfig, ImageAsset, PanelId, TemplateTag } from "@/types/cove
 /** Choix faits sur l'accueil ; ce qui manque est déduit des captures. */
 export type StartOptions = {
   template?: string
+  icon?: ImageAsset
+  brandColor?: string
 }
 
 type CoverState = {
@@ -52,12 +54,12 @@ export const useCoverStore = create<CoverState>()(
               : { ...state.config, content },
           }
         }),
-      // Point de départ de l'éditeur : les captures et le modèle choisis sur
-      // l'accueil. La couleur dominante de la première capture devient la
-      // couleur de marque.
+      // Point de départ de l'éditeur : les captures, l'icône, la couleur et le
+      // modèle choisis sur l'accueil. Sans couleur choisie, la couleur dominante
+      // de la première capture devient la couleur de marque.
       startFrom: (images, options = {}) =>
         set((state) => {
-          const brandColor = images[0]?.dominant
+          const brandColor = options.brandColor ?? images[0]?.dominant
           // Des captures toutes en portrait appellent le template dédié au mobile.
           const template = options.template
             ? options.template
@@ -70,6 +72,9 @@ export const useCoverStore = create<CoverState>()(
             config: {
               ...state.config,
               template,
+              content: options.icon
+                ? { ...state.config.content, icon: options.icon }
+                : state.config.content,
               style: brandColor ? { ...state.config.style, brandColor } : state.config.style,
               mockups: { ...state.config.mockups, images },
             },
