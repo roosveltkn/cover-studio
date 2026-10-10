@@ -1,28 +1,28 @@
-name: Fonctionnalité
-description: Proposer une amélioration ou un nouveau modèle
+name: Feature
+description: Suggest an improvement or a new template
 labels: [enhancement]
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Problème ou besoin
-      description: Qu'essayez-vous de faire et qu'est-ce qui vous en empêche ?
+      label: Problem or need
+      description: What are you trying to do, and what is stopping you?
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
-      label: Proposition
-      description: Comment imaginez-vous la solution ? Joignez une maquette si possible.
+      label: Proposal
+      description: How do you picture the solution? Attach a mockup if you can.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives envisagées
+      label: Alternatives considered
   - type: checkboxes
     id: contribute
     attributes:
       label: Contribution
       options:
-        - label: Je souhaite travailler sur cette fonctionnalité
+        - label: I'd like to work on this feature

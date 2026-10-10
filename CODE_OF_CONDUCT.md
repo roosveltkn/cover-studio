@@ -1,41 +1,42 @@
-# Code de conduite
+# Code of conduct
 
-Ce projet adopte l'esprit du [Contributor Covenant 2.1](https://www.contributor-covenant.org/fr/version/2/1/code_of_conduct/).
+This project follows the spirit of the
+[Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
 
-## Notre engagement
+## Our pledge
 
-Nous voulons une communauté accueillante et respectueuse, quels que soient l'âge, le handicap,
-l'origine, l'identité ou l'expression de genre, le niveau d'expérience, la nationalité,
-l'apparence, la religion ou l'orientation sexuelle.
+We want a welcoming and respectful community, regardless of age, disability, ethnicity, gender
+identity or expression, level of experience, nationality, appearance, religion or sexual
+orientation.
 
-## Comportements attendus
+## Expected behaviour
 
-- Faire preuve d'empathie et de bienveillance envers les autres
-- Respecter les points de vue et les expériences différents
-- Donner et recevoir des retours constructifs avec grâce
-- Assumer ses erreurs, s'excuser et en tirer des leçons
-- Penser à l'intérêt de la communauté, pas seulement au sien
+- Showing empathy and kindness toward others
+- Respecting differing viewpoints and experiences
+- Giving and gracefully accepting constructive feedback
+- Owning our mistakes, apologising and learning from them
+- Focusing on what is best for the community, not just for ourselves
 
-## Comportements inacceptables
+## Unacceptable behaviour
 
-- Langage ou images à caractère sexuel, attention sexuelle non désirée
-- Insultes, remarques dénigrantes, attaques personnelles ou politiques
-- Harcèlement public ou privé
-- Publication d'informations privées d'autrui (adresse, email…) sans son accord
-- Toute conduite raisonnablement jugée inappropriée dans un cadre professionnel
+- Sexualised language or imagery, and unwelcome sexual attention
+- Insults, derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information (address, email…) without their consent
+- Any other conduct that could reasonably be considered inappropriate in a professional setting
 
-## Application
+## Enforcement
 
-Les mainteneurs clarifient et font respecter ces règles. Ils peuvent modérer, modifier ou supprimer
-tout commentaire, commit, issue ou contribution, et exclure temporairement ou définitivement toute
-personne dont le comportement est jugé inapproprié.
+Maintainers clarify and enforce these rules. They may moderate, edit or remove any comment,
+commit, issue or contribution, and temporarily or permanently ban anyone whose behaviour they
+deem inappropriate.
 
-Ce code s'applique à tous les espaces du projet (dépôt, issues, PR, discussions) et lorsqu'une
-personne représente publiquement le projet.
+This code applies in all project spaces (repository, issues, pull requests, discussions) and
+when someone publicly represents the project.
 
-## Signalement
+## Reporting
 
-Signalez un comportement inacceptable aux mainteneurs via le
-[signalement privé GitHub](https://github.com/roosveltkn/cover-studio/security/advisories/new)
-ou en les contactant directement depuis leur profil GitHub. Tous les signalements sont examinés
-avec sérieux et confidentialité.
+Report unacceptable behaviour to the maintainers through
+[GitHub private reporting](https://github.com/roosveltkn/cover-studio/security/advisories/new)
+or by contacting them directly from their GitHub profile. All reports are reviewed seriously and
+confidentially.

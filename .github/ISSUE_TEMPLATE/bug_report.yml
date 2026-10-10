@@ -1,38 +1,38 @@
 name: Bug
-description: Quelque chose ne fonctionne pas comme prévu
+description: Something doesn't work as expected
 labels: [bug]
 body:
   - type: textarea
     id: description
     attributes:
       label: Description
-      description: Que se passe-t-il ? Qu'attendiez-vous ?
+      description: What happens? What did you expect?
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Étapes pour reproduire
+      label: Steps to reproduce
       placeholder: |
-        1. Ouvrir l'éditeur
-        2. Importer une capture
+        1. Open the editor
+        2. Import a screenshot
         3. ...
     validations:
       required: true
   - type: input
     id: template
     attributes:
-      label: Modèle concerné
+      label: Template
       placeholder: showcase, bento, mobile-trio…
   - type: input
     id: browser
     attributes:
-      label: Navigateur et système
+      label: Browser and OS
       placeholder: Chrome 130, Windows 11
     validations:
       required: true
   - type: textarea
     id: screenshots
     attributes:
-      label: Captures d'écran / console
-      description: Glissez des images ou collez les erreurs de la console.
+      label: Screenshots / console
+      description: Drop images or paste errors from the browser console.
