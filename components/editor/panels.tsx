@@ -32,7 +32,7 @@ export function Panel({ id }: { id: PanelId }) {
     </header>
   )
 
-  // Le panneau des modèles gère son en-tête : il reste collé en haut au défilement.
+  // Le panneau des modèles place ses étiquettes de filtre sous l'en-tête.
   if (id === "templates") return <TemplatesPanel header={header} />
 
   return (
@@ -74,9 +74,8 @@ function TemplatesPanel({ header }: { header: ReactNode }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 px-4 pb-4">
-      {/* Titre, étiquettes et compteur restent visibles pendant le défilement. */}
-      <div className="sticky top-0 z-10 -mx-4 flex flex-col gap-4 border-b border-border/60 bg-background px-4 pt-4 pb-3">
+    <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4">
         {header}
         <div role="group" aria-label={tPanel("tagsLabel")} className="flex flex-wrap gap-1.5">
           {TEMPLATE_TAGS.map((tag) => {
