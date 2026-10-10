@@ -273,7 +273,16 @@
     "imageTooLarge": "Image trop lourde : 10 Mo maximum.",
     "readFailed": "Lecture du fichier impossible.",
     "corrupt": "Image illisible ou corrompue.",
-    "importFailed": "Import impossible."
+    "importFailed": "Import impossible.",
+    "captureInvalidUrl": "Adresse invalide. Exemple : monsite.com",
+    "captureForbiddenHost": "Cette adresse mène à un réseau privé : impossible de la capturer.",
+    "captureNoPages": "Cette adresse ne mène pas à une page web.",
+    "captureBlocked": "Ce site refuse les robots. Importez plutôt vos captures.",
+    "captureUnreachable": "Site injoignable. Vérifiez l'adresse.",
+    "captureTimeout": "Le site met trop de temps à répondre. Réessayez.",
+    "captureRateLimited": "Trop de demandes d'affilée. Patientez une minute.",
+    "captureNetwork": "Service de capture injoignable. Vérifiez votre connexion.",
+    "captureFailed": "Capture impossible. Réessayez ou importez vos captures."
   },
   "defaults": {
     "badge": "Catégorie · Secteur",

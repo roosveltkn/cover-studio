@@ -273,7 +273,16 @@
     "imageTooLarge": "Image too large: 10 MB maximum.",
     "readFailed": "Could not read the file.",
     "corrupt": "Unreadable or corrupted image.",
-    "importFailed": "Import failed."
+    "importFailed": "Import failed.",
+    "captureInvalidUrl": "Invalid address. Example: mysite.com",
+    "captureForbiddenHost": "This address leads to a private network and can't be captured.",
+    "captureNoPages": "This address doesn't lead to a web page.",
+    "captureBlocked": "This site blocks robots. Import your screenshots instead.",
+    "captureUnreachable": "Site unreachable. Check the address.",
+    "captureTimeout": "The site is taking too long to respond. Try again.",
+    "captureRateLimited": "Too many requests in a row. Wait a minute.",
+    "captureNetwork": "Capture service unreachable. Check your connection.",
+    "captureFailed": "Capture failed. Try again or import your screenshots."
   },
   "defaults": {
     "badge": "Category · Industry",
