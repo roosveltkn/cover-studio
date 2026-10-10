@@ -179,6 +179,10 @@ Contraintes :
 
 Contrat d'API, sécurité et déploiement : [CAPTURE.md](./CAPTURE.md).
 
+### 6.8 Édition directe sur l'aperçu
+
+Textes modifiables sur place et barre d'outils flottante (taille, police, couleur par élément), à la manière de Canva. Le panneau reste la voie complète. Spécification : [INLINE-EDITING.md](./INLINE-EDITING.md).
+
 ## 7. Dérivation de la palette
 
 À partir de `brandColor` (converti en HSL ou OKLCH) :
