@@ -185,7 +185,7 @@ Une couleur de marque en entrée (color picker + saisie hex). Le template en dé
 
 - **Vite + React + TypeScript**
 - **Tailwind CSS** pour l'interface de l'éditeur
-- **html-to-image** pour l'export PNG
+- **modern-screenshot** pour l'export PNG
 - Aucun backend ; hébergement statique (Vercel, Netlify ou GitHub Pages)
 
 ### 8.2 Rendu
@@ -210,7 +210,7 @@ Une couleur de marque en entrée (color picker + saisie hex). Le template en dé
 │  │  └─ PhoneFrame.tsx     # SVG/CSS
 │  ├─ lib/
 │  │  ├─ color.ts           # HSL/OKLCH, luminance, contraste
-│  │  ├─ export.ts          # html-to-image, gestion des polices
+│  │  ├─ export.ts          # modern-screenshot, capture du DOM
 │  │  └─ image.ts           # lecture fichier, dimensions, validation
 │  └─ fonts/                # polices auto-hébergées
 ├─ public/
@@ -246,12 +246,12 @@ Un template ajouté = un dossier dans `src/templates/` + une entrée dans le reg
 
 | Sujet | Exigence |
 |---|---|
-| Polices | Auto-hébergées et embarquées à l'export (sinon `html-to-image` les perd). Attendre `document.fonts.ready` avant de capturer. |
+| Polices | Auto-hébergées et embarquées à l'export (sinon la capture les perd). Attendre `document.fonts.ready` avant de capturer. |
 | Images | Lues via `FileReader` en data URL, pas de requête réseau. Taille max suggérée : 10 Mo par image. |
 | Formats acceptés | PNG, JPEG, WebP |
 | Mémoire | Un canevas 2400×1500 en 2× fait 4800×3000 ; prévoir un message d'erreur si le navigateur refuse la capture. |
 | Navigateurs cibles | Chrome, Edge, Firefox, Safari récents |
-| Safari | Vérifier l'export `html-to-image` (problèmes connus avec certains filtres et images SVG) |
+| Safari | Export via `modern-screenshot` (redessine les images pour Safari/iOS) : à vérifier sur un vrai iPhone |
 | Accessibilité | Éditeur navigable au clavier, labels de formulaire, contraste de l'interface conforme AA |
 
 ## 11. Critères d'acceptation V1

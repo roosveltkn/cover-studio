@@ -46,7 +46,7 @@ Ouvrez <http://localhost:3000>.
 ## Stack
 
 [Next.js](https://nextjs.org) (App Router, export statique) · React 19 · TypeScript ·
-Tailwind CSS 4 · shadcn/ui · Zustand · html-to-image · dnd-kit.
+Tailwind CSS 4 · shadcn/ui · Zustand · modern-screenshot · dnd-kit.
 
 ## Structure du projet
 

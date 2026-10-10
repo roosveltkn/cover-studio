@@ -11,7 +11,7 @@ type CoverImageProps = {
 /**
  * Capture affichée en `cover`. Un `background-image` plutôt qu'un `<img>` avec
  * `object-fit` : Safari/iOS ignore `object-fit` dans le `foreignObject` SVG
- * utilisé par html-to-image, ce qui déformait les captures à l'export.
+ * utilisé par la capture DOM, ce qui déformait les captures à l'export.
  */
 export function CoverImage({ src, position = "50% 0%", size = "cover", style }: CoverImageProps) {
   return (
