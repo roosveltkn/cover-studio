@@ -1,22 +1,22 @@
 ## Description
 
-<!-- Que change cette PR, et pourquoi ? Issue liée : Closes #... -->
+<!-- What does this PR change, and why? Related issue: Closes #... -->
 
-## Type de changement
+## Type of change
 
-- [ ] Correction de bug
-- [ ] Nouvelle fonctionnalité
-- [ ] Nouveau modèle de cover
-- [ ] Traduction
+- [ ] Bug fix
+- [ ] New feature
+- [ ] New cover template
+- [ ] Translation
 - [ ] Documentation / refactor / chore
 
-## Captures d'écran
+## Screenshots
 
-<!-- Obligatoire pour tout changement visuel : avant / après, ou cover exportée. -->
+<!-- Required for any visual change: before / after, or an exported cover. -->
 
 ## Checklist
 
-- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm i18n:check` et `pnpm build` passent
-- [ ] Les nouveaux textes sont dans `messages/fr.json` et `messages/en.json`
-- [ ] Aucun asset sous licence ou logo tiers ajouté
-- [ ] Le titre de la PR suit Conventional Commits (`feat:`, `fix:`…)
+- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm i18n:check`, `pnpm test` and `pnpm build` pass
+- [ ] New texts are in both `messages/fr.json` and `messages/en.json`
+- [ ] No licensed assets or third-party logos added
+- [ ] The PR title follows Conventional Commits (`feat:`, `fix:`…)

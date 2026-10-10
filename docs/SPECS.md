@@ -1,108 +1,119 @@
-# Générateur de covers d'applications — Spécifications
+# App cover generator: specification
 
-> Nom de travail : à définir
-> Statut : spécifications V1
-> Licence cible : open source (MIT)
+> Name: Cover Studio
+> Status: original V1 specification, kept as the design reference. The project has since gone
+> beyond V1 (16 templates, several export formats, fr/en, URL capture): see the
+> [README](../README.md) for the current state.
+> License: open source (MIT)
 
 ---
 
-## 1. Contexte et objectif
+## 1. Context and goal
 
-Les développeurs ont besoin de visuels de présentation pour leurs applications (portfolio, README GitHub, Product Hunt, LinkedIn). Les produire dans Figma ou Canva est long et peu reproductible.
+Developers need presentation visuals for their apps (portfolio, GitHub README, Product Hunt,
+LinkedIn). Making them in Figma or Canva is slow and hard to reproduce.
 
-**Objectif** : une application web gratuite et open source qui génère une cover de présentation à partir de 2 captures d'écran, de quelques textes et d'une couleur de marque.
+**Goal**: a free, open-source web app that generates a presentation cover from 2 screenshots, a
+few texts and a brand colour.
 
-**Référence visuelle** : trois covers existantes (Portf.app, OngolaPhone, Klivar) qui partagent le même gabarit. Le V1 reproduit ce gabarit.
+**Visual reference**: three existing covers (Portf.app, OngolaPhone, Klivar) that share the same
+layout. V1 reproduces that layout.
 
-## 2. Périmètre
+## 2. Scope
 
-### 2.1 Dans le V1
-- Un seul template (gabarit des 3 covers de référence)
-- Édition du contenu : textes, chips, captures
-- Couleur de marque unique, dont toute la palette est dérivée
-- Prévisualisation en direct
-- Export PNG 2400×1500
+### 2.1 In V1
+- A single template (the layout of the 3 reference covers)
+- Content editing: texts, chips, screenshots
+- A single brand colour, from which the whole palette is derived
+- Live preview
+- 2400×1500 PNG export
 
-### 2.2 Hors V1
-- Plusieurs templates
-- Autres ratios d'export
-- ~~Localisation / multi-langues~~ : livrée en fr/en, voir [I18N.md](./I18N.md)
-- CLI et GitHub Action
-- Comptes utilisateurs, sauvegarde cloud, backend applicatif (seul le service de capture d'URL, facultatif et sans état, fait exception : voir 6.7)
+### 2.2 Out of V1
+- ~~Several templates~~: delivered (see `templates/registry.ts`)
+- ~~Other export ratios~~: delivered (cover, Open Graph, GitHub, X, Product Hunt, square)
+- ~~Localisation / multiple languages~~: delivered in fr/en, see [I18N.md](./I18N.md)
+- CLI and GitHub Action
+- User accounts, cloud saving, application backend (the optional, stateless URL capture service
+  is the only exception: see 6.7)
 
-### 2.3 Non-objectifs
-- Ce n'est pas un éditeur de design libre (pas de drag & drop d'éléments)
-- Ce n'est pas un générateur de screenshots pour les stores (App Store / Play Store)
+### 2.3 Non-goals
+- It is not a free-form design editor (no drag and drop of elements)
+- It is not a store screenshot generator (App Store / Play Store)
 
-## 3. Principes
+## 3. Principles
 
-1. **100 % côté client** : aucune image n'est envoyée à un serveur. Seule exception, facultative : la capture depuis une URL (6.7) envoie l'**adresse saisie** au service de capture. Les images importées, elles, ne quittent jamais le navigateur.
-2. **Sans compte** : l'utilisateur ouvre la page et exporte.
-3. **Un seul champ obligatoire de style** : la couleur de marque. Le reste est dérivé.
-4. **Template = composant + schéma de props**, pour permettre la contribution par PR plus tard.
-5. **Aucun asset sous licence** : cadres navigateur et téléphone dessinés en SVG/CSS.
+1. **100% client-side**: no image is sent to a server. The one optional exception: capturing from
+   a URL (6.7) sends the **typed address** to the capture service. Imported images never leave
+   the browser.
+2. **No account**: the user opens the page and exports.
+3. **A single required style field**: the brand colour. Everything else is derived.
+4. **Template = component + props schema**, so that templates can be contributed through PRs.
+5. **No licensed assets**: browser and phone frames are drawn in SVG/CSS.
 
-## 4. Anatomie du gabarit
+## 4. Layout anatomy
 
-Canevas de **2400 × 1500 px** (16:10). Les valeurs ci-dessous sont mesurées sur les covers de référence et à ajuster à l'implémentation.
+**2400 × 1500 px** canvas (16:10). The values below were measured on the reference covers and are
+to be adjusted during implementation.
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│ fond : dégradé + grille + halo (haut-droite)                       │
+│ background: gradient + grid + halo (top right)                     │
 │                                                                    │
-│  [PASTILLE]                    ┌───────────────────────────┐       │
+│  [BADGE]                       ┌───────────────────────────┐       │
 │                                │ ● ● ●  [🔒 url]           │       │
-│  Nom                           │                           │       │
-│  Description                   │   capture desktop         │       │
-│  sur 3 lignes                  │                      ┌────┴────┐  │
+│  Name                          │                           │       │
+│  Description                   │   desktop screenshot      │       │
+│  on 3 lines                    │                      ┌────┴────┐  │
 │                                │                      │ mobile  │  │
 │  [chip] [chip]                 └──────────────────────│         │  │
 │  [chip] [chip]                                        └─────────┘  │
 │                                                                    │
-│  pied de page                                                      │
+│  footer                                                            │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-| Zone | Position approximative (px) |
+| Area | Approximate position (px) |
 |---|---|
-| Colonne gauche | x = 135, largeur ≈ 720 |
-| Pastille | y ≈ 285 à 346 |
-| Nom | y ≈ 400 à 500, corps ≈ 110 px |
-| Description | sous le nom, corps ≈ 32 px, 3 lignes |
-| Chips | sous la description, retour à la ligne automatique |
-| Pied de page | y ≈ 1375 |
-| Navigateur | x ≈ 900 à 2190, y ≈ 180 à 1100/1170 |
-| Téléphone | x ≈ 1907 à 2308, y ≈ 510 à 1430 |
+| Left column | x = 135, width ≈ 720 |
+| Badge | y ≈ 285 to 346 |
+| Name | y ≈ 400 to 500, size ≈ 110 px |
+| Description | below the name, size ≈ 32 px, 3 lines |
+| Chips | below the description, automatic wrapping |
+| Footer | y ≈ 1375 |
+| Browser | x ≈ 900 to 2190, y ≈ 180 to 1100/1170 |
+| Phone | x ≈ 1907 to 2308, y ≈ 510 to 1430 |
 
-Éléments fixes : feux tricolores du navigateur, barre d'URL avec cadenas, cadre noir du téléphone avec dynamic island, typographie, espacements, forme de la pastille (contour arrondi) et des chips (fond blanc translucide).
+Fixed elements: browser traffic lights, URL bar with a padlock, black phone frame with a dynamic
+island, typography, spacing, badge shape (rounded outline) and chip shape (translucent white
+background).
 
-## 5. Modèle de données
+## 5. Data model
 
 ```ts
 type CoverConfig = {
   content: {
-    badge: string;            // affiché en majuscules espacées
-    nameMain: string;         // 1re partie du nom
-    nameAccent?: string;      // 2e partie, optionnelle (ex. "Ongola" + "Phone")
+    badge: string;            // shown in spaced capitals
+    nameMain: string;         // first part of the name
+    nameAccent?: string;      // optional second part (e.g. "Ongola" + "Phone")
     description: string;
-    chips: string[];          // liste dynamique, nombre libre
-    footer: string;           // texte libre (ex. "klivar.fr · Tech Lead")
-    browserUrl: string;       // URL affichée dans la barre du navigateur
+    chips: string[];          // dynamic list, any number
+    footer: string;           // free text (e.g. "klivar.fr · Tech Lead")
+    browserUrl: string;       // URL shown in the browser bar
   };
   style: {
-    brandColor: string;       // hex, seul champ obligatoire
-    accentColor?: string;     // override de la couleur de nameAccent (V1.1)
+    brandColor: string;       // hex, the only required field
+    accentColor?: string;     // override for the nameAccent colour (V1.1)
     haloIntensity?: number;   // 0–1 (V1.1)
-    gridOpacity?: number;     // 0–1, 0 = désactivée (V1.1)
+    gridOpacity?: number;     // 0–1, 0 = disabled (V1.1)
   };
   mockups: {
     desktopImage?: ImageAsset;
     mobileImage?: ImageAsset;
     browserTheme?: "auto" | "light" | "dark";   // V1.1
-    desktopCropY?: number;                       // décalage vertical, 0–1 (V1.1)
+    desktopCropY?: number;                       // vertical offset, 0–1 (V1.1)
   };
   layout?: {                                     // V2
-    mirror?: boolean;                            // texte à droite, mockups à gauche
+    mirror?: boolean;                            // text on the right, mockups on the left
     phonePosition?: "bottom-right" | "bottom-left";
   };
   export: {
@@ -118,116 +129,135 @@ type ImageAsset = {
 };
 ```
 
-## 6. Fonctionnalités
+The implemented model has since grown (an ordered list of screenshots, per-template fields): see
+`types/cover.ts`.
 
-### 6.1 Contenu (V1)
+## 6. Features
 
-| Champ | Type | Contrainte |
+### 6.1 Content (V1)
+
+| Field | Type | Constraint |
 |---|---|---|
-| Pastille | texte | max ~40 caractères, transformée en majuscules par le template |
-| Nom (partie 1) | texte | obligatoire |
-| Nom (partie 2) | texte | optionnel |
-| Description | texte multi-lignes | max ~160 caractères recommandés |
-| Chips | liste | ajout / suppression, nombre libre, retour à la ligne automatique |
-| Pied de page | texte | libre |
-| URL navigateur | texte | indépendant du pied de page |
+| Badge | text | ~40 characters max, turned into capitals by the template |
+| Name (part 1) | text | required |
+| Name (part 2) | text | optional |
+| Description | multi-line text | ~160 characters max recommended |
+| Chips | list | add / remove, any number, automatic wrapping |
+| Footer | text | free |
+| Browser URL | text | independent from the footer |
 
 ### 6.2 Mockups (V1)
 
-- Upload séparé de la capture desktop et de la capture mobile (PNG, JPEG, WebP)
-- Chaque mockup est optionnel : le gabarit doit rester valide avec desktop seul, mobile seul, ou les deux
-- Hauteur du navigateur : suit le ratio de la capture, bornée par un minimum et un maximum
-- La capture est affichée depuis le haut de page (`object-fit: cover`, ancrage haut)
-- Si aucune image n'est fournie : placeholder neutre
+- Separate upload of the desktop and mobile screenshots (PNG, JPEG, WebP)
+- Each mockup is optional: the layout must stay valid with desktop only, mobile only, or both
+- Browser height: follows the screenshot's ratio, within a minimum and a maximum
+- The screenshot is shown from the top of the page (`object-fit: cover`, anchored at the top)
+- Without an image: a neutral placeholder
 
-### 6.3 Couleurs (V1)
+### 6.3 Colours (V1)
 
-Une couleur de marque en entrée (color picker + saisie hex). Le template en dérive toute sa palette (cf. §7).
+One brand colour as input (colour picker + hex input). The template derives its whole palette
+from it (see §7).
 
 ### 6.4 Export (V1)
 
-- Bouton « Télécharger PNG »
-- Taille de sortie : 2400×1500 (échelle 1×)
-- Nom de fichier : `<nameMain><nameAccent>-cover.png`, normalisé en minuscules sans espaces
+- "Download PNG" button
+- Output size: 2400×1500 (1× scale)
+- File name: `<nameMain><nameAccent>-cover.png`, lowercased without spaces
 
-### 6.5 Ajouts V1.1
+### 6.5 V1.1 additions
 
-- Thème du navigateur : clair, sombre, ou auto (selon la luminosité moyenne de la capture)
-- Override de la couleur de la 2e partie du nom
-- Réglage du halo et de la grille
-- Recadrage vertical de la capture desktop
+- Browser theme: light, dark, or auto (based on the screenshot's average brightness)
+- Override for the colour of the name's second part
+- Halo and grid settings
+- Vertical cropping of the desktop screenshot
 
-### 6.6 Ajouts V2
+### 6.6 V2 additions
 
-- Inversion du layout et position du téléphone
-- Ratios d'export supplémentaires : 1:1, 1.91:1 (image OG), 16:9
-- Plusieurs templates
-- Facteur d'échelle 2×
+- Mirrored layout and phone position
+- Extra export ratios: 1:1, 1.91:1 (OG image), 16:9
+- Several templates
+- 2× scale factor
 
-### 6.7 Capture depuis une URL
+### 6.7 Capture from a URL
 
-L'utilisateur colle l'adresse de son site au lieu d'importer des fichiers.
+The user pastes their site's address instead of importing files.
 
-1. **Analyse** : le service liste les pages du site (sitemap, puis liens de la page d'accueil, puis rendu Chrome si le site est une SPA). Un seul niveau, 50 pages au plus, groupées (accueil, navigation, pages, blog, légal).
-2. **Choix** : l'utilisateur coche les pages et les appareils (desktop, mobile). Un clic sur « Aperçu » affiche la capture desktop réduite ; elle est gardée en mémoire et réutilisée si la page est cochée.
-3. **Capture** : une image WebP par page et par appareil, qui suit ensuite le même chemin qu'un fichier importé (`readImage`, galerie, placement par orientation).
+1. **Analysis**: the service lists the site's pages (sitemap, then home page links, then a Chrome
+   render if the site is an SPA). One level only, 50 pages at most, grouped (home, navigation,
+   pages, blog, legal).
+2. **Selection**: in a dialog (a bottom drawer on mobile), the user checks pages and devices
+   (desktop, mobile). A run captures at most 4 images: 2 pages on both devices, or up to 4 pages on
+   a single one. "Preview" shows the desktop capture scaled down; it is kept in memory and reused
+   if the page is checked.
+3. **Capture**: one WebP image per page and device, which then follows the same path as an
+   imported file (`readImage`, gallery, placement by orientation).
 
-Contraintes :
-- Le service est un projet Vercel séparé (`capture/`), sans état ; l'app reste un export statique.
-- La fonctionnalité n'apparaît que si `NEXT_PUBLIC_CAPTURE_ENDPOINT` est défini : un fork reste 100 % local.
-- Les pages derrière connexion et les sites protégés contre les robots ne sont pas capturables ; l'import manuel reste la voie de repli.
+Constraints:
+- The service is a separate, stateless Vercel project (`capture/`); the app stays a static export.
+- The feature only appears when `NEXT_PUBLIC_CAPTURE_ENDPOINT` is set: a fork stays 100% local.
+- Pages behind a login and sites protected against robots cannot be captured; manual import
+  remains the fallback.
 
-Contrat d'API, sécurité et déploiement : [CAPTURE.md](./CAPTURE.md).
+API contract, security and deployment: [CAPTURE.md](./CAPTURE.md).
 
-## 7. Dérivation de la palette
+## 7. Palette derivation
 
-À partir de `brandColor` (converti en HSL ou OKLCH) :
+From `brandColor` (converted to HSL or OKLCH):
 
-| Élément | Règle |
+| Element | Rule |
 |---|---|
-| Fond bas-gauche | même teinte, luminosité ≈ 10 % |
-| Fond haut-droite | `brandColor` |
-| Halo | teinte plus claire et saturée, flou large, positionné en haut à droite |
-| Pastille, chips | blanc à ≈ 8 % d'opacité |
-| Bouton, accents | `brandColor` éclaircie |
-| Couleur de `nameAccent` | auto : teinte claire sur fond sombre ; teinte foncée si le fond est vif |
+| Bottom-left background | same hue, lightness ≈ 10% |
+| Top-right background | `brandColor` |
+| Halo | lighter, more saturated hue, wide blur, positioned top right |
+| Badge, chips | white at ≈ 8% opacity |
+| Button, accents | lightened `brandColor` |
+| `nameAccent` colour | auto: light tint on a dark background; dark tint if the background is bright |
 
-**Contraste** : la luminance relative de la couleur de fond est calculée. Si le ratio de contraste du texte blanc passe sous 4,5:1 (WCAG AA), le fond est assombri jusqu'à atteindre le seuil. Cas à tester : jaune, cyan, blanc cassé, noir pur.
+**Contrast**: the background colour's relative luminance is computed. If the contrast ratio of
+white text falls below 4.5:1 (WCAG AA), the background is darkened until it reaches the
+threshold. Cases to test: yellow, cyan, off-white, pure black.
 
-## 8. Architecture technique
+## 8. Technical architecture
 
 ### 8.1 Stack
 
-- **Vite + React + TypeScript**
-- **Tailwind CSS** pour l'interface de l'éditeur
-- **modern-screenshot** pour l'export PNG
-- Aucun backend ; hébergement statique (Vercel, Netlify ou GitHub Pages)
+The V1 plan was Vite + React. The project is implemented with:
 
-### 8.2 Rendu
+- **Next.js** (App Router, static export) + **React 19** + **TypeScript**
+- **Tailwind CSS 4** and **shadcn/ui** (Base UI) for the editor interface
+- **modern-screenshot** for PNG export
+- No application backend; static hosting (Vercel). The optional URL capture service is a
+  separate Vercel project.
 
-- Le template est un composant React rendu à **2400×1500 px** réels.
-- La prévisualisation l'enveloppe dans un conteneur et applique `transform: scale()` pour tenir dans l'écran.
-- L'export capture le composant **à sa taille native**, hors du `scale` de prévisualisation.
+### 8.2 Rendering
 
-### 8.3 Structure du dépôt
+- The template is a React component rendered at a real **2400×1500 px**.
+- The preview wraps it in a container and applies `transform: scale()` to fit the screen.
+- Export captures the component **at its native size**, outside the preview's `scale`.
+
+### 8.3 Repository structure
+
+The actual structure is described in the [README](../README.md#project-structure). The V1 plan
+was:
 
 ```
 /
 ├─ src/
-│  ├─ app/                  # shell de l'éditeur (formulaire + preview)
+│  ├─ app/                  # editor shell (form + preview)
 │  ├─ templates/
-│  │  └─ showcase/          # template V1
+│  │  └─ showcase/          # V1 template
 │  │     ├─ Template.tsx
-│  │     ├─ schema.ts       # schéma des props du template
-│  │     └─ palette.ts      # dérivation des couleurs
+│  │     ├─ schema.ts       # template props schema
+│  │     └─ palette.ts      # colour derivation
 │  ├─ mockups/
 │  │  ├─ BrowserFrame.tsx   # SVG/CSS
 │  │  └─ PhoneFrame.tsx     # SVG/CSS
 │  ├─ lib/
-│  │  ├─ color.ts           # HSL/OKLCH, luminance, contraste
-│  │  ├─ export.ts          # modern-screenshot, capture du DOM
-│  │  └─ image.ts           # lecture fichier, dimensions, validation
-│  └─ fonts/                # polices auto-hébergées
+│  │  ├─ color.ts           # HSL/OKLCH, luminance, contrast
+│  │  ├─ export.ts          # modern-screenshot, DOM capture
+│  │  └─ image.ts           # file reading, dimensions, validation
+│  └─ fonts/                # self-hosted fonts
 ├─ public/
 ├─ SPECS.md
 ├─ README.md
@@ -235,7 +265,7 @@ Contrat d'API, sécurité et déploiement : [CAPTURE.md](./CAPTURE.md).
 └─ LICENSE
 ```
 
-### 8.4 Contrat d'un template
+### 8.4 Template contract
 
 ```ts
 type Template = {
@@ -243,75 +273,82 @@ type Template = {
   name: string;
   size: { width: number; height: number };
   component: React.ComponentType<{ config: CoverConfig }>;
-  schema: FieldSchema[];       // champs exposés à l'éditeur
+  schema: FieldSchema[];       // fields exposed to the editor
 };
 ```
 
-Un template ajouté = un dossier dans `src/templates/` + une entrée dans le registre. L'éditeur génère son formulaire à partir de `schema`.
+Adding a template = a folder in `templates/` + an entry in the registry. The editor generates its
+form from `schema`. The implemented contract also declares screenshot `slots` and translation
+keys: see [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-template).
 
-## 9. Interface de l'éditeur
+## 9. Editor interface
 
-- Disposition en 2 zones : **formulaire à gauche, prévisualisation à droite** ; en mobile, la prévisualisation passe au-dessus.
-- Sections du formulaire : Contenu, Couleurs, Captures, Export.
-- Mise à jour de la prévisualisation en temps réel, sans bouton « Appliquer ».
-- Valeurs par défaut : un exemple pré-rempli (placeholder) pour que le rendu soit visible dès l'ouverture.
-- Persistance : `localStorage` du texte et des couleurs. Les images ne sont pas persistées en V1 (poids).
+- Two-area layout: **form on the left, preview on the right**; on mobile, the preview moves above.
+- Form sections: Content, Colours, Screenshots, Export.
+- The preview updates in real time, without an "Apply" button.
+- Defaults: a prefilled example (placeholder), so something is visible as soon as the editor
+  opens.
+- Persistence: text and colours in `localStorage`. Images are not persisted in V1 (size).
 
-## 10. Contraintes techniques
+## 10. Technical constraints
 
-| Sujet | Exigence |
+| Topic | Requirement |
 |---|---|
-| Polices | Auto-hébergées et embarquées à l'export (sinon la capture les perd). Attendre `document.fonts.ready` avant de capturer. |
-| Images | Lues via `FileReader` en data URL, pas de requête réseau. Taille max suggérée : 10 Mo par image. |
-| Formats acceptés | PNG, JPEG, WebP |
-| Mémoire | Un canevas 2400×1500 en 2× fait 4800×3000 ; prévoir un message d'erreur si le navigateur refuse la capture. |
-| Navigateurs cibles | Chrome, Edge, Firefox, Safari récents |
-| Safari | Export via `modern-screenshot` (redessine les images pour Safari/iOS) : à vérifier sur un vrai iPhone |
-| Accessibilité | Éditeur navigable au clavier, labels de formulaire, contraste de l'interface conforme AA |
+| Fonts | Self-hosted and embedded at export time (otherwise the capture loses them). Wait for `document.fonts.ready` before capturing. |
+| Images | Read with `FileReader` as data URLs, no network request. Suggested max size: 10 MB per image. |
+| Accepted formats | PNG, JPEG, WebP |
+| Memory | A 2400×1500 canvas at 2× is 4800×3000; show an error message if the browser refuses the capture. |
+| Target browsers | Recent Chrome, Edge, Firefox, Safari |
+| Safari | Export through `modern-screenshot` (redraws images for Safari/iOS): to be checked on a real iPhone |
+| Accessibility | Keyboard-navigable editor, form labels, AA-compliant interface contrast |
 
-## 11. Critères d'acceptation V1
+## 11. V1 acceptance criteria
 
-- [ ] Reproduire les 3 covers de référence (Portf.app, OngolaPhone, Klivar) avec un écart visuel limité aux captures et aux polices
-- [ ] Changer la couleur de marque met à jour fond, halo, chips et accents sans autre réglage
-- [ ] Le texte reste lisible sur au moins : indigo, orange, violet, vert, jaune, rouge, noir
-- [ ] Le gabarit s'affiche correctement avec : desktop seul, mobile seul, les deux, aucune image
-- [ ] Ajouter jusqu'à 8 chips ne casse pas la mise en page
-- [ ] Un nom de 30 caractères ne déborde pas de la colonne gauche
-- [ ] L'export PNG fait exactement 2400×1500 px et contient les bonnes polices
-- [ ] Aucun appel réseau n'est émis lors de l'upload ou de l'export (vérifiable dans l'onglet Network)
-- [ ] Le temps d'export reste sous 3 secondes sur un ordinateur courant
+- [ ] Reproduce the 3 reference covers (Portf.app, OngolaPhone, Klivar) with visual differences
+  limited to screenshots and fonts
+- [ ] Changing the brand colour updates background, halo, chips and accents with no other setting
+- [ ] Text stays readable on at least: indigo, orange, purple, green, yellow, red, black
+- [ ] The layout renders correctly with: desktop only, mobile only, both, no image
+- [ ] Adding up to 8 chips does not break the layout
+- [ ] A 30-character name does not overflow the left column
+- [ ] The PNG export is exactly 2400×1500 px and contains the right fonts
+- [ ] No network call is made during upload or export (checkable in the Network tab)
+- [ ] Export takes less than 3 seconds on an ordinary computer
 
 ## 12. Open source
 
-- **Licence** : MIT
-- **Dépôt** : README avec capture, démo en ligne, instructions d'installation (`pnpm install && pnpm dev`)
-- **CONTRIBUTING.md** : guide « créer un template » (structure du dossier, schéma, enregistrement dans le registre, capture de preview obligatoire)
-- **Polices** : uniquement sous licence libre (ex. OFL), licences listées dans le dépôt
-- **Mockups** : dessinés dans le projet, sans reproduction des cadres officiels d'appareils (Apple, Google), ce qui évite les questions de licence
+- **License**: MIT
+- **Repository**: README with a screenshot, live demo, setup instructions
+  (`pnpm install && pnpm dev`)
+- **CONTRIBUTING.md**: a "create a template" guide (folder structure, schema, registration in the
+  registry, required preview screenshot)
+- **Fonts**: free licences only (e.g. OFL), licences listed in the repository
+- **Mockups**: drawn in the project, without reproducing official device frames (Apple, Google),
+  which avoids licensing questions
 
-## 13. Feuille de route
+## 13. Roadmap
 
-| Version | Contenu |
+| Version | Content |
 |---|---|
-| **V1** | Template unique, contenu complet, couleur de marque, 2 captures, export PNG 2400×1500 |
-| **V1.1** | Thème navigateur, override de la couleur du nom, halo et grille, recadrage vertical |
-| **V2** | Inversion de layout, ratios supplémentaires, échelle 2×, système multi-templates, premiers templates communautaires |
-| **Plus tard** | CLI / GitHub Action, export WebP |
+| **V1** | Single template, full content, brand colour, 2 screenshots, 2400×1500 PNG export |
+| **V1.1** | Browser theme, name colour override, halo and grid, vertical cropping |
+| **V2** | Mirrored layout, extra ratios, 2× scale, multi-template system (delivered), first community templates |
+| **Later** | CLI / GitHub Action, WebP export |
 
-## 14. Risques
+## 14. Risks
 
-| Risque | Impact | Mitigation |
+| Risk | Impact | Mitigation |
 |---|---|---|
-| Polices absentes de l'export | Rendu différent de la preview | Auto-hébergement, `document.fonts.ready`, test d'export en CI manuel |
-| Contraste insuffisant sur couleurs claires | Texte illisible | Calcul de luminance et assombrissement automatique du fond |
-| Export lent ou en échec sur mobile | Mauvaise expérience | Message d'erreur explicite, recommander desktop pour l'export |
-| Un seul template : peu d'intérêt pour la communauté | Faible adoption | Soigner le template V1, documenter la contribution dès V1 |
-| Divergence entre rendu preview et export | Perte de confiance | Rendre la preview à partir du même composant que l'export |
-| Service de capture détourné (SSRF, abus) | Accès au réseau interne, coûts | Filtre d'adresses à chaque requête et redirection, origines autorisées, rate limiting Vercel, plafond de dépense |
+| Fonts missing from the export | Output differs from the preview | Self-hosting, `document.fonts.ready`, manual export check |
+| Insufficient contrast on light colours | Unreadable text | Luminance computation and automatic background darkening |
+| Slow or failing export on mobile | Poor experience | Clear error message, recommend desktop for export |
+| A single template: little interest for the community | Low adoption | Polish the V1 template, document contributing from V1 |
+| Preview and export rendering diverge | Loss of trust | Render the preview from the same component as the export |
+| Capture service abused (SSRF, misuse) | Internal network access, costs | Address filter on every request and redirect, allowed origins, Vercel rate limiting, spending cap |
 
-## 15. Questions ouvertes
+## 15. Open questions
 
-- Nom du projet et domaine
-- Police du template (à choisir parmi des polices libres proches des covers de référence)
-- Support des captures animées (GIF) : exclu du V1
-- Ajout d'un logo d'application dans le gabarit : non prévu en V1 ; à trancher
+- ~~Project name and domain~~: Cover Studio, coverstudio.roosveltkn.com
+- Template font (to pick among free fonts close to the reference covers)
+- Animated screenshots (GIF): excluded from V1
+- App logo in the layout: not planned in V1; to be decided (an app icon has since been added)

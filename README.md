@@ -1,30 +1,29 @@
 # Cover Studio
 
-Générateur gratuit et open source de covers pour vos applications : importez vos captures d'écran,
-choisissez un modèle et une couleur de marque, exportez un PNG prêt à partager (README GitHub,
-Product Hunt, LinkedIn, portfolio).
-
-_English: a free, open-source cover generator for your app. Drop in screenshots (or let it capture your site from its URL), pick a template and a brand colour, export a ready-to-share PNG. Everything runs in your browser._
+A free, open-source cover generator for your app: drop in your screenshots (or let Cover Studio
+capture your site from its URL), pick a template and a brand colour, and export a PNG ready to
+share on a GitHub README, Product Hunt, LinkedIn or your portfolio.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![CI](https://github.com/roosveltkn/cover-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/roosveltkn/cover-studio/actions/workflows/ci.yml)
 
-## Fonctionnalités
+## Features
 
-- 5 modèles (showcase, spotlight, bento, perspective, mobile-trio)
-- Captures multiples (jusqu'à 4), réordonnables par glisser-déposer
-- Capture depuis une URL : le site est analysé, vous choisissez les pages, elles sont capturées
-  en version ordinateur et mobile (service facultatif, voir [docs/CAPTURE.md](./docs/CAPTURE.md))
-- Une couleur de marque : toute la palette en est dérivée
-- Textes, icône de l'application, typographie et tailles réglables
-- Export PNG en plusieurs formats et en haute résolution
-- Interface en français et en anglais, thème clair / sombre
-- **100 % côté client** : aucune image n'est envoyée à un serveur, aucun compte requis. Seule
-  exception, facultative : la capture depuis une URL envoie l'adresse saisie au service de capture
+- 16 templates (showcase, spotlight, bento, perspective, mobile-trio, aurora, editorial, terminal…)
+- Up to 4 screenshots, reordered by drag and drop
+- Capture from a URL: the site is analysed, you pick the pages, and they are captured on desktop
+  and mobile (optional service, see [docs/CAPTURE.md](./docs/CAPTURE.md))
+- One brand colour: the whole palette is derived from it
+- Adjustable texts, app icon, typography and sizes
+- PNG export in several formats (cover, Open Graph, GitHub, X, Product Hunt, square), in high
+  resolution
+- Interface in English and French, light and dark themes
+- **100% client-side**: no image is ever uploaded and no account is needed. The one optional
+  exception: capturing from a URL sends the address you type to the capture service
 
-## Démarrage rapide
+## Quick start
 
-Prérequis : [Node.js](https://nodejs.org) 20 ou plus et [pnpm](https://pnpm.io) 10.
+Requirements: [Node.js](https://nodejs.org) 20 or later and [pnpm](https://pnpm.io) 10.
 
 ```bash
 git clone https://github.com/roosveltkn/cover-studio.git
@@ -33,51 +32,54 @@ pnpm install
 pnpm dev
 ```
 
-Ouvrez <http://localhost:3000>.
+Open <http://localhost:3000>.
 
 ## Scripts
 
-| Commande          | Rôle                                                   |
-| ----------------- | ------------------------------------------------------ |
-| `pnpm dev`        | serveur de développement                               |
-| `pnpm build`      | build de production (export statique dans `out/`)      |
-| `pnpm lint`       | ESLint                                                 |
-| `pnpm typecheck`  | vérification TypeScript                                |
-| `pnpm format`     | formatage Prettier                                     |
-| `pnpm i18n:check` | cohérence des traductions (clés, variables, textes en dur) |
-| `pnpm test`       | tests unitaires (Vitest)                               |
-| `pnpm test:e2e`   | build puis tests de bout en bout (Playwright)          |
-| `pnpm capture:dev` | service de capture en local (`vercel dev`)            |
-| `pnpm capture:test` | tests du service de capture                          |
+| Command                  | Purpose                                                       |
+| ------------------------ | ------------------------------------------------------------- |
+| `pnpm dev`               | development server                                            |
+| `pnpm build`             | production build (static export to `out/`)                    |
+| `pnpm lint`              | ESLint                                                        |
+| `pnpm typecheck`         | TypeScript check                                              |
+| `pnpm format`            | Prettier formatting                                           |
+| `pnpm i18n:check`        | translation consistency (keys, variables, hard-coded text)    |
+| `pnpm test`              | unit tests (Vitest)                                           |
+| `pnpm test:e2e`          | build, then end-to-end tests (Playwright)                     |
+| `pnpm capture:dev`       | local capture service (`vercel dev`)                          |
+| `pnpm capture:test`      | capture service tests                                         |
+| `pnpm capture:typecheck` | capture service TypeScript check                              |
 
 ## Stack
 
-[Next.js](https://nextjs.org) (App Router, export statique) · React 19 · TypeScript ·
-Tailwind CSS 4 · shadcn/ui · Zustand · modern-screenshot · dnd-kit.
+[Next.js](https://nextjs.org) (App Router, static export) · React 19 · TypeScript ·
+Tailwind CSS 4 · shadcn/ui (Base UI) · Zustand · modern-screenshot · dnd-kit.
+The optional capture service runs headless Chromium (`puppeteer-core` and `@sparticuz/chromium`)
+on Vercel Functions.
 
-## Structure du projet
+## Project structure
 
 ```
-app/          pages (landing, éditeur) et métadonnées SEO
-components/   éditeur, landing et composants UI
-templates/    un dossier par modèle de cover + registre (registry.ts)
-mockups/      cadres navigateur et téléphone (SVG / CSS)
-stores/       état de l'éditeur (Zustand)
-lib/          logique pure : couleurs, images, export
-i18n/         traducteur maison ; textes dans messages/{fr,en}.json
-capture/      service de capture d'URL (projet Vercel séparé, Chrome headless)
-docs/         spécifications (SPECS.md), internationalisation (I18N.md), capture (CAPTURE.md)
+app/          pages (landing, editor) and SEO metadata
+components/   editor, landing and UI components
+templates/    one folder per cover template, plus the registry (registry.ts)
+mockups/      browser and phone frames (SVG / CSS)
+stores/       editor state (Zustand)
+lib/          pure logic: colours, images, export, capture client
+i18n/         home-made translator; texts live in messages/{fr,en}.json
+capture/      URL capture service (separate Vercel project, headless Chrome)
+docs/         specification (SPECS.md), internationalisation (I18N.md), capture (CAPTURE.md)
+tests/        unit tests (tests/unit) and end-to-end tests (tests/e2e)
 ```
 
-## Contribuer
+## Contributing
 
-Les contributions sont les bienvenues : nouveaux modèles, formats d'export, langues, corrections.
-Lisez [CONTRIBUTING.md](./CONTRIBUTING.md), en particulier la section
-[Ajouter un modèle](./CONTRIBUTING.md#ajouter-un-modèle), et le
-[code de conduite](./CODE_OF_CONDUCT.md).
+Contributions are welcome: new templates, export formats, languages, fixes. Read
+[CONTRIBUTING.md](./CONTRIBUTING.md), especially [Adding a template](./CONTRIBUTING.md#adding-a-template),
+and the [code of conduct](./CODE_OF_CONDUCT.md).
 
-Une faille de sécurité ? Voir [SECURITY.md](./SECURITY.md).
+Found a security issue? See [SECURITY.md](./SECURITY.md).
 
-## Licence
+## License
 
 [MIT](./LICENSE) © Roosvelt Kenne

@@ -1,30 +1,27 @@
-# Politique de sécurité
+# Security policy
 
-## Signaler une vulnérabilité
+## Reporting a vulnerability
 
-Ne créez **pas** d'issue publique pour une faille de sécurité.
+Please do **not** open a public issue for a security vulnerability.
 
-Utilisez le signalement privé de GitHub : onglet **Security** du dépôt →
-**Report a vulnerability**
+Use GitHub's private reporting: the repository's **Security** tab → **Report a vulnerability**
 (<https://github.com/roosveltkn/cover-studio/security/advisories/new>).
 
-Indiquez si possible : la description du problème, les étapes pour le reproduire, la version ou le
-commit concerné et l'impact estimé.
+If you can, include a description of the problem, steps to reproduce it, the affected version or
+commit, and the estimated impact.
 
-Vous recevrez une réponse sous 7 jours. Une fois la faille corrigée, nous la divulguons
-publiquement et créditons la personne qui l'a signalée, si elle le souhaite.
+You will get a reply within 7 days. Once the vulnerability is fixed, we disclose it publicly and
+credit the reporter if they wish.
 
-## Périmètre
+## Scope
 
-Cover Studio est un site statique qui traite les images dans le navigateur. Les sujets pertinents
-incluent par exemple le XSS, le traitement non sûr de fichiers importés et les dépendances
-vulnérables.
+Cover Studio is a static site that processes images in the browser. Relevant topics include, for
+example, XSS, unsafe handling of imported files, and vulnerable dependencies.
 
-Le service facultatif de capture d'URL (`capture/`, voir [docs/CAPTURE.md](./docs/CAPTURE.md))
-charge des adresses fournies par les visiteurs dans un Chrome headless : tout contournement du
-filtre d'adresses (SSRF vers un réseau privé ou local, rebinding DNS, redirections) est dans le
-périmètre.
+The optional URL capture service (`capture/`, see [docs/CAPTURE.md](./docs/CAPTURE.md)) loads
+visitor-supplied addresses in a headless Chrome: any way around its address filter (SSRF to a
+private or local network, DNS rebinding, redirects) is in scope.
 
-## Versions supportées
+## Supported versions
 
-Seule la dernière version publiée sur la branche `main` est supportée.
+Only the latest version released on the `main` branch is supported.
