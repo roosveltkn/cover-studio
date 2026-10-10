@@ -12,6 +12,8 @@ export type ImageAsset = {
   luminance: number
   /** Couleur moyenne de la bande haute, pour la zone de statut du téléphone. */
   topColor: string
+  /** Couleur moyenne de la bande basse, pour combler une capture plus courte que l'écran. */
+  bottomColor?: string
   /** Couleur vive dominante, proposée comme couleur de marque. */
   dominant?: string
 }

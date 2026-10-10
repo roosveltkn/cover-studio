@@ -99,6 +99,7 @@ function sampleColors(image: HTMLImageElement) {
 
   let total = 0
   const top = [0, 0, 0]
+  const bottom = [0, 0, 0]
   for (let i = 0; i < data.length; i += 4) {
     total += relativeLuminance(data[i], data[i + 1], data[i + 2])
     if (i < size * 4) {
@@ -106,13 +107,17 @@ function sampleColors(image: HTMLImageElement) {
       top[1] += data[i + 1]
       top[2] += data[i + 2]
     }
+    if (i >= data.length - size * 4) {
+      bottom[0] += data[i]
+      bottom[1] += data[i + 1]
+      bottom[2] += data[i + 2]
+    }
   }
 
-  const topColor =
-    "#" +
-    top.map((sum) => Math.round(sum / size).toString(16).padStart(2, "0")).join("")
+  const hex = (sums: number[]) =>
+    "#" + sums.map((sum) => Math.round(sum / size).toString(16).padStart(2, "0")).join("")
 
-  return { luminance: total / (size * size), topColor }
+  return { luminance: total / (size * size), topColor: hex(top), bottomColor: hex(bottom) }
 }
 
 /**
