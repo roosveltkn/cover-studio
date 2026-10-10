@@ -309,6 +309,21 @@
     "suggested": "Suggested colors",
     "colorAria": "Color {color}"
   },
+  "inlineEditing": {
+    "toolbarLabel": "Text formatting",
+    "edit": "Edit",
+    "smaller": "Decrease size",
+    "larger": "Increase size",
+    "sizeReset": "Original size",
+    "font": "Font",
+    "templateFont": "Template font",
+    "color": "Text color",
+    "colorHex": "Hex code",
+    "colorPreset": "Color {color}",
+    "colorReset": "Template color",
+    "close": "Close",
+    "chipLabel": "Feature {index}"
+  },
   "pills": {
     "remove": "Remove {pill}"
   },

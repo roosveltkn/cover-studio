@@ -22,6 +22,12 @@ export type BrowserTheme = "auto" | "light" | "dark"
 
 export type TextElement = "badge" | "name" | "description" | "chips" | "footer"
 
+/** Champ de texte modifiable directement sur l'aperçu. */
+export type EditableField = "badge" | "nameMain" | "nameAccent" | "description" | "chips" | "footer"
+
+/** Texte sélectionné sur l'aperçu ; `path` vaut par ex. "content.chips.2". */
+export type TextSelection = { element: TextElement; path: string }
+
 export type CoverConfig = {
   /** Identifiant du template dans le registre. */
   template: string
@@ -45,6 +51,10 @@ export type CoverConfig = {
     fontFamily?: string
     /** Multiplicateur de taille par élément de texte, 1 par défaut. */
     textScale?: Partial<Record<TextElement, number>>
+    /** Police par élément de texte (id de lib/fonts), sinon celle du template. */
+    textFont?: Partial<Record<TextElement, string>>
+    /** Couleur par élément de texte (hex), sinon celle du template. */
+    textColor?: Partial<Record<TextElement, string>>
   }
   mockups: {
     /** Captures importées, dans l'ordre choisi par l'utilisateur. */

@@ -12,6 +12,7 @@ import {
   nameFontSize,
   useTextScale,
 } from "@/templates/shared/text-block"
+import { EditableText } from "@/templates/shared/editable"
 import type { PlacedConfig } from "@/types/cover"
 
 const GUIDE = 140
@@ -124,7 +125,7 @@ export function TerminalTemplate({ config }: { config: PlacedConfig }) {
                 flexShrink: 0,
               }}
             />
-            {content.badge}
+            <EditableText field="badge" text={content.badge} />
           </div>
         )}
 
@@ -150,9 +151,11 @@ export function TerminalTemplate({ config }: { config: PlacedConfig }) {
               overflowWrap: "anywhere",
             }}
           >
-            {content.nameMain}
+            <EditableText field="nameMain" text={content.nameMain} />
             {content.nameAccent && (
-              <span style={{ color: accent }}>{content.nameAccent}</span>
+              <span style={{ color: accent }}>
+                <EditableText field="nameAccent" text={content.nameAccent} colorable={false} />
+              </span>
             )}
           </h1>
         </div>
@@ -171,7 +174,7 @@ export function TerminalTemplate({ config }: { config: PlacedConfig }) {
               overflow: "hidden",
             }}
           >
-            {content.description}
+            <EditableText field="description" text={content.description} />
           </p>
         )}
 
@@ -213,7 +216,7 @@ export function TerminalTemplate({ config }: { config: PlacedConfig }) {
                     flexShrink: 0,
                   }}
                 />
-                {chip}
+                <EditableText field="chips" text={chip} index={index} />
               </span>
             ))}
           </div>

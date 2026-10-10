@@ -201,6 +201,11 @@ Constraints:
 
 API contract, security and deployment: [CAPTURE.md](./CAPTURE.md).
 
+### 6.8 Inline editing on the preview
+
+Texts editable in place and a floating toolbar (size, font, colour per element), Canva-style. The
+panel remains the complete path. Specification: [INLINE-EDITING.md](./INLINE-EDITING.md).
+
 ## 7. Palette derivation
 
 From `brandColor` (converted to HSL or OKLCH):

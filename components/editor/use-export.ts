@@ -24,6 +24,8 @@ export function useExport() {
   const canvas = coverCanvas(getTemplate(config.template), config)
 
   async function run() {
+    // Rien de l'édition directe ne doit subsister dans le PNG.
+    useCoverStore.getState().setSelection(null)
     setExporting(true)
     const started = performance.now()
     try {

@@ -9,6 +9,7 @@ import {
   resolveBrowserTheme,
 } from "@/templates/shared/mockups"
 import { Chips, CoverRoot, TextBlock, useTextScale } from "@/templates/shared/text-block"
+import { EditableText } from "@/templates/shared/editable"
 import type { PlacedConfig } from "@/types/cover"
 
 const PAD = 64
@@ -87,7 +88,7 @@ export function BentoTemplate({ config }: { config: PlacedConfig }) {
         />
         {content.footer && (
           <div style={{ fontSize: 26 * footerScale, fontWeight: 500, color: tone(brand, 0.4, 0.4) }}>
-            {content.footer}
+            <EditableText field="footer" text={content.footer} />
           </div>
         )}
       </Tile>

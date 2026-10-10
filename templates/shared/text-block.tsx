@@ -1,15 +1,12 @@
 import { createContext, useContext, type CSSProperties } from "react"
 
 import { DEFAULT_FONT, fontStack } from "@/lib/fonts"
-import type { CoverConfig, ImageAsset, TextElement } from "@/types/cover"
+import type { CoverConfig, ImageAsset } from "@/types/cover"
 
-/** Police et tailles choisies par l'utilisateur, lues par les blocs de texte. */
-export const TypographyContext = createContext<CoverConfig["style"] | null>(null)
+import { EditableText, useIsEditing } from "./editable"
+import { TypographyContext, useTextScale } from "./typography"
 
-/** Multiplicateur de taille d'un élément de texte (1 si non réglé). */
-export function useTextScale(element: TextElement) {
-  return useContext(TypographyContext)?.textScale?.[element] ?? 1
-}
+export { TypographyContext, useTextScale }
 
 export type TextColors = {
   text: string
@@ -62,6 +59,7 @@ export function TextBlock({
   const fontSize = nameFontSize(content, nameSize) * useTextScale("name")
   const badgeScale = useTextScale("badge")
   const descriptionScale = useTextScale("description")
+  const editingDescription = useIsEditing("description")
   const centered = align === "center"
 
   return (
@@ -96,7 +94,7 @@ export function TextBlock({
             overflow: "hidden",
           }}
         >
-          {content.badge}
+          <EditableText field="badge" text={content.badge} />
         </div>
       )}
 
@@ -122,8 +120,12 @@ export function TextBlock({
             overflowWrap: "anywhere",
           }}
         >
-          {content.nameMain}
-          {content.nameAccent && <span style={{ color: colors.accent }}>{content.nameAccent}</span>}
+          <EditableText field="nameMain" text={content.nameMain} />
+          {content.nameAccent && (
+            <span style={{ color: colors.accent }}>
+              <EditableText field="nameAccent" text={content.nameAccent} colorable={false} />
+            </span>
+          )}
         </h1>
       </div>
 
@@ -134,13 +136,14 @@ export function TextBlock({
             fontSize: 31 * descriptionScale,
             lineHeight: 1.45,
             color: colors.muted,
-            display: "-webkit-box",
-            WebkitLineClamp: descriptionLines,
+            // Le rognage est levé pendant la saisie pour garder le curseur visible.
+            display: editingDescription ? "block" : "-webkit-box",
+            WebkitLineClamp: editingDescription ? undefined : descriptionLines,
             WebkitBoxOrient: "vertical",
-            overflow: "hidden",
+            overflow: editingDescription ? "visible" : "hidden",
           }}
         >
-          {content.description}
+          <EditableText field="description" text={content.description} />
         </p>
       )}
 
@@ -233,7 +236,7 @@ export function Chips({
             textOverflow: "ellipsis",
           }}
         >
-          {chip}
+          <EditableText field="chips" text={chip} index={index} />
         </span>
       ))}
     </div>
@@ -264,7 +267,7 @@ export function Footer({
         fontSize: (typeof style.fontSize === "number" ? style.fontSize : 26) * scale,
       }}
     >
-      {text}
+      <EditableText field="footer" text={text} />
     </div>
   )
 }

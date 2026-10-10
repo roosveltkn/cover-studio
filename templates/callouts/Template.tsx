@@ -4,6 +4,7 @@ import { contrast, hexAlpha, readableOn, tone } from "@/lib/color"
 import { PHONE_SIZE, PhoneFrame } from "@/mockups/PhoneFrame"
 import { COVER_SIZE } from "@/templates/shared/mockups"
 import { CoverRoot, Footer, TextBlock, useTextScale } from "@/templates/shared/text-block"
+import { EditableText } from "@/templates/shared/editable"
 import type { PlacedConfig } from "@/types/cover"
 
 const COLUMN = { left: 120, top: 360, width: 760 }
@@ -128,7 +129,9 @@ export function CalloutsTemplate({ config }: { config: PlacedConfig }) {
             >
               <Check size={28 * chipsScale} strokeWidth={3} />
             </span>
-            <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{chip}</span>
+            <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+              <EditableText field="chips" text={chip} index={index} />
+            </span>
           </div>
         )
       })}
