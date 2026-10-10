@@ -20,7 +20,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "pnpm build && playwright test",
-    "test:e2e:ui": "pnpm build && playwright test --ui"
+    "test:e2e:ui": "pnpm build && playwright test --ui",
+    "capture:dev": "pnpm --filter cover-studio-capture dev",
+    "capture:test": "pnpm --filter cover-studio-capture test",
+    "capture:typecheck": "pnpm --filter cover-studio-capture typecheck"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
