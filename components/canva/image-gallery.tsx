@@ -43,6 +43,8 @@ type ImageGalleryProps = {
 export function ImageGallery({ id, images, slots, onChange }: ImageGalleryProps) {
   const t = useTranslations("gallery")
   const labelKeys = slotLabelKeys(images, slots)
+  // Ici plutôt que dans la zone d'ajout : elle disparaît une fois la limite atteinte.
+  const [error, setError] = useState<string>()
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -106,8 +108,15 @@ export function ImageGallery({ id, images, slots, onChange }: ImageGalleryProps)
         <AddImages
           id={id}
           remaining={MAX_IMAGES - images.length}
+          invalid={Boolean(error)}
+          onError={setError}
           onAdd={(added) => onChange([...images, ...added])}
         />
+      )}
+      {error && (
+        <p role="alert" className="text-xs text-destructive">
+          {error}
+        </p>
       )}
     </div>
   )
@@ -190,35 +199,40 @@ function SortableImage({
 function AddImages({
   id,
   remaining,
+  invalid,
+  onError,
   onAdd,
 }: {
   id: string
   remaining: number
+  invalid: boolean
+  onError: (error: string | undefined) => void
   onAdd: (images: ImageAsset[]) => void
 }) {
   const t = useTranslations("gallery")
   const tErrors = useTranslations("errors")
   const locale = useLocale()
-  const [error, setError] = useState<string>()
   const [dragging, setDragging] = useState(false)
   const [loading, setLoading] = useState(false)
 
   async function handle(files: FileList | null) {
     if (!files?.length) return
-    setError(undefined)
+    // Copie immédiate : l'input est vidé juste après l'appel, ce qui vide la FileList.
+    const selected = Array.from(files)
+    onError(undefined)
     setLoading(true)
     const added: ImageAsset[] = []
     const errors: string[] = []
-    for (const file of Array.from(files).slice(0, remaining)) {
+    for (const file of selected.slice(0, remaining)) {
       try {
         added.push(await readImage(file))
       } catch (err) {
         errors.push(t("fileError", { name: file.name, message: describeImageError(err, tErrors) }))
       }
     }
-    if (files.length > remaining) errors.push(t("limit", { max: MAX_IMAGES }))
+    if (selected.length > remaining) errors.push(t("limit", { max: MAX_IMAGES }))
     if (added.length) onAdd(added)
-    if (errors.length) setError(errors.join(" "))
+    if (errors.length) onError(errors.join(" "))
     setLoading(false)
   }
 
@@ -254,18 +268,13 @@ function AddImages({
           multiple
           accept={ACCEPTED_TYPES.join(",")}
           className="sr-only"
-          aria-invalid={Boolean(error)}
+          aria-invalid={invalid}
           onChange={(event) => {
             handle(event.target.files)
             event.target.value = ""
           }}
         />
       </label>
-      {error && (
-        <p role="alert" className="text-xs text-destructive">
-          {error}
-        </p>
-      )}
     </div>
   )
 }

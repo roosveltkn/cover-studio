@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import { FileInput } from "@/components/canva/file-input"
+import { ImageGallery } from "@/components/canva/image-gallery"
 import { FitPreview } from "@/components/editor/fit-preview"
 import { GithubIcon } from "@/components/github-icon"
 import { LocaleSwitcher } from "@/components/locale-switcher"
@@ -24,7 +24,7 @@ import { useRouter } from "@/i18n/navigation"
 import { useLocale, useTranslations } from "@/i18n/provider"
 import { trackScreenshotImported } from "@/lib/analytics"
 import { LINKS } from "@/lib/site"
-import { isPortrait } from "@/lib/slots"
+import { MAX_IMAGES, isPortrait } from "@/lib/slots"
 import { cn } from "@/lib/utils"
 import { hydrateCoverStore, useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
@@ -53,30 +53,38 @@ export function Landing() {
   const locale = useLocale()
   const router = useRouter()
   const startFrom = useCoverStore((state) => state.startFrom)
-  const [image, setImage] = useState<ImageAsset>()
+  const [images, setImages] = useState<ImageAsset[]>([])
 
   useEffect(() => {
     router.prefetch("/editor")
   }, [router])
 
-  function importImage(next?: ImageAsset) {
-    setImage(next)
-    if (next) trackScreenshotImported({ orientation: isPortrait(next) ? "portrait" : "landscape" })
+  function updateImages(next: ImageAsset[]) {
+    const known = new Set(images.map((image) => image.id))
+    for (const image of next) {
+      if (!known.has(image.id)) {
+        trackScreenshotImported({ orientation: isPortrait(image) ? "portrait" : "landscape" })
+      }
+    }
+    setImages(next)
   }
 
   function start() {
-    if (!image) return
+    if (images.length === 0) return
     hydrateCoverStore()
-    startFrom(image)
+    startFrom(images)
     router.push("/editor")
   }
 
   const base = defaultConfig(locale)
+  const previewTemplate = getTemplate(
+    images.length > 0 && images.every(isPortrait) ? "mobile-trio" : "spotlight"
+  )
   const previewConfig = {
     ...base,
-    template: image && isPortrait(image) ? "mobile-trio" : "spotlight",
-    style: { brandColor: image?.dominant ?? base.style.brandColor },
-    mockups: { ...base.mockups, images: image ? [image] : [] },
+    template: previewTemplate.id,
+    style: { brandColor: images[0]?.dominant ?? base.style.brandColor },
+    mockups: { ...base.mockups, images },
   }
 
   return (
@@ -130,11 +138,16 @@ export function Landing() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="landing-image" className="text-[13px] font-semibold">
-                    {t("imageLabel")}
+                    {t("imageLabel", { max: MAX_IMAGES })}
                   </Label>
-                  <FileInput id="landing-image" value={image} onChange={importImage} />
+                  <ImageGallery
+                    id="landing-image"
+                    images={images}
+                    slots={previewTemplate.slots}
+                    onChange={updateImages}
+                  />
                 </div>
-                <Button size="lg" className="h-11 w-full text-base" disabled={!image} onClick={start}>
+                <Button size="lg" className="h-11 w-full text-base" disabled={images.length === 0} onClick={start}>
                   {t("createButton")}
                   <ArrowRight data-icon="inline-end" />
                 </Button>
@@ -151,7 +164,7 @@ export function Landing() {
 
             <div className="rounded-2xl border border-border bg-muted/50 p-2 shadow-sm sm:p-3">
               <div className="overflow-hidden rounded-lg ring-1 ring-foreground/10">
-                <FitPreview template={getTemplate(previewConfig.template)} config={previewConfig} />
+                <FitPreview template={previewTemplate} config={previewConfig} />
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import type { CoverConfig, ImageAsset, PlacedConfig, Slot, Template } from "@/types/cover"
 
-export const MAX_IMAGES = 6
+/** Une capture par emplacement au plus : aucun template n'en affiche davantage. */
+export const MAX_IMAGES = 3
 
 export function isPortrait(image: ImageAsset) {
   return image.height > image.width

@@ -5,7 +5,7 @@ import { defaultLocale, type Locale } from "@/i18n/routing"
 import { setPath } from "@/lib/path"
 import { isPortrait } from "@/lib/slots"
 import { DEFAULT_CONFIG, DEFAULT_TEMPLATE, localizeContent } from "@/templates/showcase/defaults"
-import type { CoverConfig, ImageAsset, PanelId } from "@/types/cover"
+import type { CoverConfig, ImageAsset, PanelId, TemplateTag } from "@/types/cover"
 
 type CoverState = {
   config: CoverConfig
@@ -17,8 +17,11 @@ type CoverState = {
    */
   activePanel: PanelId
   setActivePanel: (panel: PanelId) => void
+  /** Étiquettes cochées dans le panneau des modèles : survivent au changement de langue, jamais persistées. */
+  templateTags: TemplateTag[]
+  setTemplateTags: (tags: TemplateTag[]) => void
   setField: (path: string, value: unknown) => void
-  startFrom: (image: ImageAsset) => void
+  startFrom: (images: ImageAsset[]) => void
   /** Passe les textes d'exemple dans la langue de la page, sans toucher à ceux modifiés. */
   applyLocale: (locale: Locale) => void
 }
@@ -30,6 +33,8 @@ export const useCoverStore = create<CoverState>()(
       locale: defaultLocale,
       activePanel: "templates",
       setActivePanel: (activePanel) => set({ activePanel }),
+      templateTags: [],
+      setTemplateTags: (templateTags) => set({ templateTags }),
       setField: (path, value) =>
         set((state) => ({ config: setPath(state.config, path, value) })),
       applyLocale: (locale) =>
@@ -42,12 +47,13 @@ export const useCoverStore = create<CoverState>()(
               : { ...state.config, content },
           }
         }),
-      // Point de départ de l'éditeur : la capture importée sur l'accueil, dont on
-      // reprend la couleur dominante comme couleur de marque.
-      startFrom: (image) =>
+      // Point de départ de l'éditeur : les captures importées sur l'accueil. La
+      // couleur dominante de la première devient la couleur de marque.
+      startFrom: (images) =>
         set((state) => {
-          // Une capture portrait appelle le template dédié au mobile.
-          const template = isPortrait(image)
+          const image = images[0]
+          // Des captures toutes en portrait appellent le template dédié au mobile.
+          const template = images.every(isPortrait)
             ? "mobile-trio"
             : state.config.template === "mobile-trio"
               ? DEFAULT_TEMPLATE
@@ -56,10 +62,10 @@ export const useCoverStore = create<CoverState>()(
             config: {
               ...state.config,
               template,
-              style: image.dominant
+              style: image?.dominant
                 ? { ...state.config.style, brandColor: image.dominant }
                 : state.config.style,
-              mockups: { ...state.config.mockups, images: [image] },
+              mockups: { ...state.config.mockups, images },
             },
           }
         }),

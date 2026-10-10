@@ -30,5 +30,6 @@ export async function openPanel(page: Page, railKey: string) {
 export function templateButtons(page: Page): Locator {
   return page
     .getByRole("complementary", { name: en("editor", "settingsLabel") })
+    .getByRole("list", { name: en("templatesPanel", "listLabel") })
     .locator("button[aria-pressed]")
 }

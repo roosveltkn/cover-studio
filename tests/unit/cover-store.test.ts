@@ -46,21 +46,21 @@ describe("setField", () => {
 describe("startFrom", () => {
   it("choisit le template mobile pour une capture portrait", async () => {
     const { useCoverStore } = await loadStore()
-    useCoverStore.getState().startFrom(portrait())
+    useCoverStore.getState().startFrom([portrait()])
     expect(useCoverStore.getState().config.template).toBe("mobile-trio")
   })
 
   it("quitte le template mobile pour une capture paysage", async () => {
     const { useCoverStore } = await loadStore()
-    useCoverStore.getState().startFrom(portrait())
-    useCoverStore.getState().startFrom(landscape())
+    useCoverStore.getState().startFrom([portrait()])
+    useCoverStore.getState().startFrom([landscape()])
     expect(useCoverStore.getState().config.template).toBe("showcase")
   })
 
   it("garde le template choisi pour une capture paysage", async () => {
     const { useCoverStore } = await loadStore()
     useCoverStore.getState().setField("template", "bento")
-    useCoverStore.getState().startFrom(landscape())
+    useCoverStore.getState().startFrom([landscape()])
     expect(useCoverStore.getState().config.template).toBe("bento")
   })
 
@@ -68,18 +68,24 @@ describe("startFrom", () => {
     const { useCoverStore } = await loadStore()
     const initial = useCoverStore.getState().config.style.brandColor
 
-    useCoverStore.getState().startFrom(landscape())
+    useCoverStore.getState().startFrom([landscape()])
     expect(useCoverStore.getState().config.style.brandColor).toBe(initial)
 
-    useCoverStore.getState().startFrom(landscape({ dominant: "#16a34a" }))
+    useCoverStore.getState().startFrom([landscape({ dominant: "#16a34a" })])
     expect(useCoverStore.getState().config.style.brandColor).toBe("#16a34a")
   })
 
-  it("remplace les captures par celle importée", async () => {
+  it("remplace les captures par celles importées, dans l'ordre", async () => {
     const { useCoverStore } = await loadStore()
-    const image = landscape()
-    useCoverStore.getState().startFrom(image)
-    expect(useCoverStore.getState().config.mockups.images).toEqual([image])
+    const images = [landscape(), portrait()]
+    useCoverStore.getState().startFrom(images)
+    expect(useCoverStore.getState().config.mockups.images).toEqual(images)
+  })
+
+  it("garde un template navigateur dès qu'une capture est en paysage", async () => {
+    const { useCoverStore } = await loadStore()
+    useCoverStore.getState().startFrom([portrait(), landscape()])
+    expect(useCoverStore.getState().config.template).toBe("showcase")
   })
 })
 
@@ -113,7 +119,7 @@ describe("applyLocale", () => {
 describe("persistance", () => {
   it("n'enregistre ni les captures ni l'icône", async () => {
     const { useCoverStore } = await loadStore()
-    useCoverStore.getState().startFrom(landscape())
+    useCoverStore.getState().startFrom([landscape()])
     useCoverStore.getState().setField("content.icon", landscape())
     useCoverStore.getState().setField("content.badge", "Sauvé")
 
@@ -142,7 +148,7 @@ describe("persistance", () => {
 
     // Même ordre que l'accueil : hydratation, puis import de la capture.
     hydrateCoverStore()
-    useCoverStore.getState().startFrom(image)
+    useCoverStore.getState().startFrom([image])
 
     const { config } = useCoverStore.getState()
     expect(config.content.badge).toBe("Sauvé")

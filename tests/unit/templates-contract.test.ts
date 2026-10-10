@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 import { MESSAGES } from "@/i18n/messages"
 import { locales } from "@/i18n/routing"
 import { getPath } from "@/lib/path"
+import { TEMPLATE_TAGS } from "@/lib/template-filter"
 import { getTemplate, templates } from "@/templates/registry"
 import { defaultConfig } from "@/templates/showcase/defaults"
 import type { FieldSchema } from "@/types/cover"
@@ -81,6 +82,16 @@ describe.each(templates)("template « $id »", (template) => {
   it("n'a pas deux champs sur le même chemin", () => {
     const paths = template.schema.map((field) => field.path)
     expect(new Set(paths).size).toBe(paths.length)
+  })
+
+  it("a des étiquettes de filtre connues, libellées dans chaque langue, sans doublon", () => {
+    expect(template.tags.length).toBeGreaterThan(0)
+    expect(new Set(template.tags).size).toBe(template.tags.length)
+    for (const tag of template.tags) expect(TEMPLATE_TAGS).toContain(tag)
+    for (const locale of locales) {
+      const labels = MESSAGES[locale].templateTags as Record<string, string>
+      for (const tag of template.tags) expect(labels[tag], `${locale}.templateTags.${tag}`).toBeTruthy()
+    }
   })
 
   it("expose le champ galerie pour importer les captures", () => {

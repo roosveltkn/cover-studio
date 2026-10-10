@@ -38,6 +38,15 @@ type TextBlockProps = {
   style?: CSSProperties
 }
 
+/** Taille du nom : `base` jusqu'à 12 caractères, réduite au-delà (hors échelle utilisateur). */
+export function nameFontSize(
+  content: Pick<CoverConfig["content"], "nameMain" | "nameAccent">,
+  base: number
+) {
+  const length = `${content.nameMain}${content.nameAccent ?? ""}`.length
+  return length <= 12 ? base : Math.max(base * 0.66, (base * 12) / length)
+}
+
 /** Pastille, nom, description et chips : bloc de texte commun aux templates. */
 export function TextBlock({
   content,
@@ -50,10 +59,7 @@ export function TextBlock({
   hideChips = false,
   style,
 }: TextBlockProps) {
-  const name = `${content.nameMain}${content.nameAccent ?? ""}`
-  const fontSize =
-    (name.length <= 12 ? nameSize : Math.max(nameSize * 0.66, (nameSize * 12) / name.length)) *
-    useTextScale("name")
+  const fontSize = nameFontSize(content, nameSize) * useTextScale("name")
   const badgeScale = useTextScale("badge")
   const descriptionScale = useTextScale("description")
   const centered = align === "center"
