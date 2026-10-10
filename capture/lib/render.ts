@@ -49,9 +49,13 @@ async function navigate(page: Page, url: URL, state: PageState): Promise<URL> {
 
 export type Capture = { image: Uint8Array; url: URL }
 
-export function capturePage(url: URL, device: Device): Promise<Capture> {
+export function capturePage(
+  url: URL,
+  device: Device,
+  language: string
+): Promise<Capture> {
   return withPage(async (page, browser) => {
-    const state = await preparePage(page, browser, device)
+    const state = await preparePage(page, browser, device, language)
     const finalUrl = await navigate(page, url, state)
     await settlePage(page)
     const image = await page.screenshot({ type: "webp", quality: 85 })
@@ -60,9 +64,12 @@ export function capturePage(url: URL, device: Device): Promise<Capture> {
 }
 
 /** HTML après exécution du JavaScript, pour lister les liens d'une SPA. */
-export function renderHtml(url: URL): Promise<{ url: URL; body: string }> {
+export function renderHtml(
+  url: URL,
+  language: string
+): Promise<{ url: URL; body: string }> {
   return withPage(async (page, browser) => {
-    const state = await preparePage(page, browser, "desktop")
+    const state = await preparePage(page, browser, "desktop", language)
     const finalUrl = await navigate(page, url, state)
     return { url: finalUrl, body: await page.content() }
   })

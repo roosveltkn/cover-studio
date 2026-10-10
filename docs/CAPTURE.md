@@ -20,7 +20,9 @@ L'image reçue passe ensuite par `readImage()` (`lib/image.ts`) comme un fichier
 
 Les deux endpoints acceptent `GET` (et `OPTIONS` pour le préflight CORS). Les paramètres passent dans la query string, ce qui permet au CDN de mettre la réponse en cache par URL.
 
-### `GET /api/discover?url=<adresse>`
+Paramètre commun facultatif : `lang` (`fr`, `en`, `pt-BR`…), la langue de l'interface. Le service l'envoie aux sites dans `Accept-Language` (fetch et Chrome), pour qu'un site multilingue serve la même langue que l'app. Valeur absente ou invalide : anglais.
+
+### `GET /api/discover?url=<adresse>&lang=<langue>`
 
 Réponse `200 application/json` :
 
@@ -62,7 +64,7 @@ Nettoyage : URL sans fragment ni query string, slash final retiré, dédoublonna
 
 Cache CDN : `s-maxage=3600`.
 
-### `GET /api/capture?url=<adresse>&device=desktop|mobile`
+### `GET /api/capture?url=<adresse>&device=desktop|mobile&lang=<langue>`
 
 | Appareil  | Viewport                    | Échelle | Image produite                        |
 | --------- | --------------------------- | ------- | ------------------------------------- |
