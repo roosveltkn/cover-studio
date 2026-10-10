@@ -2,13 +2,24 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    # Les PR visent develop ; main ne reçoit que les releases.
+    target-branch: develop
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # typescript-eslint (via eslint-config-next) ne prend pas encore TypeScript 7 en charge.
+      - dependency-name: typescript
+        versions: [">=7"]
+      # Les types suivent la version de Node visée (20, voir le README et la CI) :
+      # une majeure plus récente décrirait des API absentes à l'exécution.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
+    target-branch: develop
     schedule:
       interval: monthly

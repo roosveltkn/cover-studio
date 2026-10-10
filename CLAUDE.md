@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Cover Studio: a free, open-source, 100% client-side cover generator. The user imports app screenshots, picks a template and a brand colour, and exports a PNG. Code comments, docs and commit-adjacent text are in French; UI strings exist in French (reference) and English.
+Cover Studio: a free, open-source, 100% client-side cover generator. The user imports app screenshots, picks a template and a brand colour, and exports a PNG. Documentation (README, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, `docs/`, GitHub templates) is in English for the community; code comments stay in French; commit messages may be English or French. UI strings exist in French (reference) and English.
 
 ## Commands
 

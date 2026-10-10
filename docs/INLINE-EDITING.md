@@ -1,87 +1,107 @@
-# Édition directe sur la cover — Spécifications
+# Inline editing on the cover — Specification
 
-> Statut : niveaux 1 et 2 implémentés
-> Complète [SPECS.md](./SPECS.md) §6 et §9
+> Status: levels 1 and 2 implemented
+> Complements [SPECS.md](./SPECS.md) §6 and §9
 
 ---
 
-## 1. Objectif
+## 1. Goal
 
-Modifier les textes **directement sur l'aperçu**, comme dans Canva : on clique sur le nom, on tape, et une barre d'outils flottante règle la taille, la police et la couleur de l'élément sélectionné. Le panneau de gauche reste la voie complète et accessible ; l'édition directe s'ajoute, elle ne remplace rien.
+Edit texts **directly on the preview**, as in Canva: click the name, type, and a floating toolbar
+adjusts the size, font and colour of the selected element. The left panel remains the complete,
+accessible path; inline editing is an addition, it replaces nothing.
 
-## 2. Périmètre
+## 2. Scope
 
-### 2.1 Niveau 1 — texte modifiable sur place
-- Survol d'un texte de l'aperçu principal : contour fin, curseur texte.
-- **Clic** sur un texte non sélectionné : il est sélectionné (cadre + barre d'outils).
-- **Clic sur le texte sélectionné, double-clic, ou Entrée** au clavier : passage en saisie, curseur placé au point cliqué (en fin de texte au clavier).
-- La saisie met à jour la cover et le panneau en direct (même champ `content.*` que le formulaire).
-- **Entrée** ou **Échap** valident et quittent la saisie ; un clic ailleurs aussi. **Échap** hors saisie désélectionne (sauf depuis un champ du panneau ou une fenêtre ouverte).
-- Clic sur le fond de la scène (hors cover) : désélection.
-- Textes concernés : pastille (`badge`), nom (`nameMain`, `nameAccent`), description, chips (une par une), pied de page (`footer`).
-- Le champ correspondant du panneau est mis en évidence quand un élément est sélectionné.
+### 2.1 Level 1 — text editable in place
+- Hovering a text of the main preview: thin outline, text cursor.
+- **Click** on an unselected text: it is selected (frame + toolbar).
+- **Click on the selected text, double-click, or Enter** from the keyboard: editing starts, caret
+  placed at the clicked point (at the end of the text from the keyboard).
+- Typing updates the cover and the panel live (same `content.*` field as the form).
+- **Enter** or **Escape** commit and leave editing; clicking elsewhere does too. **Escape** outside
+  editing deselects (except from a panel field or an open popup).
+- Clicking the stage background (outside the cover): deselection.
+- Texts covered: badge (`badge`), name (`nameMain`, `nameAccent`), description, chips (one by one),
+  footer (`footer`).
+- The matching panel field is highlighted while an element is selected.
 
-### 2.2 Niveau 2 — barre d'outils contextuelle
-Affichée au-dessus de l'élément sélectionné (en dessous s'il manque de place), dans la fenêtre :
-- **Taille** : − / pourcentage / +, réinitialisation. Écrit `style.textScale[élément]` (déjà existant, bornes `SCALE_MIN`–`SCALE_MAX`).
-- **Police** : police du modèle (par défaut) ou une des `FONTS`. Écrit `style.textFont[élément]`.
-- **Couleur** : sélecteur + couleurs suggérées, réinitialisation. Écrit `style.textColor[élément]`.
-- **Modifier le texte** : passe en saisie (utile au clavier et au tactile).
-- Cliquer dans la barre ne fait pas perdre le focus du texte en saisie : on peut changer la taille en tapant.
-- **Fermer** : désélectionne.
+### 2.2 Level 2 — contextual toolbar
+Shown above the selected element (below it when there is not enough room), inside the window:
+- **Size**: − / percentage / +, reset. Writes `style.textScale[element]` (already existing, bounded
+  by `SCALE_MIN`–`SCALE_MAX`).
+- **Font**: template font (default) or one of the `FONTS`. Writes `style.textFont[element]`.
+- **Colour**: picker + suggested colours, reset. Writes `style.textColor[element]`.
+- **Edit text**: starts editing (useful from the keyboard and on touch devices).
+- **Close**: deselects.
+- Clicking the toolbar does not take focus away from a text being edited: the size can be changed
+  while typing.
 
-Les réglages valent pour l'**élément** (toutes les chips ensemble, le nom entier), pas pour une seule chip.
+Settings apply to the **element** (all chips together, the whole name), not to a single chip.
 
-### 2.3 Hors périmètre (niveau 3, plus tard)
-Déplacement, redimensionnement par poignées, rotation, repères magnétiques, ajout d'éléments libres, annuler/rétablir (`zundo`), suppression d'un texte depuis la barre.
+### 2.3 Out of scope (level 3, later)
+Moving, resizing with handles, rotation, snapping guides, adding free elements, undo/redo
+(`zundo`), deleting a text from the toolbar.
 
-## 3. Règles de saisie
+## 3. Editing rules
 
-| Règle | Comportement |
+| Rule | Behaviour |
 |---|---|
-| Texte brut | `contentEditable="plaintext-only"` : pas de mise en forme collée. |
-| Une seule ligne | Les retours à la ligne (saisis ou collés) deviennent des espaces. |
-| Longueur maximale | Celle du schéma du template (`maxLength`), appliquée pendant la frappe. |
-| Texte vidé | Pas écrit dans le store pendant la saisie (l'élément disparaîtrait sous le curseur) ; à la validation : le nom principal (obligatoire) reprend sa valeur d'origine, une chip vide est retirée, les autres champs deviennent vides et l'élément disparaît. |
-| Description | Le rognage à N lignes (`line-clamp`) est levé pendant la saisie dans `TextBlock` ; les templates à texte spécifique le gardent. |
-| Accent du nom | La couleur personnalisée du nom s'applique à la partie principale ; l'accent garde la couleur d'accent du template. |
+| Plain text | `contentEditable="plaintext-only"`: no pasted formatting. |
+| Single line | Line breaks (typed or pasted) become spaces. |
+| Maximum length | The template schema's `maxLength`, enforced while typing. |
+| Emptied text | Not written to the store while typing (the element would vanish under the caret); on commit, the main name (required) gets its original value back, an empty chip is removed, other fields become empty and the element disappears. |
+| Description | The N-line clamp (`line-clamp`) is lifted while editing in `TextBlock`; templates with their own text layout keep it. |
+| Name accent | The custom name colour applies to the main part; the accent keeps the template's accent colour. |
 
-## 4. Modèle de données
+## 4. Data model
 
-Ajouts à `CoverConfig["style"]`, persistés comme le reste du style :
+Additions to `CoverConfig["style"]`, persisted like the rest of the style:
 
 ```ts
-textFont?: Partial<Record<TextElement, string>>   // id de police (lib/fonts)
+textFont?: Partial<Record<TextElement, string>>   // font id (lib/fonts)
 textColor?: Partial<Record<TextElement, string>>  // hex
 ```
 
-État d'interface dans le store, **non persisté** :
+UI state in the store, **not persisted**:
 
 ```ts
-selection: { element: TextElement; path: string } | null   // path : "content.badge", "content.chips.2"…
+selection: { element: TextElement; path: string } | null   // path: "content.badge", "content.chips.2"…
 editing: boolean
 ```
 
 ## 5. Architecture
 
-- **`templates/shared/editable.tsx`** : `EditingContext` et `<EditableText field index? />`. Les templates restent indépendants du store : le contexte apporte les rappels (`select`, `startEditing`, `update`, `commit`) et `maxLength`.
-  - Sans contexte (miniatures, aperçu non principal) : rendu identique à aujourd'hui, plus un `<span>` stylé seulement si une police ou une couleur personnalisée existe — elle doit apparaître dans les miniatures et l'export.
-  - Avec contexte : `<span data-edit-path>` cliquable ; en saisie, le span est remonté (clé différente) et **non contrôlé** par React (texte posé à l'entrée, lu à chaque `input`) pour ne pas perdre le curseur.
-- **`TextBlock`, `Chips`, `Footer`** utilisent `EditableText` : 11 templates couverts d'un coup ; brutal, editorial, poster, store et terminal sont adaptés à la main.
-- **`components/editor/inline-editing.tsx`** : fournit le contexte à partir du store, calcule le cadre de sélection (`getBoundingClientRect`, `ResizeObserver`) et affiche la barre d'outils dans un portail en position fixe.
-- **Export** : le cadre et la barre sont **hors** du nœud exporté ; le contour de survol est un `outline` CSS (non présent à l'export, la souris étant sur le bouton). La sélection est vidée avant l'export.
-- Seul l'aperçu principal (`CanvasStage`) active l'édition ; `FitPreview` ne la reçoit jamais.
+- **`templates/shared/editable.tsx`**: `EditingContext` and `<EditableText field index? />`.
+  Templates stay independent from the store: the context provides the callbacks (`select`,
+  `startEditing`, `update`, `commit`) and `maxLength`.
+  - Without context (thumbnails, non-main preview): same output as before, plus a styled `<span>`
+    only when a custom font or colour exists — it must show in thumbnails and in the export.
+  - With context: a clickable `<span data-edit-path>`; while editing, the span is remounted
+    (different element) and **not controlled** by React (text set on entry, read on each `input`)
+    so the caret is never lost.
+- **`TextBlock`, `Chips`, `Footer`** use `EditableText`: 11 templates covered at once; brutal,
+  editorial, poster, store and terminal are adapted by hand.
+- **`components/editor/inline-editing.tsx`** builds the context from the store and computes the
+  selection frame (`getBoundingClientRect`, `ResizeObserver`); **`text-toolbar.tsx`** renders the
+  toolbar in a fixed-position portal.
+- **Export**: the frame and the toolbar live **outside** the exported node; the hover outline is a
+  CSS `outline` (absent from the export, the mouse being on the button). The selection is cleared
+  before exporting.
+- Only the main preview (`CanvasStage`) enables editing; `FitPreview` never receives it.
 
-## 6. Accessibilité
+## 6. Accessibility
 
-- Les textes modifiables sont focusables (`tabIndex=0`, `role="button"`, `aria-label` = libellé du champ) ; Entrée passe en saisie (`role="textbox"`).
-- La barre d'outils est un `role="toolbar"` étiqueté, boutons nommés, textes dans `messages/*.json`.
-- Le panneau garde toutes les fonctions : l'édition directe n'est jamais la seule voie.
+- Editable texts are focusable (`tabIndex=0`, `role="button"`, `aria-label` = field label); Enter
+  starts editing (`role="textbox"`).
+- The toolbar is a labelled `role="toolbar"` with named buttons; its texts live in
+  `messages/*.json`.
+- The panel keeps every feature: inline editing is never the only path.
 
-## 7. Critères d'acceptation
+## 7. Acceptance criteria
 
-1. Cliquer puis taper sur le nom d'une cover change le nom dans l'aperçu et dans le champ du panneau.
-2. Entrée valide ; Échap désélectionne ; le PNG exporté ne contient ni cadre ni barre.
-3. La barre change taille, police et couleur de l'élément ; les miniatures et l'export reflètent ces réglages.
-4. Les 16 templates exposent leurs textes à l'édition directe (test de contrat).
-5. Aucun texte d'interface en dur ; `pnpm i18n:check`, `typecheck`, `lint`, tests unitaires et E2E passent.
+1. Clicking then typing on a cover's name changes the name in the preview and in the panel field.
+2. Enter commits; Escape deselects; the exported PNG contains neither frame nor toolbar.
+3. The toolbar changes the element's size, font and colour; thumbnails and the export reflect them.
+4. All templates expose their texts to inline editing (contract test).
+5. No hard-coded UI text; `pnpm i18n:check`, `typecheck`, `lint`, unit and E2E tests pass.

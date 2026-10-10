@@ -1,40 +1,51 @@
-# Service de capture d'URL
+# URL capture service
 
-Le service `capture/` liste les pages d'un site et en fait des captures d'écran. C'est un projet Vercel séparé : l'app Cover Studio reste un export statique et l'appelle seulement si `NEXT_PUBLIC_CAPTURE_ENDPOINT` est défini. Ce document fait foi pour les deux côtés : le service l'implémente et `lib/capture.ts` le consomme.
+The `capture/` service lists a site's pages and takes screenshots of them. It is a separate Vercel
+project: the Cover Studio app stays a static export and only calls it when
+`NEXT_PUBLIC_CAPTURE_ENDPOINT` is set. This document is the source of truth for both sides: the
+service implements it and `lib/capture.ts` consumes it.
 
-## Vue d'ensemble
+## Overview
 
 ```
-App (statique)                                Service capture/ (Vercel Functions)
-──────────────                                ──────────────────────────────────
-« Analyser »  ── GET /api/discover?url= ──▶   robots.txt → sitemaps → liens de l'accueil
-                                              → rendu Chrome si SPA → liste JSON
-« Aperçu »    ── GET /api/capture?url=&device=desktop ──▶  Chrome headless → WebP
-« Capturer »  ── GET /api/capture?… (2 en parallèle max) ──▶  WebP
-              ◀── image/webp, mise en cache 24 h par le CDN Vercel
+App (static)                                  capture/ service (Vercel Functions)
+────────────                                  ───────────────────────────────────
+"Analyze"   ── GET /api/discover?url= ──▶     robots.txt → sitemaps → home page links
+                                              → Chrome render for SPAs → JSON list
+"Preview"   ── GET /api/capture?url=&device=desktop ──▶  headless Chrome → WebP
+"Capture"   ── GET /api/capture?… (2 in parallel at most) ──▶  WebP
+            ◀── image/webp, cached for 24 h by the Vercel CDN
 ```
 
-L'image reçue passe ensuite par `readImage()` (`lib/image.ts`) comme un fichier importé.
+The received image then goes through `readImage()` (`lib/image.ts`), exactly like an imported
+file.
+
+In the app, a run captures at most 4 images (pages × devices): 2 pages on desktop and mobile, or
+up to 4 pages on a single device. The gallery itself holds 4 images (`MAX_IMAGES` in
+`lib/slots.ts`).
 
 ## Endpoints
 
-Les deux endpoints acceptent `GET` (et `OPTIONS` pour le préflight CORS). Les paramètres passent dans la query string, ce qui permet au CDN de mettre la réponse en cache par URL.
+Both endpoints accept `GET` (and `OPTIONS` for the CORS preflight). Parameters go in the query
+string, which lets the CDN cache responses per URL.
 
-Paramètre commun facultatif : `lang` (`fr`, `en`, `pt-BR`…), la langue de l'interface. Le service l'envoie aux sites dans `Accept-Language` (fetch et Chrome), pour qu'un site multilingue serve la même langue que l'app. Valeur absente ou invalide : anglais.
+Optional common parameter: `lang` (`fr`, `en`, `pt-BR`…), the interface language. The service
+forwards it to sites in `Accept-Language` (both fetch and Chrome), so that a multilingual site
+serves the same language as the app. Missing or invalid value: English.
 
-### `GET /api/discover?url=<adresse>&lang=<langue>`
+### `GET /api/discover?url=<address>&lang=<language>`
 
-Réponse `200 application/json` :
+`200 application/json` response:
 
 ```ts
 type DiscoverResponse = {
-  /** Adresse de la page d'accueil après redirections. */
+  /** Home page address, after redirects. */
   site: string
-  /** Pages retenues, dans l'ordre d'affichage conseillé (50 au plus). */
+  /** Selected pages, in the suggested display order (50 at most). */
   pages: DiscoveredPage[]
-  /** Nombre de pages trouvées avant plafonnement. */
+  /** Number of pages found before capping. */
   total: number
-  /** Métadonnées de la page d'accueil, pour préremplir la cover. */
+  /** Home page metadata, to prefill the cover. */
   meta: {
     title?: string
     description?: string
@@ -45,98 +56,135 @@ type DiscoverResponse = {
 
 type DiscoveredPage = {
   url: string
-  /** Chemin affichable : "/", "/pricing". */
+  /** Display path: "/", "/pricing". */
   path: string
-  /** Texte du lien de navigation, ou chemin humanisé ; null pour l'accueil sans libellé. */
+  /** Navigation link text, or humanised path; null for an unlabelled home page. */
   label: string | null
   group: "home" | "navigation" | "pages" | "blog" | "legal"
   source: "nav" | "link" | "sitemap" | "render"
 }
 ```
 
-Ordre de recherche, du moins coûteux au plus coûteux :
+Search order, from cheapest to most expensive:
 
-1. Page d'accueil en `fetch` simple (sans navigateur) : liens `<a href>` du même site. Ceux de `<nav>` et `<header>` forment le groupe `navigation`.
-2. `robots.txt` : lignes `Sitemap:`. À défaut, `/sitemap.xml`. Les sitemaps index sont suivis (5 fichiers, 1 000 URL au plus).
-3. Si l'accueil contient moins de 3 liens internes (SPA rendue en JS) : rendu Chrome et lecture des liens du DOM.
+1. Home page with a plain `fetch` (no browser): `<a href>` links to the same site. Links inside
+   `<nav>` and `<header>` form the `navigation` group.
+2. `robots.txt`: `Sitemap:` lines, otherwise `/sitemap.xml`. Sitemap indexes are followed
+   (5 files and 1,000 URLs at most).
+3. If the home page has fewer than 3 internal links (an SPA rendered in JS): Chrome render, then
+   links are read from the DOM.
 
-Nettoyage : URL sans fragment ni query string, slash final retiré, dédoublonnage, exclusion des fichiers (`.pdf`, images, flux…), des pages de connexion et d'administration, de la pagination et des taxonomies. Quand le site a plusieurs langues en préfixe (`/fr/…`, `/en/…`), seule la langue de l'accueil est gardée. Le groupe `blog` est limité à 15 entrées.
+Clean-up: URLs without fragment or query string, trailing slash removed, deduplication, files
+excluded (`.pdf`, images, feeds…), as well as login and admin pages, pagination and taxonomies.
+When the site uses language prefixes (`/fr/…`, `/en/…`), only the home page's language is kept.
+The `blog` group is capped at 15 entries.
 
-Cache CDN : `s-maxage=3600`.
+CDN cache: `s-maxage=3600`.
 
-### `GET /api/capture?url=<adresse>&device=desktop|mobile&lang=<langue>`
+### `GET /api/capture?url=<address>&device=desktop|mobile&lang=<language>`
 
-| Appareil  | Viewport                    | Échelle | Image produite                        |
-| --------- | --------------------------- | ------- | ------------------------------------- |
-| `desktop` | 1440×900                    | 2       | 2880×1800, paysage → cadre navigateur |
-| `mobile`  | 390×844, tactile, UA iPhone | 3       | 1170×2532, portrait → cadre téléphone |
+| Device    | Viewport                       | Scale | Output image                            |
+| --------- | ------------------------------ | ----- | --------------------------------------- |
+| `desktop` | 1440×900                       | 2     | 2880×1800, landscape → browser frame    |
+| `mobile`  | 390×844, touch, iPhone UA      | 3     | 1170×2532, portrait → phone frame       |
 
-Réponse `200 image/webp`. L'en-tête `X-Capture-Url` (exposé en CORS) donne l'adresse finale après redirections.
+`200 image/webp` response. The `X-Capture-Url` header (exposed through CORS) gives the final
+address after redirects.
 
-Avant la capture : `prefers-reduced-motion`, défilement pour déclencher le lazy-load, attente des polices, masquage des bannières cookies (scripts des CMP courants bloqués, sélecteurs connus masqués, éléments fixes parlant de cookies retirés).
+Before the screenshot: `prefers-reduced-motion`, scrolling to trigger lazy loading, waiting for
+fonts, and hiding cookie banners (scripts of common consent managers blocked, known selectors
+hidden, fixed elements mentioning cookies removed).
 
-Cache CDN : `s-maxage=86400`.
+CDN cache: `s-maxage=86400`.
 
-### Erreurs
+### Errors
 
-Toute erreur renvoie du JSON `{ "code": CaptureErrorCode }`, sans cache :
+Every error returns JSON `{ "code": CaptureErrorCode }`, never cached:
 
-| Code               | Statut | Cas                                                                                           |
-| ------------------ | ------ | --------------------------------------------------------------------------------------------- |
-| `invalid-url`      | 400    | Paramètre absent, mal formé, schéma autre que http(s), port exotique, identifiants dans l'URL |
-| `invalid-device`   | 400    | `device` absent ou inconnu                                                                    |
-| `forbidden-origin` | 403    | En-tête `Origin` hors de `ALLOWED_ORIGINS`                                                    |
-| `forbidden-host`   | 403    | L'adresse (ou une redirection) pointe vers un réseau privé ou local                           |
-| `no-pages`         | 404    | L'adresse ne mène pas à une page HTML (PDF, image, API)                                       |
-| `blocked`          | 502    | Le site refuse le robot (401, 403, 429, 503, page de challenge)                               |
-| `unreachable`      | 502    | DNS introuvable, connexion refusée, réponse trop lourde, erreur HTTP                          |
-| `timeout`          | 504    | Le site met trop de temps à répondre                                                          |
-| `rate-limited`     | 429    | Posé par le Firewall Vercel, pas par le code                                                  |
-| `internal`         | 500    | Tout le reste (Chrome qui plante…)                                                            |
+| Code               | Status | When                                                                                   |
+| ------------------ | ------ | -------------------------------------------------------------------------------------- |
+| `invalid-url`      | 400    | Missing or malformed parameter, scheme other than http(s), unusual port, credentials   |
+| `invalid-device`   | 400    | `device` missing or unknown                                                            |
+| `forbidden-origin` | 403    | `Origin` header not in `ALLOWED_ORIGINS`                                               |
+| `forbidden-host`   | 403    | The address (or a redirect) points to a private or local network                       |
+| `no-pages`         | 404    | The address does not lead to an HTML page (PDF, image, API)                            |
+| `blocked`          | 502    | The site refuses the robot (401, 403, 429, 503, challenge page)                        |
+| `unreachable`      | 502    | DNS not found, connection refused, response too large, HTTP error                      |
+| `timeout`          | 504    | The site takes too long to respond                                                     |
+| `rate-limited`     | 429    | Set by the Vercel Firewall, not by the code                                            |
+| `internal`         | 500    | Anything else (Chrome crash…)                                                          |
 
-## Sécurité
+## Security
 
-Le service charge des adresses fournies par n'importe qui : c'est une cible de SSRF.
+The service loads addresses supplied by anyone, which makes it an SSRF target.
 
-- **Filtre d'adresses** (`capture/lib/url-guard.ts`) : seules les adresses IP de plage `unicast` publique sont acceptées (refus de `127.0.0.0/8`, `10/8`, `172.16/12`, `192.168/16`, `169.254/16`, `100.64/10`, `::1`, `fc00::/7`, IPv4 mappées, NAT64, 6to4…). Les noms `localhost`, `*.localhost`, `*.local`, `*.internal` sont refusés sans résolution.
-- **Requêtes `fetch`** (`capture/lib/http.ts`) : le contrôle se fait **au moment de la connexion**, dans le `lookup` de l'agent undici. Une résolution DNS qui change entre la vérification et la connexion (DNS rebinding) est donc couverte. Les redirections sont suivies à la main (5 au plus) et revalidées.
-- **Chrome** : chaque requête de la page (document, sous-ressources, `fetch` du JS de la page) est interceptée et vérifiée. Risque résiduel : Chrome résout lui-même le DNS après notre vérification ; un rebinding très court reste théoriquement possible. Les WebSockets ne passent pas par l'interception.
-- **Limites** : 5 Mo par réponse `fetch`, 8 s par requête, 45 s par capture, 2 048 caractères par URL.
-- **Origines** : `ALLOWED_ORIGINS` restreint les origines navigateur. Ce n'est pas une authentification (un script peut forger l'en-tête) : la protection contre l'abus vient du rate limiting Vercel.
-- Le service ne renvoie jamais le HTML des pages, seulement des listes de liens et des images.
+- **Address filter** (`capture/lib/url-guard.ts`): only public `unicast` IP addresses are accepted
+  (`127.0.0.0/8`, `10/8`, `172.16/12`, `192.168/16`, `169.254/16`, `100.64/10`, `::1`, `fc00::/7`,
+  IPv4-mapped, NAT64, 6to4… are refused). The names `localhost`, `*.localhost`, `*.local` and
+  `*.internal` are refused without resolution.
+- **`fetch` requests** (`capture/lib/http.ts`): the check happens **at connection time**, in the
+  undici agent's `lookup`. A DNS answer that changes between the check and the connection
+  (DNS rebinding) is therefore covered. Redirects are followed manually (5 at most) and
+  re-validated.
+- **Chrome**: every request made by the page (document, sub-resources, the page's own `fetch`
+  calls) is intercepted and checked. Residual risk: Chrome resolves DNS itself after our check,
+  so a very short rebinding window remains theoretically possible. WebSockets are not
+  intercepted. The `@sparticuz/chromium` flags that disable the same-origin policy
+  (`--disable-web-security`, `--allow-running-insecure-content`) are removed, as is
+  `--single-process`, which crashes isolated browser contexts.
+- **Limits**: 5 MB per `fetch` response, 8 s per request, 45 s per capture, 2,048 characters per
+  URL.
+- **Origins**: `ALLOWED_ORIGINS` restricts browser origins. It is not authentication (a script can
+  forge the header): abuse protection comes from Vercel rate limiting.
+- The service never returns page HTML, only link lists and images.
 
-## Développement local
+## Local development
 
-`@sparticuz/chromium` est un binaire Linux : sous Windows et macOS, le service utilise le Chrome installé.
+`@sparticuz/chromium` is a Linux binary: on Windows and macOS, the service uses your installed
+Chrome.
 
 ```bash
-cp capture/.env.example capture/.env.local   # renseigner CHROME_PATH
-pnpm capture:dev                             # vercel dev sur http://localhost:3001
+cp capture/.env.example capture/.env.local   # set CHROME_PATH
+pnpm capture:dev                             # vercel dev on http://localhost:3001
 pnpm capture:test
 pnpm capture:typecheck
 ```
 
-| Variable                       | Où               | Rôle                                                                                                                                                                          |
-| ------------------------------ | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CHROME_PATH`                  | local uniquement | Chemin du Chrome installé, ex. `C:\Program Files\Google\Chrome\Application\chrome.exe`                                                                                        |
-| `ALLOWED_ORIGINS`              | service          | Origines autorisées, séparées par des virgules. `*` accepté dans le sous-domaine (`https://cover-studio-*.vercel.app`). Vide : toutes les origines (développement seulement). |
-| `NEXT_PUBLIC_CAPTURE_ENDPOINT` | app              | URL du service, sans slash final. Absente : la fonctionnalité est masquée.                                                                                                    |
+| Variable                       | Where      | Purpose                                                                                                                                         |
+| ------------------------------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CHROME_PATH`                  | local only | Path to the installed Chrome, e.g. `C:\Program Files\Google\Chrome\Application\chrome.exe`                                                      |
+| `ALLOWED_ORIGINS`              | service    | Allowed origins, comma-separated. `*` is accepted in the subdomain (`https://cover-studio-*.vercel.app`). Empty: any origin (development only). |
+| `NEXT_PUBLIC_CAPTURE_ENDPOINT` | app        | Service URL, without a trailing slash. Missing: the feature is hidden.                                                                          |
 
-## Déploiement sur Vercel
+## Deploying on Vercel
 
-1. **Nouveau projet** importé depuis le même dépôt : Root Directory `capture`, Framework Preset _Other_, Node.js 22.x.
-2. **Builds inutiles évités** :
-   - projet capture : option « Skip deployments when there are no changes to the root directory » ;
-   - projet app : Ignored Build Step `git diff --quiet ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD -- . ":!capture"` (comparaison avec le dernier déploiement réussi, pas seulement le dernier commit).
-3. **Domaine** : par exemple `capture.<domaine>`. Tant que le service n'est pas sur la branche de production, le domaine peut être rattaché à la branche de développement (option « Git Branch » du domaine), puis détaché à la release.
-4. **Variables** : `ALLOWED_ORIGINS` sur le service ; `NEXT_PUBLIC_CAPTURE_ENDPOINT` sur l'app.
-5. **Firewall → règles de rate limiting** par IP : `/api/discover` 10 requêtes/min, `/api/capture` 20 requêtes/min, réponse 429.
-6. **Spend Management** (plan Pro) : alerte et plafond de dépense. Sur Hobby, le projet est mis en pause une fois les quotas atteints.
+1. **New project** imported from the same repository: Root Directory `capture`, Framework Preset
+   _Other_, Node.js 22.x. Deployment Protection (Vercel Authentication) is turned off for this
+   project: the service is public by design and protected by the rules below.
+2. **Skipping useless builds**:
+   - capture project: "Skip deployments when there are no changes to the root directory";
+   - app project: Ignored Build Step
+     `if git cat-file -e "${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}^{commit}" 2>/dev/null; then git diff --quiet "${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}" HEAD -- . ":!capture"; else exit 1; fi`.
+     It compares against the last successful deployment, not just the last commit. Vercel makes
+     a shallow clone: if that commit is missing from the clone, the command asks for a build
+     (`exit 1`) instead of failing, which would fail the deployment.
+3. **Domain**: for example `capture.<domain>` for production. Previews get their own
+   `*.vercel.app` addresses; a stable one can be tied to the `develop` branch (the domain's
+   "Git Branch" option).
+4. **Variables**: `ALLOWED_ORIGINS` on the service; `NEXT_PUBLIC_CAPTURE_ENDPOINT` on the app,
+   pointing previews to the service's `develop` preview and production to the production domain.
+5. **Firewall → rate limiting rules** per IP: `/api/discover` 10 requests/min, `/api/capture`
+   20 requests/min, 429 response.
+6. **Spend Management** (Pro plan): spending alert and cap. On Hobby, the project is paused once
+   quotas are reached.
 
-`capture/vercel.json` fixe la région (Paris, `cdg1`) et la durée maximale des fonctions (60 s). La mémoire n'y figure pas : elle est ignorée avec la facturation Active CPU et se règle dans les paramètres du projet. Pas d'`includeFiles` non plus : avec pnpm, le chemin du binaire Chromium est un lien symbolique qui rend le paquet de fonction invalide ; le traçage automatique des fichiers suffit.
+`capture/vercel.json` sets the region (Paris, `cdg1`) and the functions' maximum duration (60 s).
+Memory is not set there: it is ignored with Active CPU billing and is configured in the project
+settings. There is no `includeFiles` either: with pnpm, the path to the Chromium binary is a
+symlink that makes the function package invalid; automatic file tracing is enough.
 
-## Limites connues
+## Known limitations
 
-- Pages derrière connexion : inaccessibles.
-- Sites protégés contre les robots (challenge Cloudflare, captcha) : erreur `blocked`.
-- Premier appel après inactivité : 3 à 6 s de plus (démarrage de Chromium).
+- Pages behind a login: not reachable.
+- Sites protected against robots (Cloudflare challenge, captcha): `blocked` error.
+- First call after a period of inactivity: 3 to 6 s longer (Chromium start-up).
