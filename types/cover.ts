@@ -120,6 +120,19 @@ export type FieldSchema =
       options: { value: string; label: FieldKey }[]
     })
 
+/** Étiquettes de filtre des modèles : libellés dans le namespace `templateTags`. */
+export type TemplateTag =
+  | "mobile"
+  | "desktop"
+  | "light"
+  | "dark"
+  | "colorful"
+  | "minimal"
+  | "playful"
+
+/** Recherche et étiquettes actives dans le panneau des modèles. */
+export type TemplateFilter = { query: string; tags: TemplateTag[] }
+
 export type Template = {
   id: string
   /** Clés des textes dans le namespace `templates`. */
@@ -130,4 +143,6 @@ export type Template = {
   schema: FieldSchema[]
   /** Emplacements remplis dans l'ordre de la liste des captures. */
   slots: Slot[]
+  /** Étiquettes proposées en filtre dans le panneau des modèles. */
+  tags: TemplateTag[]
 }

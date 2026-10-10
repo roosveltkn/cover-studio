@@ -1,9 +1,15 @@
 "use client"
 
+import { Search, X } from "lucide-react"
 import type { ReactNode } from "react"
 
-import { useTranslations } from "@/i18n/provider"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useLocale, useTranslations } from "@/i18n/provider"
+import { pluralSuffix } from "@/i18n/translator"
 import { trackTemplateSelected } from "@/lib/analytics"
+import { EMPTY_FILTER, TEMPLATE_TAGS, filterTemplates, isFilterActive } from "@/lib/template-filter"
+import { cn } from "@/lib/utils"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
 import type { PanelId } from "@/types/cover"
@@ -49,41 +55,115 @@ function Rows({ children }: { children: ReactNode }) {
 
 function TemplatesPanel() {
   const t = useTranslations("templates")
+  const tPanel = useTranslations("templatesPanel")
+  const tTags = useTranslations("templateTags")
+  const locale = useLocale()
   const config = useCoverStore((state) => state.config)
   const setField = useCoverStore((state) => state.setField)
+  const filter = useCoverStore((state) => state.templateFilter)
+  const setFilter = useCoverStore((state) => state.setTemplateFilter)
   const active = getTemplate(config.template).id
 
+  // La recherche porte sur les textes affichés, dans la langue de la page.
+  const results = filterTemplates(templates, filter, (template) => [
+    t(template.nameKey),
+    t(template.descriptionKey),
+    ...template.tags.map((tag) => tTags(tag)),
+  ])
+
+  function toggleTag(tag: (typeof TEMPLATE_TAGS)[number]) {
+    const tags = filter.tags.includes(tag)
+      ? filter.tags.filter((item) => item !== tag)
+      : [...filter.tags, tag]
+    setFilter({ ...filter, tags })
+  }
+
   return (
-    // Une colonne dans le panneau desktop (350 px), deux en pleine largeur mobile.
-    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
-      {templates.map((template) => {
-        const selected = template.id === active
-        return (
-          <button
-            key={template.id}
-            type="button"
-            aria-pressed={selected}
-            onClick={() => {
-              setField("template", template.id)
-              if (!selected) trackTemplateSelected({ template: template.id })
-            }}
-            className="group flex flex-col gap-2 rounded-xl text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/60"
-          >
-            <span
-              className={
-                "block w-full overflow-hidden rounded-lg ring-1 ring-foreground/10 transition-shadow group-hover:shadow-md " +
-                (selected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "")
-              }
+    <div className="flex flex-col gap-4">
+      <div className="relative">
+        <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="search"
+          value={filter.query}
+          onChange={(event) => setFilter({ ...filter, query: event.target.value })}
+          aria-label={tPanel("searchLabel")}
+          placeholder={tPanel("searchPlaceholder")}
+          className="h-9 pl-8"
+        />
+      </div>
+
+      <div role="group" aria-label={tPanel("tagsLabel")} className="flex flex-wrap gap-1.5">
+        {TEMPLATE_TAGS.map((tag) => {
+          const pressed = filter.tags.includes(tag)
+          return (
+            <button
+              key={tag}
+              type="button"
+              aria-pressed={pressed}
+              onClick={() => toggleTag(tag)}
+              className={cn(
+                "h-7 rounded-full border px-3 text-xs font-medium transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+                pressed
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
             >
-              <FitPreview template={template} config={{ ...config, template: template.id }} />
-            </span>
-            <span className="flex flex-col">
-              <span className="text-sm font-semibold">{t(template.nameKey)}</span>
-              <span className="text-xs text-muted-foreground">{t(template.descriptionKey)}</span>
-            </span>
-          </button>
-        )
-      })}
+              {tTags(tag)}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="flex min-h-7 items-center justify-between gap-2">
+        <p aria-live="polite" className="text-xs text-muted-foreground">
+          {tPanel(`results${pluralSuffix(locale, results.length)}`, { count: results.length })}
+        </p>
+        {isFilterActive(filter) && (
+          <Button variant="ghost" size="sm" onClick={() => setFilter(EMPTY_FILTER)}>
+            <X data-icon="inline-start" />
+            {tPanel("reset")}
+          </Button>
+        )}
+      </div>
+
+      {results.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+          {tPanel("empty")}
+        </p>
+      ) : (
+        // Une colonne dans le panneau desktop (350 px), deux en pleine largeur mobile.
+        <ul aria-label={tPanel("listLabel")} className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
+          {results.map((template) => {
+            const selected = template.id === active
+            return (
+              <li key={template.id}>
+                <button
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => {
+                    setField("template", template.id)
+                    if (!selected) trackTemplateSelected({ template: template.id })
+                  }}
+                  className="group flex w-full flex-col gap-2 rounded-xl text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/60"
+                >
+                  <span
+                    className={
+                      "block w-full overflow-hidden rounded-lg ring-1 ring-foreground/10 transition-shadow group-hover:shadow-md " +
+                      (selected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "")
+                    }
+                  >
+                    <FitPreview template={template} config={{ ...config, template: template.id }} />
+                  </span>
+                  <span className="flex flex-col">
+                    <span className="text-sm font-semibold">{t(template.nameKey)}</span>
+                    <span className="text-xs text-muted-foreground">{t(template.descriptionKey)}</span>
+                  </span>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { openEditor, openPanel } from "./helpers/editor"
+import { openEditor, openPanel, templateButtons } from "./helpers/editor"
 import { en, text } from "./helpers/messages"
 import { DESKTOP_SCREENSHOT, MOBILE_SCREENSHOT, screenshot } from "./helpers/png"
 
@@ -84,9 +84,7 @@ test.describe("éditeur", () => {
 
   test("une capture portrait ouvre le template mobile", async ({ page }) => {
     await openEditor(page, MOBILE_SCREENSHOT())
-    const selected = page
-      .getByRole("complementary", { name: en("editor", "settingsLabel") })
-      .locator('button[aria-pressed="true"]')
+    const selected = templateButtons(page).and(page.locator('[aria-pressed="true"]'))
 
     await expect(selected).toContainText(en("templates", "mobileTrioName"))
   })

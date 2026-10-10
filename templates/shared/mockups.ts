@@ -26,3 +26,16 @@ export function gridLayers(color: string) {
     `linear-gradient(90deg, ${color} 1px, transparent 1px)`,
   ]
 }
+
+/**
+ * Les trois écrans de téléphone d'un template mobile. Sans 2e et 3e capture,
+ * on montre d'autres cadrages de la capture principale.
+ */
+export function phoneScreens(mockups: PlacedMockups) {
+  const main = mockups.mobileImage
+  return [
+    { image: main, position: "top" },
+    { image: mockups.mobileImage2 ?? main, position: mockups.mobileImage2 ? "top" : "50%" },
+    { image: mockups.mobileImage3 ?? main, position: mockups.mobileImage3 ? "top" : "100%" },
+  ]
+}

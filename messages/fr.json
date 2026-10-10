@@ -78,7 +78,7 @@
   },
   "panels": {
     "templatesTitle": "Modèles",
-    "templatesDescription": "Vos captures et vos textes, mis en page de 5 façons.",
+    "templatesDescription": "Vos captures et vos textes, dans le style de votre choix.",
     "contentTitle": "Texte",
     "contentDescription": "Pastille, nom, description et fonctionnalités.",
     "typographyTitle": "Police",
@@ -86,7 +86,7 @@
     "colorsTitle": "Couleurs",
     "colorsDescription": "Une seule couleur : toute la palette en découle.",
     "mockupsTitle": "Captures",
-    "mockupsDescription": "Jusqu'à 6 captures, placées selon leur ordre. Rien n'est envoyé en ligne.",
+    "mockupsDescription": "Jusqu'à 3 captures, placées selon leur ordre. Rien n'est envoyé en ligne.",
     "exportTitle": "Télécharger",
     "exportDescription": "Export PNG en taille réelle."
   },
@@ -139,7 +139,36 @@
     "terminalName": "Terminal",
     "terminalDescription": "Sombre et technique, style outil de dev",
     "posterName": "Affiche",
-    "posterDescription": "Typographie géante, mockups au centre"
+    "posterDescription": "Typographie géante, mockups au centre",
+    "storeName": "Store",
+    "storeDescription": "Trois panneaux légendés, style App Store",
+    "focusName": "Focus",
+    "focusDescription": "Un téléphone géant incliné, scène sombre",
+    "cascadeName": "Cascade",
+    "cascadeDescription": "Trois téléphones en escalier",
+    "calloutsName": "Annotations",
+    "calloutsDescription": "Fonctionnalités en bulles autour du téléphone",
+    "ribbonName": "Ruban",
+    "ribbonDescription": "Bande diagonale d'écrans répétés"
+  },
+  "templatesPanel": {
+    "searchLabel": "Rechercher un modèle",
+    "searchPlaceholder": "Rechercher : sombre, mobile, verre…",
+    "tagsLabel": "Filtrer par étiquette",
+    "listLabel": "Modèles disponibles",
+    "resultsOne": "{count} modèle",
+    "resultsOther": "{count} modèles",
+    "empty": "Aucun modèle ne correspond à votre recherche.",
+    "reset": "Effacer les filtres"
+  },
+  "templateTags": {
+    "mobile": "Mobile",
+    "desktop": "Web",
+    "light": "Clair",
+    "dark": "Sombre",
+    "colorful": "Coloré",
+    "minimal": "Minimal",
+    "playful": "Ludique"
   },
   "slots": {
     "browser": "Navigateur",

@@ -78,7 +78,7 @@
   },
   "panels": {
     "templatesTitle": "Templates",
-    "templatesDescription": "Your screenshots and texts, laid out in 5 ways.",
+    "templatesDescription": "Your screenshots and texts, in the style of your choice.",
     "contentTitle": "Text",
     "contentDescription": "Badge, name, description and features.",
     "typographyTitle": "Font",
@@ -86,7 +86,7 @@
     "colorsTitle": "Colors",
     "colorsDescription": "A single color: the whole palette follows from it.",
     "mockupsTitle": "Screenshots",
-    "mockupsDescription": "Up to 6 screenshots, placed in order. Nothing is uploaded.",
+    "mockupsDescription": "Up to 3 screenshots, placed in order. Nothing is uploaded.",
     "exportTitle": "Download",
     "exportDescription": "PNG export at full size."
   },
@@ -139,7 +139,36 @@
     "terminalName": "Terminal",
     "terminalDescription": "Dark and technical, dev tool style",
     "posterName": "Poster",
-    "posterDescription": "Giant type, centred mockups"
+    "posterDescription": "Giant type, centred mockups",
+    "storeName": "Store",
+    "storeDescription": "Three captioned panels, App Store style",
+    "focusName": "Focus",
+    "focusDescription": "One giant tilted phone, dark scene",
+    "cascadeName": "Cascade",
+    "cascadeDescription": "Three phones in a staircase",
+    "calloutsName": "Callouts",
+    "calloutsDescription": "Features in bubbles around the phone",
+    "ribbonName": "Ribbon",
+    "ribbonDescription": "Diagonal band of repeated screens"
+  },
+  "templatesPanel": {
+    "searchLabel": "Search templates",
+    "searchPlaceholder": "Search: dark, mobile, glass…",
+    "tagsLabel": "Filter by tag",
+    "listLabel": "Available templates",
+    "resultsOne": "{count} template",
+    "resultsOther": "{count} templates",
+    "empty": "No template matches your search.",
+    "reset": "Clear filters"
+  },
+  "templateTags": {
+    "mobile": "Mobile",
+    "desktop": "Web",
+    "light": "Light",
+    "dark": "Dark",
+    "colorful": "Colorful",
+    "minimal": "Minimal",
+    "playful": "Playful"
   },
   "slots": {
     "browser": "Browser",
