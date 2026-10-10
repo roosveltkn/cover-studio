@@ -1,6 +1,7 @@
 import { EXPORT_NODE_ID } from "@/lib/export"
 import { canvasFor, getExportSize } from "@/lib/export-sizes"
 import { placeImages } from "@/lib/slots"
+import { EditingContext, type EditingApi } from "@/templates/shared/editable"
 import { CanvasContext, TypographyContext } from "@/templates/shared/text-block"
 import type { CoverConfig, Template } from "@/types/cover"
 
@@ -10,6 +11,8 @@ type CoverPreviewProps = {
   scale: number
   /** Seul l'aperçu principal porte l'id capturé à l'export. */
   exportable?: boolean
+  /** Édition directe des textes : aperçu principal uniquement. */
+  editing?: EditingApi
   children?: React.ReactNode
 }
 
@@ -24,6 +27,7 @@ export function CoverPreview({
   config,
   scale,
   exportable,
+  editing,
   children,
 }: CoverPreviewProps) {
   const canvas = coverCanvas(template, config)
@@ -34,11 +38,20 @@ export function CoverPreview({
       className="relative shrink-0"
       style={{ width: canvas.width * scale, height: canvas.height * scale }}
     >
-      <div style={{ ...canvas, transform: `scale(${scale})`, transformOrigin: "0 0" }}>
+      <div
+        style={{
+          ...canvas,
+          transform: `scale(${scale})`,
+          transformOrigin: "0 0",
+          ["--edit-scale" as string]: scale,
+        }}
+      >
         <div id={exportable ? EXPORT_NODE_ID : undefined} style={canvas}>
           <CanvasContext value={canvas}>
             <TypographyContext value={config.style}>
-              <Component config={placeImages(config, template)} />
+              <EditingContext value={editing ?? null}>
+                <Component config={placeImages(config, template)} />
+              </EditingContext>
             </TypographyContext>
           </CanvasContext>
         </div>

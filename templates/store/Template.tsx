@@ -8,6 +8,7 @@ import {
   nameFontSize,
   useTextScale,
 } from "@/templates/shared/text-block"
+import { EditableText } from "@/templates/shared/editable"
 import type { PlacedConfig } from "@/types/cover"
 
 const PAD = 110
@@ -74,7 +75,7 @@ export function StoreTemplate({ config }: { config: PlacedConfig }) {
               whiteSpace: "nowrap",
             }}
           >
-            {content.badge}
+            <EditableText field="badge" text={content.badge} />
           </span>
         )}
         <div style={{ display: "flex", alignItems: "center", gap: nameSize * 0.25 }}>
@@ -92,8 +93,12 @@ export function StoreTemplate({ config }: { config: PlacedConfig }) {
               textOverflow: "ellipsis",
             }}
           >
-            {content.nameMain}
-            {content.nameAccent && <span style={{ color: accent }}>{content.nameAccent}</span>}
+            <EditableText field="nameMain" text={content.nameMain} />
+            {content.nameAccent && (
+              <span style={{ color: accent }}>
+                <EditableText field="nameAccent" text={content.nameAccent} colorable={false} />
+              </span>
+            )}
           </h1>
         </div>
       </div>
@@ -116,7 +121,7 @@ export function StoreTemplate({ config }: { config: PlacedConfig }) {
             overflow: "hidden",
           }}
         >
-          {content.description}
+          <EditableText field="description" text={content.description} />
         </p>
       )}
 
@@ -161,7 +166,7 @@ export function StoreTemplate({ config }: { config: PlacedConfig }) {
                   overflow: "hidden",
                 }}
               >
-                {caption}
+                <EditableText field="chips" text={caption} index={index} />
               </div>
             )}
             <PhoneFrame

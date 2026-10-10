@@ -12,6 +12,7 @@ import {
   nameFontSize,
   useTextScale,
 } from "@/templates/shared/text-block"
+import { EditableText } from "@/templates/shared/editable"
 import type { PlacedConfig } from "@/types/cover"
 
 const INK = "#111111"
@@ -170,7 +171,7 @@ export function BrutalTemplate({ config }: { config: PlacedConfig }) {
               overflow: "hidden",
             }}
           >
-            {content.badge}
+            <EditableText field="badge" text={content.badge} />
           </div>
         )}
 
@@ -203,7 +204,7 @@ export function BrutalTemplate({ config }: { config: PlacedConfig }) {
               overflowWrap: "anywhere",
             }}
           >
-            {content.nameMain}
+            <EditableText field="nameMain" text={content.nameMain} />
             {content.nameAccent && (
               <span
                 style={{
@@ -217,7 +218,7 @@ export function BrutalTemplate({ config }: { config: PlacedConfig }) {
                   transform: "rotate(-2deg)",
                 }}
               >
-                {content.nameAccent}
+                <EditableText field="nameAccent" text={content.nameAccent} colorable={false} />
               </span>
             )}
           </h1>
@@ -237,7 +238,7 @@ export function BrutalTemplate({ config }: { config: PlacedConfig }) {
               overflow: "hidden",
             }}
           >
-            {content.description}
+            <EditableText field="description" text={content.description} />
           </p>
         )}
 
@@ -273,7 +274,7 @@ export function BrutalTemplate({ config }: { config: PlacedConfig }) {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {chip}
+                  <EditableText field="chips" text={chip} index={index} />
                 </span>
               )
             })}
@@ -308,7 +309,7 @@ export function BrutalTemplate({ config }: { config: PlacedConfig }) {
               key={index}
               style={{ display: "inline-flex", alignItems: "center", gap: 40 }}
             >
-              {content.footer}
+              <EditableText field="footer" text={content.footer} />
               <span style={{ color: sticker }}>✦</span>
             </span>
           ))}

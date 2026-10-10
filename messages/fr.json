@@ -309,6 +309,21 @@
     "suggested": "Couleurs suggérées",
     "colorAria": "Couleur {color}"
   },
+  "inlineEditing": {
+    "toolbarLabel": "Mise en forme du texte",
+    "edit": "Modifier",
+    "smaller": "Réduire la taille",
+    "larger": "Agrandir la taille",
+    "sizeReset": "Taille d'origine",
+    "font": "Police",
+    "templateFont": "Police du modèle",
+    "color": "Couleur du texte",
+    "colorHex": "Code hexadécimal",
+    "colorPreset": "Couleur {color}",
+    "colorReset": "Couleur du modèle",
+    "close": "Fermer",
+    "chipLabel": "Fonctionnalité {index}"
+  },
   "pills": {
     "remove": "Retirer {pill}"
   },

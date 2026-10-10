@@ -151,3 +151,17 @@
   width: 20px;
   height: 20px;
 }
+
+/*
+ * Édition directe (docs/INLINE-EDITING.md) : contour au survol des textes de
+ * l'aperçu principal. L'aperçu est réduit par `scale()` : l'épaisseur est
+ * compensée par `--edit-scale` pour rester fine à l'écran.
+ */
+[data-editable] {
+  border-radius: calc(2px / var(--edit-scale, 1));
+  outline-offset: calc(2px / var(--edit-scale, 1));
+}
+[data-editable]:hover:not([data-selected]),
+[data-editable]:focus-visible:not([data-selected]) {
+  outline: calc(1.5px / var(--edit-scale, 1)) solid var(--primary);
+}

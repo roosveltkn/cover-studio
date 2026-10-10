@@ -5,7 +5,13 @@ import { defaultLocale, type Locale } from "@/i18n/routing"
 import { setPath } from "@/lib/path"
 import { isPortrait } from "@/lib/slots"
 import { DEFAULT_CONFIG, DEFAULT_TEMPLATE, localizeContent } from "@/templates/showcase/defaults"
-import type { CoverConfig, ImageAsset, PanelId, TemplateTag } from "@/types/cover"
+import type {
+  CoverConfig,
+  ImageAsset,
+  PanelId,
+  TemplateTag,
+  TextSelection,
+} from "@/types/cover"
 
 /** Choix faits sur l'accueil ; ce qui manque est déduit des captures. */
 export type StartOptions = {
@@ -27,6 +33,12 @@ type CoverState = {
   /** Étiquettes cochées dans le panneau des modèles : survivent au changement de langue, jamais persistées. */
   templateTags: TemplateTag[]
   setTemplateTags: (tags: TemplateTag[]) => void
+  /** Texte sélectionné sur l'aperçu (édition directe), jamais persisté. */
+  selection: TextSelection | null
+  /** Vrai quand le texte sélectionné est en cours de saisie. */
+  editing: boolean
+  setSelection: (selection: TextSelection | null) => void
+  setEditing: (editing: boolean) => void
   setField: (path: string, value: unknown) => void
   startFrom: (images: ImageAsset[], options?: StartOptions) => void
   /** Passe les textes d'exemple dans la langue de la page, sans toucher à ceux modifiés. */
@@ -42,8 +54,16 @@ export const useCoverStore = create<CoverState>()(
       setActivePanel: (activePanel) => set({ activePanel }),
       templateTags: [],
       setTemplateTags: (templateTags) => set({ templateTags }),
+      selection: null,
+      editing: false,
+      setSelection: (selection) => set({ selection, editing: false }),
+      setEditing: (editing) => set({ editing }),
       setField: (path, value) =>
-        set((state) => ({ config: setPath(state.config, path, value) })),
+        set((state) => ({
+          config: setPath(state.config, path, value),
+          // Un autre template n'a pas forcément le texte sélectionné.
+          ...(path === "template" ? { selection: null, editing: false } : {}),
+        })),
       applyLocale: (locale) =>
         set((state) => {
           const content = localizeContent(state.config.content, locale)

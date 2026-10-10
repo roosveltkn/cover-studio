@@ -11,7 +11,7 @@ import { TEMPLATE_TAGS, filterTemplates } from "@/lib/template-filter"
 import { cn } from "@/lib/utils"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate, templates } from "@/templates/registry"
-import type { PanelId, TemplateTag } from "@/types/cover"
+import type { PanelId, TemplateTag, TextSelection } from "@/types/cover"
 
 import { ExportCard } from "./export-card"
 import { FitPreview } from "./fit-preview"
@@ -24,6 +24,7 @@ export function Panel({ id }: { id: PanelId }) {
   const title = t(`${id}Title`)
   const description = t(`${id}Description`)
   const templateId = useCoverStore((state) => state.config.template)
+  const selection = useCoverStore((state) => state.selection)
 
   const header = (
     <header className="flex flex-col gap-1">
@@ -45,11 +46,27 @@ export function Panel({ id }: { id: PanelId }) {
           {getTemplate(templateId)
             .schema.filter((field) => field.section === id)
             .map((field) => (
-              <SchemaField key={field.path} field={field} />
+              // Le champ du texte sélectionné sur l'aperçu est mis en évidence.
+              <div
+                key={field.path}
+                data-highlighted={matchesSelection(field.path, selection) || undefined}
+                className="rounded-lg transition-shadow data-highlighted:ring-2 data-highlighted:ring-primary/40 data-highlighted:ring-offset-4 data-highlighted:ring-offset-background"
+              >
+                <SchemaField field={field} />
+              </div>
             ))}
         </Rows>
       )}
     </div>
+  )
+}
+
+function matchesSelection(path: string, selection: TextSelection | null) {
+  if (!selection) return false
+  return (
+    selection.path === path ||
+    selection.path.startsWith(`${path}.`) ||
+    path === `style.textScale.${selection.element}`
   )
 }
 

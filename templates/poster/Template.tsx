@@ -14,6 +14,7 @@ import {
   nameFontSize,
   useTextScale,
 } from "@/templates/shared/text-block"
+import { EditableText } from "@/templates/shared/editable"
 import type { PlacedConfig } from "@/types/cover"
 
 const PAD = 120
@@ -110,7 +111,7 @@ export function PosterTemplate({ config }: { config: PlacedConfig }) {
             overflow: "hidden",
           }}
         >
-          {content.badge}
+          <EditableText field="badge" text={content.badge} />
         </div>
       )}
 
@@ -190,9 +191,11 @@ export function PosterTemplate({ config }: { config: PlacedConfig }) {
             overflowWrap: "anywhere",
           }}
         >
-          {content.nameMain}
+          <EditableText field="nameMain" text={content.nameMain} />
           {content.nameAccent && (
-            <span style={{ color: accent }}>{content.nameAccent}</span>
+            <span style={{ color: accent }}>
+              <EditableText field="nameAccent" text={content.nameAccent} colorable={false} />
+            </span>
           )}
         </h1>
       </div>
@@ -218,7 +221,7 @@ export function PosterTemplate({ config }: { config: PlacedConfig }) {
               overflow: "hidden",
             }}
           >
-            {content.description}
+            <EditableText field="description" text={content.description} />
           </p>
         )}
         {content.chips.length > 0 && (

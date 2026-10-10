@@ -15,6 +15,12 @@ export function isHexColor(value: string) {
   return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value)
 }
 
+/** Couleur CSS calculée ("rgb(…)") en hex, noir si illisible. */
+export function cssToHex(color: string) {
+  const parsed = parse(color)
+  return (parsed && formatHex(parsed)) ?? "#000000"
+}
+
 export function hexToOklch(hex: string): Oklch {
   const parsed = parse(hex)
   const color = parsed ? toOklch(parsed) : undefined
