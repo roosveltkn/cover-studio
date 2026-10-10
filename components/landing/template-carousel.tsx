@@ -25,12 +25,19 @@ type TemplateCarouselProps = {
  * au survol, au focus ou si l'utilisateur réduit les animations). Cliquer sur
  * une diapositive choisit le modèle, cliquer à nouveau l'annule.
  */
-export function TemplateCarousel({ config, picked, onPick }: TemplateCarouselProps) {
+export function TemplateCarousel({
+  config,
+  picked,
+  onPick,
+}: TemplateCarouselProps) {
   const t = useTranslations("landing")
   const tTemplates = useTranslations("templates")
   const count = templates.length
   const [index, setIndex] = useState(() =>
-    Math.max(0, templates.findIndex((template) => template.id === picked))
+    Math.max(
+      0,
+      templates.findIndex((template) => template.id === picked)
+    )
   )
   const [playing, setPlaying] = useState(true)
   const [hovered, setHovered] = useState(false)
@@ -40,11 +47,15 @@ export function TemplateCarousel({ config, picked, onPick }: TemplateCarouselPro
 
   useEffect(() => {
     if (!autoplay) return
-    const timer = setInterval(() => setIndex((current) => (current + 1) % count), INTERVAL)
+    const timer = setInterval(
+      () => setIndex((current) => (current + 1) % count),
+      INTERVAL
+    )
     return () => clearInterval(timer)
   }, [autoplay, count])
 
-  const go = (step: number) => setIndex((current) => (current + step + count) % count)
+  const go = (step: number) =>
+    setIndex((current) => (current + step + count) % count)
   const current = templates[index]
   const currentPicked = picked === current.id
 
@@ -64,12 +75,15 @@ export function TemplateCarousel({ config, picked, onPick }: TemplateCarouselPro
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false)
+        if (!event.currentTarget.contains(event.relatedTarget))
+          setFocused(false)
       }}
     >
       <div
         className="relative w-full overflow-hidden rounded-lg ring-1 ring-foreground/10"
-        style={{ aspectRatio: `${current.size.width} / ${current.size.height}` }}
+        style={{
+          aspectRatio: `${current.size.width} / ${current.size.height}`,
+        }}
         aria-live={autoplay ? "off" : "polite"}
       >
         {/* Seuls la diapositive affichée et ses deux voisines sont rendues. */}
@@ -83,7 +97,10 @@ export function TemplateCarousel({ config, picked, onPick }: TemplateCarouselPro
               key={template.id}
               role="group"
               aria-roledescription="slide"
-              aria-label={t("slideLabel", { position: position + 1, total: count })}
+              aria-label={t("slideLabel", {
+                position: position + 1,
+                total: count,
+              })}
               aria-hidden={offset !== 0}
               inert={offset !== 0}
               className="absolute inset-0 transition-transform duration-500 ease-out motion-reduce:transition-none"
@@ -96,11 +113,16 @@ export function TemplateCarousel({ config, picked, onPick }: TemplateCarouselPro
                 onClick={() => pick(template.id)}
                 className="group relative block size-full cursor-pointer outline-none focus-visible:ring-3 focus-visible:ring-ring/60 focus-visible:ring-inset"
               >
-                <FitPreview template={template} config={{ ...config, template: template.id }} />
+                <FitPreview
+                  template={template}
+                  config={{ ...config, template: template.id }}
+                />
                 <span
                   className={cn(
                     "pointer-events-none absolute inset-0 rounded-lg transition-shadow",
-                    selected ? "ring-3 ring-primary ring-inset" : "group-hover:ring-2 group-hover:ring-primary/50 group-hover:ring-inset"
+                    selected
+                      ? "ring-3 ring-primary ring-inset"
+                      : "group-hover:ring-2 group-hover:ring-primary/50 group-hover:ring-inset"
                   )}
                 />
                 <span
@@ -139,27 +161,42 @@ export function TemplateCarousel({ config, picked, onPick }: TemplateCarouselPro
           {index + 1} / {count}
         </span>
         <div className="flex shrink-0 items-center gap-1">
-          <Button variant="outline" size="icon-sm" aria-label={t("previousTemplate")} onClick={() => go(-1)}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("previousTemplate")}
+            onClick={() => go(-1)}
+          >
             <ChevronLeft />
           </Button>
           {!reducedMotion && (
             <Button
               variant="outline"
-              size="icon-sm"
+              size="icon"
+              className={"rounded-full"}
               aria-label={playing ? t("pauseCarousel") : t("playCarousel")}
               onClick={() => setPlaying(!playing)}
             >
               {playing ? <Pause /> : <Play />}
             </Button>
           )}
-          <Button variant="outline" size="icon-sm" aria-label={t("nextTemplate")} onClick={() => go(1)}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("nextTemplate")}
+            onClick={() => go(1)}
+          >
             <ChevronRight />
           </Button>
         </div>
       </div>
       <p className="text-xs text-muted-foreground">
         {picked
-          ? t("pickedHint", { name: tTemplates(templates.find((template) => template.id === picked)!.nameKey) })
+          ? t("pickedHint", {
+              name: tTemplates(
+                templates.find((template) => template.id === picked)!.nameKey
+              ),
+            })
           : t("pickHint")}
       </p>
     </section>
