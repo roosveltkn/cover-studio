@@ -129,7 +129,17 @@
     "perspectiveName": "Perspective",
     "perspectiveDescription": "Scène sombre, mockups inclinés en 3D",
     "mobileTrioName": "Mobile trio",
-    "mobileTrioDescription": "Trois téléphones, pour les apps mobiles"
+    "mobileTrioDescription": "Trois téléphones, pour les apps mobiles",
+    "editorialName": "Éditorial",
+    "editorialDescription": "Mise en page magazine, aplat de couleur",
+    "auroraName": "Aurora",
+    "auroraDescription": "Dégradé maillé et carte de verre",
+    "brutalName": "Néo-brutal",
+    "brutalDescription": "Contours épais et ombres pleines",
+    "terminalName": "Terminal",
+    "terminalDescription": "Sombre et technique, style outil de dev",
+    "posterName": "Affiche",
+    "posterDescription": "Typographie géante, mockups au centre"
   },
   "slots": {
     "browser": "Navigateur",

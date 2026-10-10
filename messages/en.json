@@ -129,7 +129,17 @@
     "perspectiveName": "Perspective",
     "perspectiveDescription": "Dark scene, mockups tilted in 3D",
     "mobileTrioName": "Mobile trio",
-    "mobileTrioDescription": "Three phones, for mobile apps"
+    "mobileTrioDescription": "Three phones, for mobile apps",
+    "editorialName": "Editorial",
+    "editorialDescription": "Magazine layout with a colour panel",
+    "auroraName": "Aurora",
+    "auroraDescription": "Mesh gradient and glass card",
+    "brutalName": "Neo-brutal",
+    "brutalDescription": "Thick outlines and hard shadows",
+    "terminalName": "Terminal",
+    "terminalDescription": "Dark and technical, dev tool style",
+    "posterName": "Poster",
+    "posterDescription": "Giant type, centred mockups"
   },
   "slots": {
     "browser": "Browser",
