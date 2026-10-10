@@ -67,6 +67,8 @@
     "backHome": "Back to home",
     "toggleTheme": "Toggle theme",
     "themeTooltip": "Theme (D)",
+    "githubAria": "View the source code on GitHub (opens in a new tab)",
+    "githubTooltip": "Source code on GitHub",
     "download": "Download",
     "railLabel": "Editor sections",
     "railTemplates": "Templates",

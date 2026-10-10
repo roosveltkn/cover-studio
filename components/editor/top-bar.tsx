@@ -3,14 +3,16 @@
 import { Download, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
+import { GithubIcon } from "@/components/github-icon"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import { Logo } from "@/components/logo"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Link } from "@/i18n/navigation"
 import { useTranslations } from "@/i18n/provider"
 import { getExportSize } from "@/lib/export-sizes"
+import { LINKS } from "@/lib/site"
 import { useCoverStore } from "@/stores/cover-store"
 import { getTemplate } from "@/templates/registry"
 
@@ -42,6 +44,22 @@ export function TopBar() {
       </Link>
 
       <div className="ml-auto flex items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <a
+                href={LINKS.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t("githubAria")}
+                className={buttonVariants({ variant: "ghost", size: "icon" })}
+              />
+            }
+          >
+            <GithubIcon className="size-4" />
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{t("githubTooltip")}</TooltipContent>
+        </Tooltip>
         <LocaleSwitcher />
         <Tooltip>
           <TooltipTrigger
