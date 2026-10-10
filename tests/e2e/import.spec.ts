@@ -64,6 +64,25 @@ test.describe("accueil", () => {
   })
 })
 
+test.describe("carrousel des modèles", () => {
+  test("le modèle choisi sur l'accueil s'ouvre dans l'éditeur", async ({ page }) => {
+    await page.goto("/en")
+    const carousel = page.getByRole("region", { name: en("landing", "carouselLabel") })
+    await carousel.getByRole("button", { name: en("landing", "pauseCarousel") }).click()
+    await carousel.getByRole("button", { name: en("landing", "nextTemplate") }).click()
+    await carousel.getByRole("button", { name: en("landing", "nextTemplate") }).click()
+
+    const name = en("templates", "bentoName")
+    const slide = carousel.getByRole("button", { name: en("landing", "pickTemplate").replace("{name}", name) })
+    await slide.click()
+    await expect(slide).toHaveAttribute("aria-pressed", "true")
+
+    await page.locator("#landing-image").setInputFiles(DESKTOP_SCREENSHOT())
+    await page.getByRole("button", { name: en("landing", "createButton") }).click()
+    await expect(templateButtons(page).and(page.locator('[aria-pressed="true"]'))).toContainText(name)
+  })
+})
+
 test.describe("éditeur", () => {
   test("s'ouvre avec la capture importée", async ({ page }) => {
     await openEditor(page)

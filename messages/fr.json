@@ -39,7 +39,18 @@
     "osContribTitle": "Ouvert aux contributions",
     "osContribText": "Nouveaux modèles, traductions, corrections : les pull requests sont les bienvenues.",
     "viewOnGithub": "Voir sur GitHub",
-    "reportIssue": "Signaler un problème"
+    "reportIssue": "Signaler un problème",
+    "carouselLabel": "Modèles de cover",
+    "slideLabel": "{position} sur {total}",
+    "pickTemplate": "Choisir le modèle {name}",
+    "pickCta": "Choisir ce modèle",
+    "picked": "Choisi",
+    "pickHint": "Cliquez sur un modèle pour partir de lui dans l'éditeur.",
+    "pickedHint": "Modèle choisi : {name}. Cliquez à nouveau pour annuler.",
+    "previousTemplate": "Modèle précédent",
+    "nextTemplate": "Modèle suivant",
+    "pauseCarousel": "Mettre en pause le défilement",
+    "playCarousel": "Relancer le défilement"
   },
   "faq": {
     "title": "Questions fréquentes",

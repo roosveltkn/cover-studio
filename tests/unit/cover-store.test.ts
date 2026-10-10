@@ -82,6 +82,12 @@ describe("startFrom", () => {
     expect(useCoverStore.getState().config.mockups.images).toEqual(images)
   })
 
+  it("ouvre le modèle choisi sur l'accueil, quelle que soit l'orientation", async () => {
+    const { useCoverStore } = await loadStore()
+    useCoverStore.getState().startFrom([portrait()], { template: "aurora" })
+    expect(useCoverStore.getState().config.template).toBe("aurora")
+  })
+
   it("garde un template navigateur dès qu'une capture est en paysage", async () => {
     const { useCoverStore } = await loadStore()
     useCoverStore.getState().startFrom([portrait(), landscape()])

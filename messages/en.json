@@ -39,7 +39,18 @@
     "osContribTitle": "Open to contributions",
     "osContribText": "New templates, translations, fixes: pull requests are welcome.",
     "viewOnGithub": "View on GitHub",
-    "reportIssue": "Report an issue"
+    "reportIssue": "Report an issue",
+    "carouselLabel": "Cover templates",
+    "slideLabel": "{position} of {total}",
+    "pickTemplate": "Choose the {name} template",
+    "pickCta": "Choose this template",
+    "picked": "Selected",
+    "pickHint": "Click a template to start from it in the editor.",
+    "pickedHint": "Selected template: {name}. Click it again to cancel.",
+    "previousTemplate": "Previous template",
+    "nextTemplate": "Next template",
+    "pauseCarousel": "Pause the slideshow",
+    "playCarousel": "Resume the slideshow"
   },
   "faq": {
     "title": "Frequently asked questions",

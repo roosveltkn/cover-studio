@@ -7,6 +7,11 @@ import { isPortrait } from "@/lib/slots"
 import { DEFAULT_CONFIG, DEFAULT_TEMPLATE, localizeContent } from "@/templates/showcase/defaults"
 import type { CoverConfig, ImageAsset, PanelId, TemplateTag } from "@/types/cover"
 
+/** Choix faits sur l'accueil ; ce qui manque est déduit des captures. */
+export type StartOptions = {
+  template?: string
+}
+
 type CoverState = {
   config: CoverConfig
   /** Langue de la page, jamais persistée : elle vient de l'URL. */
@@ -21,7 +26,7 @@ type CoverState = {
   templateTags: TemplateTag[]
   setTemplateTags: (tags: TemplateTag[]) => void
   setField: (path: string, value: unknown) => void
-  startFrom: (images: ImageAsset[]) => void
+  startFrom: (images: ImageAsset[], options?: StartOptions) => void
   /** Passe les textes d'exemple dans la langue de la page, sans toucher à ceux modifiés. */
   applyLocale: (locale: Locale) => void
 }
@@ -47,13 +52,16 @@ export const useCoverStore = create<CoverState>()(
               : { ...state.config, content },
           }
         }),
-      // Point de départ de l'éditeur : les captures importées sur l'accueil. La
-      // couleur dominante de la première devient la couleur de marque.
-      startFrom: (images) =>
+      // Point de départ de l'éditeur : les captures et le modèle choisis sur
+      // l'accueil. La couleur dominante de la première capture devient la
+      // couleur de marque.
+      startFrom: (images, options = {}) =>
         set((state) => {
-          const image = images[0]
+          const brandColor = images[0]?.dominant
           // Des captures toutes en portrait appellent le template dédié au mobile.
-          const template = images.every(isPortrait)
+          const template = options.template
+            ? options.template
+            : images.every(isPortrait)
             ? "mobile-trio"
             : state.config.template === "mobile-trio"
               ? DEFAULT_TEMPLATE
@@ -62,9 +70,7 @@ export const useCoverStore = create<CoverState>()(
             config: {
               ...state.config,
               template,
-              style: image?.dominant
-                ? { ...state.config.style, brandColor: image.dominant }
-                : state.config.style,
+              style: brandColor ? { ...state.config.style, brandColor } : state.config.style,
               mockups: { ...state.config.mockups, images },
             },
           }
