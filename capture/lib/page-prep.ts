@@ -2,6 +2,7 @@ import type { Browser, HTTPRequest, Page } from "puppeteer-core"
 
 import { desktopUserAgent } from "./browser.js"
 import { DEVICES, type Device } from "./devices.js"
+import { acceptLanguage } from "./language.js"
 import { createHostChecker } from "./url-guard.js"
 
 /** Domaines des gestionnaires de consentement courants : leurs scripts sont bloqués. */
@@ -87,7 +88,8 @@ function isConsentRequest(url: URL) {
 export async function preparePage(
   page: Page,
   browser: Browser,
-  device: Device
+  device: Device,
+  language: string
 ): Promise<PageState> {
   const profile = DEVICES[device]
   const state: PageState = { forbiddenNavigation: false }
@@ -96,6 +98,10 @@ export async function preparePage(
   await page.setViewport(profile.viewport)
   await page.setUserAgent({
     userAgent: profile.userAgent ?? (await desktopUserAgent(browser)),
+  })
+  // Même langue que l'interface de l'app pour les sites qui la négocient.
+  await page.setExtraHTTPHeaders({
+    "Accept-Language": acceptLanguage(language),
   })
   await page.emulateMediaFeatures([
     { name: "prefers-reduced-motion", value: "reduce" },

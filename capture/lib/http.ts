@@ -3,6 +3,7 @@ import type { LookupFunction } from "node:net"
 import { Agent, fetch, type Response } from "undici"
 
 import { CaptureError, findCaptureError } from "./errors.js"
+import { acceptLanguage, DEFAULT_LANGUAGE } from "./language.js"
 import { isPublicAddress, parseTargetUrl } from "./url-guard.js"
 
 const TIMEOUT_MS = 8_000
@@ -55,7 +56,7 @@ export type FetchResult = {
 
 export type FetchText = (
   url: URL,
-  options?: { accept?: string }
+  options?: { accept?: string; language?: string }
 ) => Promise<FetchResult>
 
 /**
@@ -74,7 +75,9 @@ export const fetchText: FetchText = async (url, options = {}) => {
         headers: {
           "User-Agent": USER_AGENT,
           Accept: options.accept ?? "text/html,application/xhtml+xml,*/*;q=0.8",
-          "Accept-Language": "fr,en;q=0.8",
+          "Accept-Language": acceptLanguage(
+            options.language ?? DEFAULT_LANGUAGE
+          ),
         },
       })
 

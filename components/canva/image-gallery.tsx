@@ -19,11 +19,14 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { GripVertical, ImagePlus, Trash2 } from "lucide-react"
-import { useState, type DragEvent } from "react"
+import { useEffect, useRef, useState, type DragEvent } from "react"
 
+import { UrlImport } from "@/components/canva/url-import"
 import { Button } from "@/components/ui/button"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { useLocale, useTranslations } from "@/i18n/provider"
 import { pluralSuffix } from "@/i18n/translator"
+import { captureClient } from "@/lib/capture"
 import { ACCEPTED_TYPES, describeImageError, readImage } from "@/lib/image"
 import { MAX_IMAGES, isPortrait, slotLabelKeys } from "@/lib/slots"
 import { cn } from "@/lib/utils"
@@ -42,9 +45,22 @@ type ImageGalleryProps = {
  */
 export function ImageGallery({ id, images, slots, onChange }: ImageGalleryProps) {
   const t = useTranslations("gallery")
+  const tUrl = useTranslations("urlImport")
   const labelKeys = slotLabelKeys(images, slots)
   // Ici plutôt que dans la zone d'ajout : elle disparaît une fois la limite atteinte.
   const [error, setError] = useState<string>()
+  const [source, setSource] = useState<"files" | "url">("files")
+  // Les captures d'URL arrivent une à une, plus vite que le rendu : chaque ajout
+  // part de la dernière liste connue, pas de celle du rendu courant.
+  const latest = useRef(images)
+  useEffect(() => {
+    latest.current = images
+  }, [images])
+  const add = (added: ImageAsset[]) => {
+    const next = [...latest.current, ...added].slice(0, MAX_IMAGES)
+    latest.current = next
+    onChange(next)
+  }
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -104,15 +120,47 @@ export function ImageGallery({ id, images, slots, onChange }: ImageGalleryProps)
         </DndContext>
       )}
 
-      {images.length < MAX_IMAGES && (
-        <AddImages
-          id={id}
-          remaining={MAX_IMAGES - images.length}
-          invalid={Boolean(error)}
-          onError={setError}
-          onAdd={(added) => onChange([...images, ...added])}
-        />
+      {images.length < MAX_IMAGES && captureClient && (
+        <ToggleGroup
+          variant="outline"
+          size="sm"
+          spacing={0}
+          aria-label={tUrl("modeLabel")}
+          value={[source]}
+          onValueChange={(next) => next[0] && setSource(next[0] as "files" | "url")}
+          className="w-full"
+        >
+          <ToggleGroupItem
+            value="files"
+            className="flex-1 data-[pressed]:bg-primary/10 data-[pressed]:text-primary"
+          >
+            {tUrl("modeFiles")}
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="url"
+            className="flex-1 data-[pressed]:bg-primary/10 data-[pressed]:text-primary"
+          >
+            {tUrl("modeUrl")}
+          </ToggleGroupItem>
+        </ToggleGroup>
       )}
+      {images.length < MAX_IMAGES &&
+        (source === "url" && captureClient ? (
+          <UrlImport
+            id={id}
+            client={captureClient}
+            remaining={MAX_IMAGES - images.length}
+            onAdd={add}
+          />
+        ) : (
+          <AddImages
+            id={id}
+            remaining={MAX_IMAGES - images.length}
+            invalid={Boolean(error)}
+            onError={setError}
+            onAdd={add}
+          />
+        ))}
       {error && (
         <p role="alert" className="text-xs text-destructive">
           {error}

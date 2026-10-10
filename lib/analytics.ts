@@ -36,6 +36,21 @@ export function trackTemplateSelected(params: { template: string }) {
   track("template_selected", params)
 }
 
+/** Les pages d'un site ont été listées (jamais l'adresse, seulement le nombre). */
+export function trackUrlDiscovered(params: { pages: number }) {
+  track("url_discovered", params)
+}
+
+/** Un aperçu de page a été demandé. */
+export function trackUrlPreviewed() {
+  track("url_previewed", {})
+}
+
+/** Des captures depuis une URL ont été lancées. */
+export function trackUrlCaptured(params: { count: number; failed: number }) {
+  track("url_captured", params)
+}
+
 /** L'export a échoué : `reason` est un code d'erreur, jamais un message libre. */
 export function trackExportFailed(params: { reason: string }) {
   track("cover_export_failed", params)

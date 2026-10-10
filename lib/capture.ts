@@ -12,8 +12,7 @@ import type {
  * la capture depuis une URL est masquée et l'app reste 100 % locale (forks).
  */
 export const CAPTURE_ENDPOINT =
-  process.env.NEXT_PUBLIC_CAPTURE_ENDPOINT?.trim().replace(/\/+$/, "") ||
-  undefined
+  process.env.NEXT_PUBLIC_CAPTURE_ENDPOINT?.trim().replace(/\/+$/, "") || undefined
 
 const MAX_URL_LENGTH = 2048
 /** Captures lancées en même temps : au-delà, le rate limiting du service répond 429. */
@@ -56,9 +55,7 @@ const MESSAGE_KEYS: Record<CaptureErrorCode, MessageKey<"errors">> = {
 
 /** Message d'erreur de capture dans la langue de l'interface. */
 export function describeCaptureError(error: unknown, t: Translator<"errors">) {
-  return t(
-    error instanceof CaptureError ? MESSAGE_KEYS[error.code] : "captureFailed"
-  )
+  return t(error instanceof CaptureError ? MESSAGE_KEYS[error.code] : "captureFailed")
 }
 
 /** Annulation volontaire (AbortController) : à ignorer, pas à afficher. */
@@ -74,9 +71,7 @@ export function isAbortError(error: unknown) {
 export function normalizeSiteUrl(input: string): string {
   const raw = input.trim()
   if (!raw || raw.length > MAX_URL_LENGTH) throw new CaptureError("invalid-url")
-  const withScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(raw)
-    ? raw
-    : `https://${raw}`
+  const withScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`
 
   let url: URL
   try {
@@ -84,8 +79,7 @@ export function normalizeSiteUrl(input: string): string {
   } catch {
     throw new CaptureError("invalid-url")
   }
-  if (url.protocol !== "http:" && url.protocol !== "https:")
-    throw new CaptureError("invalid-url")
+  if (url.protocol !== "http:" && url.protocol !== "https:") throw new CaptureError("invalid-url")
   // « monsite » sans extension : faute de frappe plutôt qu'un vrai site.
   if (!url.hostname.includes(".") && !url.hostname.startsWith("["))
     throw new CaptureError("invalid-url")
@@ -119,10 +113,7 @@ function createLimiter(concurrency: number) {
   let active = 0
   const waiting: Array<() => void> = []
 
-  return async function run<T>(
-    task: () => Promise<T>,
-    signal: AbortSignal
-  ): Promise<T> {
+  return async function run<T>(task: () => Promise<T>, signal: AbortSignal): Promise<T> {
     signal.throwIfAborted()
     if (active < concurrency) {
       active++
@@ -156,11 +147,7 @@ function createLimiter(concurrency: number) {
  * Rattache un appelant à une requête partagée : il peut abandonner sans
  * annuler la requête pour les autres. `release` est appelé à son abandon.
  */
-function follow<T>(
-  shared: Promise<T>,
-  signal: AbortSignal | undefined,
-  release: () => void
-) {
+function follow<T>(shared: Promise<T>, signal: AbortSignal | undefined, release: () => void) {
   if (!signal) return shared
   return new Promise<T>((resolve, reject) => {
     const abandon = () => {
@@ -190,6 +177,12 @@ type Pending = {
 
 export type CaptureClient = ReturnType<typeof createCaptureClient>
 
+export type CaptureOptions = {
+  signal?: AbortSignal
+  /** Langue de l'interface : les sites multilingues servent la même. */
+  language?: string
+}
+
 export function createCaptureClient(options: {
   endpoint: string
   fetch?: typeof fetch
@@ -202,19 +195,12 @@ export function createCaptureClient(options: {
   const pending = new Map<string, Pending>()
 
   /** Appelle le service et traduit tout échec en CaptureError (sauf annulation). */
-  async function call(
-    path: string,
-    params: Record<string, string>,
-    signal?: AbortSignal
-  ) {
+  async function call(path: string, params: Record<string, string>, signal?: AbortSignal) {
     let response: Response
     try {
-      response = await fetchImpl(
-        `${endpoint}${path}?${new URLSearchParams(params)}`,
-        {
-          signal,
-        }
-      )
+      response = await fetchImpl(`${endpoint}${path}?${new URLSearchParams(params)}`, {
+        signal,
+      })
     } catch (error) {
       if (isAbortError(error)) throw error
       throw new CaptureError("network")
@@ -228,7 +214,10 @@ export function createCaptureClient(options: {
     throw new CaptureError(code ?? "internal")
   }
 
-  const keyOf = (url: string, device: CaptureDevice) => `${device} ${url}`
+  const keyOf = (url: string, device: CaptureDevice, language = "") =>
+    `${device} ${language} ${url}`
+  const langParam = (language?: string): Record<string, string> =>
+    language ? { lang: language } : {}
 
   function remember(key: string, result: CaptureResult) {
     done.delete(key)
@@ -241,20 +230,17 @@ export function createCaptureClient(options: {
     /** Pages du site, voir `GET /api/discover`. */
     async discoverPages(
       url: string,
-      signal?: AbortSignal
+      { signal, language }: CaptureOptions = {}
     ): Promise<DiscoverResponse> {
-      const response = await call("/api/discover", { url }, signal)
-      const data = (await response
-        .json()
-        .catch(() => null)) as DiscoverResponse | null
-      if (!data || !Array.isArray(data.pages))
-        throw new CaptureError("internal")
+      const response = await call("/api/discover", { url, ...langParam(language) }, signal)
+      const data = (await response.json().catch(() => null)) as DiscoverResponse | null
+      if (!data || !Array.isArray(data.pages)) throw new CaptureError("internal")
       return data
     },
 
     /** Capture déjà reçue, sans requête : sert à l'aperçu au clic. */
-    cached(url: string, device: CaptureDevice): CaptureResult | undefined {
-      return done.get(keyOf(url, device))
+    cached(url: string, device: CaptureDevice, language?: string): CaptureResult | undefined {
+      return done.get(keyOf(url, device, language))
     },
 
     /**
@@ -265,10 +251,10 @@ export function createCaptureClient(options: {
     capturePage(
       url: string,
       device: CaptureDevice,
-      signal?: AbortSignal
+      { signal, language }: CaptureOptions = {}
     ): Promise<CaptureResult> {
       signal?.throwIfAborted()
-      const key = keyOf(url, device)
+      const key = keyOf(url, device, language)
       const cached = done.get(key)
       if (cached) return Promise.resolve(cached)
 
@@ -278,12 +264,11 @@ export function createCaptureClient(options: {
         const promise: Promise<CaptureResult> = limit(async () => {
           const response = await call(
             "/api/capture",
-            { url, device },
+            { url, device, ...langParam(language) },
             controller.signal
           )
           const blob = await response.blob()
-          if (!blob.type.startsWith("image/"))
-            throw new CaptureError("internal")
+          if (!blob.type.startsWith("image/")) throw new CaptureError("internal")
           return {
             blob,
             url: response.headers.get("X-Capture-Url") ?? url,
