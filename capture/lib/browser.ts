@@ -4,6 +4,19 @@ import puppeteer, { type Browser, type Page } from "puppeteer-core"
 let browserPromise: Promise<Browser> | null = null
 
 /**
+ * Drapeaux par défaut de @sparticuz/chromium à retirer :
+ * - --single-process fait planter la création d'un contexte isolé
+ *   (« Target.createTarget: Target closed ») ;
+ * - les deux autres désactivent la same-origin policy et le blocage du
+ *   contenu mixte, inutiles pour charger des pages inconnues.
+ */
+const UNSAFE_ARGS = new Set([
+  "--single-process",
+  "--disable-web-security",
+  "--allow-running-insecure-content",
+])
+
+/**
  * Sur Vercel : Chromium de @sparticuz/chromium (binaire Linux). En local :
  * le Chrome installé, désigné par CHROME_PATH.
  */
@@ -16,7 +29,7 @@ async function launch(): Promise<Browser> {
   chromium.setGraphicsMode = false
   return puppeteer.launch({
     args: await puppeteer.defaultArgs({
-      args: chromium.args,
+      args: chromium.args.filter((arg) => !UNSAFE_ARGS.has(arg)),
       headless: "shell",
     }),
     executablePath: await chromium.executablePath(),

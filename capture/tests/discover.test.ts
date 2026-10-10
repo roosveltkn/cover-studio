@@ -164,6 +164,26 @@ describe("buildPages", () => {
     )
   })
 
+  it("ne classe en légal que des segments de chemin entiers", () => {
+    const sitemap = [
+      "/changelog/2023-08-30-mentions",
+      "/docs/terms-update-summary",
+      "/legal/aup",
+      "/fr/politique-de-confidentialite",
+      "/terms-of-service",
+    ].map((path) => new URL(path, site).href)
+    const groups = Object.fromEntries(
+      build([], sitemap).pages.map((page) => [page.path, page.group])
+    )
+    expect(groups).toMatchObject({
+      "/changelog/2023-08-30-mentions": "pages",
+      "/docs/terms-update-summary": "pages",
+      "/legal/aup": "legal",
+      "/fr/politique-de-confidentialite": "legal",
+      "/terms-of-service": "legal",
+    })
+  })
+
   it("donne un libellé null à l'accueil sans lien de navigation", () => {
     expect(build([]).pages).toEqual([
       {

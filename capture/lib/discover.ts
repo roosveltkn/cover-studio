@@ -51,8 +51,9 @@ const EXCLUDED_EXTENSIONS =
 /** Connexion, administration, panier, compte, pagination et taxonomies. */
 const EXCLUDED_PATHS =
   /(^|\/)(log-?out|sign-?out|deconnexion|log-?in|sign-?in|connexion|wp-admin|wp-login\.php|wp-json|xmlrpc\.php|cdn-cgi|admin|feed|cart|panier|checkout|my-account|mon-compte|account|tags?|author|category|categorie|page\/\d+)(\/|$)/i
+/** Segment entier de chemin : « /changelog/…-mentions » n'est pas une page légale. */
 const LEGAL_PATHS =
-  /mentions|legal|privacy|privacidad|confidentialit|politique-de|cgu|cgv|terms|conditions|cookies?|imprint|impressum|gdpr|rgpd|disclaimer|datenschutz/i
+  /(^|\/)(mentions-legales|legal|legal-notice|privacy(-policy)?|privacidad|confidentialite|politique-de-confidentialite|cgu|cgv|terms(-of-(service|use))?|conditions-generales[\w-]*|cookies?(-policy)?|imprint|impressum|gdpr|rgpd|disclaimer|datenschutz)(\/|$)/i
 /** Article d'une rubrique éditoriale ; l'index (/blog) reste une page. */
 const BLOG_ARTICLE =
   /^\/(blog|news|actualites?|actus?|articles?|posts?|journal|insights|stories|magazine)\/.+/i

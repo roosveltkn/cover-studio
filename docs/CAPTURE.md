@@ -123,15 +123,15 @@ pnpm capture:typecheck
 ## Déploiement sur Vercel
 
 1. **Nouveau projet** importé depuis le même dépôt : Root Directory `capture`, Framework Preset _Other_, Node.js 22.x.
-2. **Ignored Build Step** :
-   - projet capture : `git diff --quiet HEAD^ HEAD -- .` (ne rebuild que si `capture/` change) ;
-   - projet app : `git diff --quiet HEAD^ HEAD -- . ':!capture'`.
-3. **Domaine** : par exemple `capture.<domaine>`.
+2. **Builds inutiles évités** :
+   - projet capture : option « Skip deployments when there are no changes to the root directory » ;
+   - projet app : Ignored Build Step `git diff --quiet ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD -- . ":!capture"` (comparaison avec le dernier déploiement réussi, pas seulement le dernier commit).
+3. **Domaine** : par exemple `capture.<domaine>`. Tant que le service n'est pas sur la branche de production, le domaine peut être rattaché à la branche de développement (option « Git Branch » du domaine), puis détaché à la release.
 4. **Variables** : `ALLOWED_ORIGINS` sur le service ; `NEXT_PUBLIC_CAPTURE_ENDPOINT` sur l'app.
 5. **Firewall → règles de rate limiting** par IP : `/api/discover` 10 requêtes/min, `/api/capture` 20 requêtes/min, réponse 429.
-6. **Spend Management** : alerte et plafond de dépense.
+6. **Spend Management** (plan Pro) : alerte et plafond de dépense. Sur Hobby, le projet est mis en pause une fois les quotas atteints.
 
-La config des fonctions (2 Go de mémoire, 60 s maximum) est dans `capture/vercel.json`.
+`capture/vercel.json` fixe la région (Paris, `cdg1`) et la durée maximale des fonctions (60 s). La mémoire n'y figure pas : elle est ignorée avec la facturation Active CPU et se règle dans les paramètres du projet. Pas d'`includeFiles` non plus : avec pnpm, le chemin du binaire Chromium est un lien symbolique qui rend le paquet de fonction invalide ; le traçage automatique des fichiers suffit.
 
 ## Limites connues
 
