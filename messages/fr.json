@@ -140,6 +140,8 @@
     "terminalDescription": "Sombre et technique, style outil de dev",
     "posterName": "Affiche",
     "posterDescription": "Typographie géante, mockups au centre",
+    "sunburstName": "Soleil",
+    "sunburstDescription": "Affiche rétro, rayons de soleil derrière les mockups",
     "storeName": "Store",
     "storeDescription": "Trois panneaux légendés, style App Store",
     "focusName": "Focus",
@@ -149,16 +151,14 @@
     "calloutsName": "Annotations",
     "calloutsDescription": "Fonctionnalités en bulles autour du téléphone",
     "ribbonName": "Ruban",
-    "ribbonDescription": "Bande diagonale d'écrans répétés"
+    "ribbonDescription": "Trois écrans sur une bande diagonale"
   },
   "templatesPanel": {
-    "searchLabel": "Rechercher un modèle",
-    "searchPlaceholder": "Rechercher : sombre, mobile, verre…",
     "tagsLabel": "Filtrer par étiquette",
     "listLabel": "Modèles disponibles",
     "resultsOne": "{count} modèle",
     "resultsOther": "{count} modèles",
-    "empty": "Aucun modèle ne correspond à votre recherche.",
+    "empty": "Aucun modèle ne porte toutes ces étiquettes.",
     "reset": "Effacer les filtres"
   },
   "templateTags": {

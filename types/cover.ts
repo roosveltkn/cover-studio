@@ -130,9 +130,6 @@ export type TemplateTag =
   | "minimal"
   | "playful"
 
-/** Recherche et étiquettes actives dans le panneau des modèles. */
-export type TemplateFilter = { query: string; tags: TemplateTag[] }
-
 export type Template = {
   id: string
   /** Clés des textes dans le namespace `templates`. */

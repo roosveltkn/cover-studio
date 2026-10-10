@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { EMPTY_FILTER, filterTemplates, isFilterActive, normalizeSearch } from "@/lib/template-filter"
+import { filterTemplates } from "@/lib/template-filter"
 import { templates } from "@/templates/registry"
 import type { Template, TemplateTag } from "@/types/cover"
 
@@ -10,42 +10,16 @@ function fake(id: string, tags: TemplateTag[]) {
 }
 
 const LIST = [fake("aurora", ["desktop", "dark", "colorful"]), fake("trio", ["mobile", "light"])]
-const TEXTS: Record<string, string[]> = {
-  aurora: ["Aurora", "Dégradé maillé et carte de verre"],
-  trio: ["Mobile trio", "Trois téléphones"],
-}
-const textsOf = (template: Template) => TEXTS[template.id]
 const ids = (list: Template[]) => list.map((template) => template.id)
 
-describe("normalizeSearch", () => {
-  it("ignore la casse et les accents", () => {
-    expect(normalizeSearch("  Dégradé ÉDITORIAL ")).toBe("degrade editorial")
-  })
-})
-
 describe("filterTemplates", () => {
-  it("renvoie tout sans recherche ni étiquette", () => {
-    expect(ids(filterTemplates(LIST, EMPTY_FILTER, textsOf))).toEqual(["aurora", "trio"])
-  })
-
-  it("cherche dans les textes, sans tenir compte des accents", () => {
-    expect(ids(filterTemplates(LIST, { query: "degrade", tags: [] }, textsOf))).toEqual(["aurora"])
-  })
-
-  it("exige chaque mot de la recherche", () => {
-    expect(ids(filterTemplates(LIST, { query: "trois verre", tags: [] }, textsOf))).toEqual([])
-    expect(ids(filterTemplates(LIST, { query: "trois mobile", tags: [] }, textsOf))).toEqual(["trio"])
+  it("renvoie tout sans étiquette cochée", () => {
+    expect(ids(filterTemplates(LIST, []))).toEqual(["aurora", "trio"])
   })
 
   it("exige toutes les étiquettes cochées", () => {
-    expect(ids(filterTemplates(LIST, { query: "", tags: ["dark"] }, textsOf))).toEqual(["aurora"])
-    expect(ids(filterTemplates(LIST, { query: "", tags: ["dark", "mobile"] }, textsOf))).toEqual([])
-  })
-})
-
-describe("isFilterActive", () => {
-  it("ignore une recherche faite d'espaces", () => {
-    expect(isFilterActive({ query: "  ", tags: [] })).toBe(false)
-    expect(isFilterActive({ query: "", tags: ["light"] })).toBe(true)
+    expect(ids(filterTemplates(LIST, ["dark"]))).toEqual(["aurora"])
+    expect(ids(filterTemplates(LIST, ["dark", "colorful"]))).toEqual(["aurora"])
+    expect(ids(filterTemplates(LIST, ["dark", "mobile"]))).toEqual([])
   })
 })

@@ -14,6 +14,7 @@ import { RibbonTemplate } from "./ribbon/Template"
 import { ShowcaseTemplate } from "./showcase/Template"
 import { SpotlightTemplate } from "./spotlight/Template"
 import { StoreTemplate } from "./store/Template"
+import { SunburstTemplate } from "./sunburst/Template"
 import { TerminalTemplate } from "./terminal/Template"
 import { baseSchema, mobileTrioSchema } from "./shared/schema"
 import { COVER_SIZE } from "./shared/mockups"
@@ -131,6 +132,16 @@ export const templates: Template[] = [
     schema: baseSchema,
     slots: BROWSER_AND_PHONE,
     tags: ["desktop", "colorful", "playful"],
+  },
+  {
+    id: "sunburst",
+    nameKey: "sunburstName",
+    descriptionKey: "sunburstDescription",
+    size: COVER_SIZE,
+    component: SunburstTemplate,
+    schema: baseSchema,
+    slots: BROWSER_AND_PHONE,
+    tags: ["desktop", "light", "colorful", "playful"],
   },
   {
     id: "store",

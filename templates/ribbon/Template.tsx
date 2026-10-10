@@ -5,16 +5,16 @@ import { CoverRoot, Footer, TextBlock } from "@/templates/shared/text-block"
 import type { PlacedConfig } from "@/types/cover"
 
 const TEXT = { left: 120, top: 100, width: 1050 }
-const PHONE_SCALE = 0.8
-const GAP = 50
-/** Assez de téléphones pour couvrir aussi les formats plus larges. */
-const COUNT = 10
-const BAND_CENTER = { x: 1300, y: 990 }
+const PHONE_SCALE = 1
+const GAP = 70
+const BAND_CENTER = { x: 1450, y: 930 }
+/** Le ruban déborde largement du canevas, pour couvrir aussi les formats plus larges. */
+const BAND_WIDTH = 5000
 const TILT = -10
 
 /**
- * Ruban diagonal de téléphones répétés qui traverse un fond de marque plein ;
- * texte en haut à gauche, au-dessus du ruban.
+ * Ruban diagonal qui traverse un fond de marque plein et porte les trois
+ * captures (une par téléphone) ; texte en haut à gauche, au-dessus du ruban.
  */
 export function RibbonTemplate({ config }: { config: PlacedConfig }) {
   const { content, style, mockups } = config
@@ -23,10 +23,7 @@ export function RibbonTemplate({ config }: { config: PlacedConfig }) {
   const accent = style.accentColor ?? tone(brand, 0.9, 0.6)
   const screens = phoneScreens(mockups)
 
-  const phoneWidth = PHONE_SIZE.width * PHONE_SCALE
-  const phoneHeight = PHONE_SIZE.height * PHONE_SCALE
-  const bandWidth = COUNT * phoneWidth + (COUNT - 1) * GAP
-  const bandHeight = phoneHeight + 160
+  const bandHeight = PHONE_SIZE.height * PHONE_SCALE + 160
 
   return (
     <CoverRoot
@@ -42,9 +39,9 @@ export function RibbonTemplate({ config }: { config: PlacedConfig }) {
       <div
         style={{
           position: "absolute",
-          left: BAND_CENTER.x - bandWidth / 2 - 200,
+          left: BAND_CENTER.x - BAND_WIDTH / 2,
           top: BAND_CENTER.y - bandHeight / 2,
-          width: bandWidth + 400,
+          width: BAND_WIDTH,
           height: bandHeight,
           transform: `rotate(${TILT}deg)`,
           background: "rgba(255, 255, 255, 0.1)",
@@ -56,18 +53,16 @@ export function RibbonTemplate({ config }: { config: PlacedConfig }) {
           gap: GAP,
         }}
       >
-        {Array.from({ length: COUNT }, (_, index) => {
-          const screen = screens[index % screens.length]
-          return (
-            <PhoneFrame
-              key={index}
-              image={screen.image}
-              imagePosition={screen.position}
-              scale={PHONE_SCALE}
-              style={{ flexShrink: 0 }}
-            />
-          )
-        })}
+        {/* Capture principale au centre, entre la 2e et la 3e. */}
+        {[screens[1], screens[0], screens[2]].map((screen, index) => (
+          <PhoneFrame
+            key={index}
+            image={screen.image}
+            imagePosition={screen.position}
+            scale={PHONE_SCALE}
+            style={{ flexShrink: 0 }}
+          />
+        ))}
       </div>
 
       <TextBlock

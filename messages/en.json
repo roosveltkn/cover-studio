@@ -140,6 +140,8 @@
     "terminalDescription": "Dark and technical, dev tool style",
     "posterName": "Poster",
     "posterDescription": "Giant type, centred mockups",
+    "sunburstName": "Sunburst",
+    "sunburstDescription": "Retro poster, sun rays behind the mockups",
     "storeName": "Store",
     "storeDescription": "Three captioned panels, App Store style",
     "focusName": "Focus",
@@ -149,16 +151,14 @@
     "calloutsName": "Callouts",
     "calloutsDescription": "Features in bubbles around the phone",
     "ribbonName": "Ribbon",
-    "ribbonDescription": "Diagonal band of repeated screens"
+    "ribbonDescription": "Three screens on a diagonal band"
   },
   "templatesPanel": {
-    "searchLabel": "Search templates",
-    "searchPlaceholder": "Search: dark, mobile, glass…",
     "tagsLabel": "Filter by tag",
     "listLabel": "Available templates",
     "resultsOne": "{count} template",
     "resultsOther": "{count} templates",
-    "empty": "No template matches your search.",
+    "empty": "No template has all these tags.",
     "reset": "Clear filters"
   },
   "templateTags": {

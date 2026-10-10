@@ -5,8 +5,7 @@ import { defaultLocale, type Locale } from "@/i18n/routing"
 import { setPath } from "@/lib/path"
 import { isPortrait } from "@/lib/slots"
 import { DEFAULT_CONFIG, DEFAULT_TEMPLATE, localizeContent } from "@/templates/showcase/defaults"
-import { EMPTY_FILTER } from "@/lib/template-filter"
-import type { CoverConfig, ImageAsset, PanelId, TemplateFilter } from "@/types/cover"
+import type { CoverConfig, ImageAsset, PanelId, TemplateTag } from "@/types/cover"
 
 type CoverState = {
   config: CoverConfig
@@ -18,9 +17,9 @@ type CoverState = {
    */
   activePanel: PanelId
   setActivePanel: (panel: PanelId) => void
-  /** Recherche du panneau des modèles : survit au changement de langue, jamais persistée. */
-  templateFilter: TemplateFilter
-  setTemplateFilter: (filter: TemplateFilter) => void
+  /** Étiquettes cochées dans le panneau des modèles : survivent au changement de langue, jamais persistées. */
+  templateTags: TemplateTag[]
+  setTemplateTags: (tags: TemplateTag[]) => void
   setField: (path: string, value: unknown) => void
   startFrom: (images: ImageAsset[]) => void
   /** Passe les textes d'exemple dans la langue de la page, sans toucher à ceux modifiés. */
@@ -34,8 +33,8 @@ export const useCoverStore = create<CoverState>()(
       locale: defaultLocale,
       activePanel: "templates",
       setActivePanel: (activePanel) => set({ activePanel }),
-      templateFilter: EMPTY_FILTER,
-      setTemplateFilter: (templateFilter) => set({ templateFilter }),
+      templateTags: [],
+      setTemplateTags: (templateTags) => set({ templateTags }),
       setField: (path, value) =>
         set((state) => ({ config: setPath(state.config, path, value) })),
       applyLocale: (locale) =>

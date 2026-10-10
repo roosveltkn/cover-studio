@@ -4,15 +4,13 @@ import { openEditor, templateButtons } from "./helpers/editor"
 import { en } from "./helpers/messages"
 
 test.describe("panneau des modèles", () => {
-  test("la recherche filtre les modèles et se réinitialise", async ({ page }) => {
+  test("une combinaison sans résultat se réinitialise", async ({ page }) => {
     await openEditor(page)
+    const tags = page.getByRole("group", { name: en("templatesPanel", "tagsLabel") })
     const all = await templateButtons(page).count()
 
-    await page.getByRole("searchbox", { name: en("templatesPanel", "searchLabel") }).fill("aurora")
-    await expect(templateButtons(page)).toHaveCount(1)
-    await expect(templateButtons(page).first()).toContainText(en("templates", "auroraName"))
-
-    await page.getByRole("searchbox", { name: en("templatesPanel", "searchLabel") }).fill("zzz")
+    await tags.getByRole("button", { name: en("templateTags", "mobile") }).click()
+    await tags.getByRole("button", { name: en("templateTags", "desktop") }).click()
     await expect(page.getByText(en("templatesPanel", "empty"))).toBeVisible()
 
     await page.getByRole("button", { name: en("templatesPanel", "reset") }).click()
