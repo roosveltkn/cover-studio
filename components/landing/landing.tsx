@@ -4,10 +4,7 @@ import {
   ArrowRight,
   Download,
   ImageUp,
-  Lock,
   Palette,
-  Sparkles,
-  UserX,
   type LucideIcon,
 } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -48,12 +45,6 @@ const STEPS: {
   { icon: ImageUp, title: "step1Title", text: "step1Text" },
   { icon: Palette, title: "step2Title", text: "step2Text" },
   { icon: Download, title: "step3Title", text: "step3Text" },
-]
-
-const PROMISES: { icon: LucideIcon; label: "promiseLocal" | "promiseNoAccount" | "promiseFree" }[] = [
-  { icon: Lock, label: "promiseLocal" },
-  { icon: UserX, label: "promiseNoAccount" },
-  { icon: Sparkles, label: "promiseFree" },
 ]
 
 export function Landing() {
@@ -196,6 +187,7 @@ export function Landing() {
                       onChange={setIcon}
                       types={ICON_TYPES}
                       contain
+                      compact
                     />
                   </FormField>
                   <FormField
@@ -207,6 +199,7 @@ export function Landing() {
                       value={brandColor}
                       onChange={setChosenColor}
                       presets={COLOR_PRESETS}
+                      compact
                     />
                     {iconColor &&
                       iconColor.toLowerCase() !== brandColor.toLowerCase() && (
@@ -252,14 +245,6 @@ export function Landing() {
                   {t("createButton")}
                   <ArrowRight data-icon="inline-end" />
                 </Button>
-                <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-4 text-xs text-muted-foreground">
-                  {PROMISES.map(({ icon: Icon, label }) => (
-                    <li key={label} className="flex items-center gap-1.5">
-                      <Icon className="size-3.5 text-primary" />
-                      {t(label)}
-                    </li>
-                  ))}
-                </ul>
               </section>
             </div>
 

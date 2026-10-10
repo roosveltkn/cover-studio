@@ -17,6 +17,8 @@ type FileInputProps = {
   types?: string[]
   /** Aperçu carré non rogné, pour une icône. */
   contain?: boolean
+  /** Zone d'import sur une ligne, à la hauteur d'un champ texte. */
+  compact?: boolean
 }
 
 /** Zone de dépôt puis carte fichier (FileInput + FileInputItem de Canva). */
@@ -26,6 +28,7 @@ export function FileInput({
   onChange,
   types = ACCEPTED_TYPES,
   contain = false,
+  compact = false,
 }: FileInputProps) {
   const t = useTranslations("fileInput")
   const tErrors = useTranslations("errors")
@@ -54,25 +57,33 @@ export function FileInput({
 
   if (value) {
     return (
-      <div className="flex items-center gap-3 rounded-lg border bg-background p-2 dark:bg-input/30">
+      <div
+        className={cn(
+          "flex items-center rounded-lg border bg-background dark:bg-input/30",
+          compact ? "h-10 gap-2 px-1.5" : "gap-3 p-2"
+        )}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={value.dataUrl}
           alt=""
           className={cn(
-            "size-12 shrink-0 rounded-md ring-1 ring-foreground/10",
+            "shrink-0 rounded-md ring-1 ring-foreground/10",
+            compact ? "size-7" : "size-12",
             contain ? "bg-muted object-contain p-1" : "object-cover object-top"
           )}
         />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{value.name}</p>
-          <p className="text-xs text-muted-foreground tabular-nums">
-            {value.width} × {value.height}
-          </p>
+          {!compact && (
+            <p className="text-xs text-muted-foreground tabular-nums">
+              {value.width} × {value.height}
+            </p>
+          )}
         </div>
         <Button
           variant="ghost"
-          size="icon"
+          size={compact ? "icon-sm" : "icon"}
           aria-label={t("remove", { name: value.name })}
           onClick={() => onChange(undefined)}
         >
@@ -92,18 +103,22 @@ export function FileInput({
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
+        title={compact ? t("dropHint", { formats: formatList(types) }) : undefined}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-input px-4 py-5 text-center transition-colors hover:bg-muted has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
+          "flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-input text-center transition-colors hover:bg-muted has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
+          compact ? "h-10 gap-2 px-3" : "flex-col gap-1.5 px-4 py-5",
           dragging && "border-primary bg-primary/5"
         )}
       >
-        <Upload className="size-5 text-muted-foreground" />
+        <Upload className={cn("text-muted-foreground", compact ? "size-4" : "size-5")} />
         <span className="text-sm font-semibold">
           {loading ? t("reading") : t("import")}
         </span>
-        <span className="text-xs text-muted-foreground">
-          {t("dropHint", { formats: formatList(types) })}
-        </span>
+        {!compact && (
+          <span className="text-xs text-muted-foreground">
+            {t("dropHint", { formats: formatList(types) })}
+          </span>
+        )}
         <input
           id={id}
           type="file"
