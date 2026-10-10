@@ -127,7 +127,11 @@ pnpm capture:typecheck
 1. **Nouveau projet** importé depuis le même dépôt : Root Directory `capture`, Framework Preset _Other_, Node.js 22.x.
 2. **Builds inutiles évités** :
    - projet capture : option « Skip deployments when there are no changes to the root directory » ;
-   - projet app : Ignored Build Step `git diff --quiet ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD -- . ":!capture"` (comparaison avec le dernier déploiement réussi, pas seulement le dernier commit).
+   - projet app : Ignored Build Step
+     `if git cat-file -e "${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}^{commit}" 2>/dev/null; then git diff --quiet "${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}" HEAD -- . ":!capture"; else exit 1; fi`.
+     Il compare avec le dernier déploiement réussi, pas seulement le dernier commit. Vercel clone le
+     dépôt en profondeur limitée : si ce commit est absent du clone, la commande demande un build
+     (`exit 1`) au lieu d'échouer, ce qui ferait échouer le déploiement.
 3. **Domaine** : par exemple `capture.<domaine>`. Tant que le service n'est pas sur la branche de production, le domaine peut être rattaché à la branche de développement (option « Git Branch » du domaine), puis détaché à la release.
 4. **Variables** : `ALLOWED_ORIGINS` sur le service ; `NEXT_PUBLIC_CAPTURE_ENDPOINT` sur l'app.
 5. **Firewall → règles de rate limiting** par IP : `/api/discover` 10 requêtes/min, `/api/capture` 20 requêtes/min, réponse 429.
