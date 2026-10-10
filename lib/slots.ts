@@ -1,11 +1,11 @@
 import type { CoverConfig, ImageAsset, PlacedConfig, Slot, Template } from "@/types/cover"
 
 /**
- * Plafond de la galerie : trois pages capturées en web et en mobile. Un modèle
+ * Plafond de la galerie : 4 captures (2 pages en web et mobile). Un modèle
  * n'affiche que ses emplacements ; les autres captures restent « non utilisées »
  * et se réordonnent pour changer celles qui s'affichent.
  */
-export const MAX_IMAGES = 6
+export const MAX_IMAGES = 4
 
 export function isPortrait(image: ImageAsset) {
   return image.height > image.width

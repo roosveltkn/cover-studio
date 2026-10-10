@@ -14,7 +14,7 @@
     "heroTitle": "A pro cover for your app, built from your screenshots",
     "heroText": "Import a screenshot of your app: the layout, mockups and colors are generated for you. All that's left is to write the text.",
     "startTitle": "Start with a screenshot",
-    "startText": "Desktop or mobile, up to 6 screenshots. Add your logo and pick the brand color, or let it come from your first screenshot.",
+    "startText": "Desktop or mobile, up to 4 screenshots. Add your logo and pick the brand color, or let it come from your first screenshot.",
     "imageLabel": "Screenshots of your app ({max} maximum)",
     "createButton": "Create my cover",
     "useScreenshotColor": "Screenshot color",
@@ -97,7 +97,7 @@
     "colorsTitle": "Colors",
     "colorsDescription": "A single color: the whole palette follows from it.",
     "mockupsTitle": "Screenshots",
-    "mockupsDescription": "Up to 6 screenshots, placed in order. Nothing is uploaded.",
+    "mockupsDescription": "Up to 4 screenshots, placed in order. Nothing is uploaded.",
     "exportTitle": "Download",
     "exportDescription": "PNG export at full size."
   },
@@ -295,11 +295,13 @@
     "doneOther": "{count} screenshots added to the gallery.",
     "pagesLabel": "Pages to capture",
     "selectionSummary": "{count} / {max} pages",
-    "hint": "Each page is captured on desktop and mobile.",
+    "hint": "{max} screenshots at most: 2 pages on both devices, 4 on a single one.",
     "captureCount": "Capture ({count})",
     "preview": "Preview",
     "pagesLimitReached": "{max} pages maximum: uncheck one to pick another.",
-    "noRoom": "Not enough room in the gallery: each page needs 2 screenshots."
+    "noRoom": "Not enough room in the gallery: remove screenshots to add more.",
+    "devicesLabel": "Devices",
+    "tooManyPages": "{max} pages maximum with these devices: uncheck pages or keep a single device."
   },
   "swatch": {
     "hex": "Hex",

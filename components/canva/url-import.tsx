@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { ResponsiveDialog } from "@/components/ui/responsive-dialog"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { useLocale, useTranslations } from "@/i18n/provider"
 import type { MessageKey } from "@/i18n/translator"
 import { pluralSuffix } from "@/i18n/translator"
@@ -44,12 +45,15 @@ const GROUP_KEYS: Record<PageGroup, MessageKey<"urlImport">> = {
   legal: "groupLegal",
 }
 const GROUP_ORDER: PageGroup[] = ["home", "navigation", "pages", "blog", "legal"]
-/** Chaque page choisie est capturée sur ordinateur et sur mobile. */
 const DEVICES: CaptureDevice[] = ["desktop", "mobile"]
+const DEVICE_ICONS = { desktop: Monitor, mobile: Smartphone }
 /** Au-delà, un champ de filtre aide à retrouver une page. */
 const FILTER_THRESHOLD = 8
-/** Pages choisies d'un coup : 3 pages × 2 appareils remplissent la galerie. */
-const MAX_PAGES = 3
+/**
+ * Captures d'une série : pages × appareils. Avec les deux appareils, 2 pages ;
+ * avec un seul, jusqu'à 4.
+ */
+const MAX_CAPTURES = 4
 
 type UrlImportProps = {
   /** Id du champ d'adresse : les libellés de la galerie pointent dessus. */
@@ -248,6 +252,7 @@ function PagePicker({
   const pages = useMemo(() => [...result.pages, ...extra], [result.pages, extra])
   const home = pages.find((page) => page.group === "home")
   const [selected, setSelected] = useState<Set<string>>(() => new Set(home ? [home.url] : []))
+  const [devices, setDevices] = useState<CaptureDevice[]>(DEVICES)
   const [query, setQuery] = useState("")
   const [addingPath, setAddingPath] = useState(false)
   const [path, setPath] = useState("")
@@ -272,11 +277,12 @@ function PagePicker({
   })).filter((entry) => entry.pages.length > 0)
 
   const chosen = pages.filter((page) => selected.has(page.url))
-  const count = chosen.length * DEVICES.length
-  // 3 pages au plus, et pas plus que la galerie ne peut en recevoir.
-  const allowed = Math.min(MAX_PAGES, Math.floor(remaining / DEVICES.length))
+  const count = chosen.length * devices.length
+  // Pages possibles : 4 captures au plus, dans la place libre de la galerie.
+  const allowed = Math.floor(Math.min(MAX_CAPTURES, remaining) / devices.length)
   const full = chosen.length >= allowed
-  const overGallery = chosen.length > allowed
+  // Repasser à deux appareils peut laisser trop de pages cochées.
+  const overLimit = chosen.length > allowed
   const done = jobs.filter((job) => job.status !== "pending").length
   const added = jobs.filter((job) => job.status === "done").length
   const failed = jobs.filter((job) => job.status === "error").length
@@ -312,7 +318,7 @@ function PagePicker({
 
   async function capture() {
     const list: Job[] = chosen.flatMap((page) =>
-      DEVICES.map((device) => ({ key: `${device} ${page.url}`, page, device, status: "pending" }))
+      devices.map((device) => ({ key: `${device} ${page.url}`, page, device, status: "pending" }))
     )
     if (list.length === 0 || list.length > remaining) return
     controller.current?.abort()
@@ -381,7 +387,11 @@ function PagePicker({
           <span
             className={cn(
               "rounded-full px-2 py-0.5 text-xs font-medium tabular-nums",
-              full && allowed > 0 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+              overLimit
+                ? "bg-destructive/10 text-destructive"
+                : full && allowed > 0
+                  ? "bg-primary/10 text-primary"
+                  : "bg-muted text-muted-foreground"
             )}
           >
             {t("selectionSummary", { count: chosen.length, max: allowed })}
@@ -491,31 +501,62 @@ function PagePicker({
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3">
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-xs">
-              <p className="flex items-center gap-1.5 text-muted-foreground">
-                <Monitor className="size-3.5 shrink-0" />
-                <Smartphone className="size-3.5 shrink-0" />
-                {t("hint")}
-              </p>
-              {allowed === 0 ? (
-                <p role="alert" className="text-destructive">
-                  {t("noRoom")}
-                </p>
-              ) : chosen.length === 0 ? (
-                <p className="text-muted-foreground">{t("noSelection")}</p>
-              ) : (
-                full && <p className="text-primary">{t("pagesLimitReached", { max: allowed })}</p>
-              )}
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs font-medium text-muted-foreground">{t("devicesLabel")}</span>
+              <ToggleGroup
+                multiple
+                variant="outline"
+                spacing={0}
+                value={devices}
+                // Au moins un appareil : le dernier ne se décoche pas.
+                onValueChange={(next) => {
+                  const kept = DEVICES.filter((device) => next.includes(device))
+                  if (kept.length > 0) setDevices(kept)
+                }}
+                className="w-full bg-background"
+              >
+                {DEVICES.map((device) => {
+                  const Icon = DEVICE_ICONS[device]
+                  return (
+                    <ToggleGroupItem
+                      key={device}
+                      value={device}
+                      className="h-9 flex-1 gap-1.5 data-[pressed]:bg-primary/10 data-[pressed]:text-primary"
+                    >
+                      <Icon />
+                      {t(device)}
+                    </ToggleGroupItem>
+                  )
+                })}
+              </ToggleGroup>
             </div>
-            <Button
-              size="lg"
-              className="px-4"
-              onClick={capture}
-              disabled={count === 0 || overGallery}
-            >
-              {t("captureCount", { count })}
-            </Button>
+            <div className="flex items-center gap-3">
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-xs">
+                <p className="text-muted-foreground">{t("hint", { max: MAX_CAPTURES })}</p>
+                {allowed === 0 ? (
+                  <p role="alert" className="text-destructive">
+                    {t("noRoom")}
+                  </p>
+                ) : overLimit ? (
+                  <p role="alert" className="text-destructive">
+                    {t("tooManyPages", { max: allowed })}
+                  </p>
+                ) : chosen.length === 0 ? (
+                  <p className="text-muted-foreground">{t("noSelection")}</p>
+                ) : (
+                  full && <p className="text-primary">{t("pagesLimitReached", { max: allowed })}</p>
+                )}
+              </div>
+              <Button
+                size="lg"
+                className="px-4"
+                onClick={capture}
+                disabled={count === 0 || overLimit}
+              >
+                {t("captureCount", { count })}
+              </Button>
+            </div>
           </div>
         )}
         {!running && added > 0 && (

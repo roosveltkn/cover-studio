@@ -14,7 +14,7 @@
     "heroTitle": "Une cover pro pour votre app, à partir de vos captures",
     "heroText": "Importez une capture de votre application : la mise en page, les mockups et les couleurs sont générés pour vous. Il ne reste qu'à écrire le texte.",
     "startTitle": "Commencez par une capture",
-    "startText": "Desktop ou mobile, jusqu'à 6 captures. Ajoutez votre logo et choisissez la couleur de marque, ou laissez-la déduite de la première capture.",
+    "startText": "Desktop ou mobile, jusqu'à 4 captures. Ajoutez votre logo et choisissez la couleur de marque, ou laissez-la déduite de la première capture.",
     "imageLabel": "Captures de votre application ({max} maximum)",
     "createButton": "Créer ma cover",
     "useScreenshotColor": "Couleur de la capture",
@@ -97,7 +97,7 @@
     "colorsTitle": "Couleurs",
     "colorsDescription": "Une seule couleur : toute la palette en découle.",
     "mockupsTitle": "Captures",
-    "mockupsDescription": "Jusqu'à 6 captures, placées selon leur ordre. Rien n'est envoyé en ligne.",
+    "mockupsDescription": "Jusqu'à 4 captures, placées selon leur ordre. Rien n'est envoyé en ligne.",
     "exportTitle": "Télécharger",
     "exportDescription": "Export PNG en taille réelle."
   },
@@ -295,11 +295,13 @@
     "doneOther": "{count} captures ajoutées à la galerie.",
     "pagesLabel": "Pages à capturer",
     "selectionSummary": "{count} / {max} pages",
-    "hint": "Chaque page est capturée sur ordinateur et sur mobile.",
+    "hint": "{max} captures au plus : 2 pages sur les deux appareils, 4 sur un seul.",
     "captureCount": "Capturer ({count})",
     "preview": "Aperçu",
     "pagesLimitReached": "{max} pages maximum : décochez-en une pour en choisir une autre.",
-    "noRoom": "Plus assez de place dans la galerie : chaque page demande 2 captures."
+    "noRoom": "Plus assez de place dans la galerie : retirez des captures pour en ajouter.",
+    "devicesLabel": "Appareils",
+    "tooManyPages": "{max} pages maximum avec ces appareils : décochez des pages ou gardez un seul appareil."
   },
   "swatch": {
     "hex": "Hex",
