@@ -30,7 +30,14 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm i18n:check
       - run: pnpm test
+      - run: pnpm capture:typecheck
+      - run: pnpm capture:test
+
+      # Endpoint factice : il affiche la capture depuis une URL, que les tests
+      # E2E simulent avec page.route (aucun appel au vrai service).
       - run: pnpm build
+        env:
+          NEXT_PUBLIC_CAPTURE_ENDPOINT: https://capture.test
 
       - name: Install Playwright browser
         run: pnpm exec playwright install --with-deps chromium
