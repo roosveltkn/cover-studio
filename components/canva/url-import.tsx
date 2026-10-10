@@ -8,7 +8,6 @@ import {
   Globe,
   List,
   Loader2,
-  Minus,
   Monitor,
   Plus,
   Search,
@@ -18,9 +17,9 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
 
 import { PagePreview } from "@/components/canva/page-preview"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { ResponsiveDialog } from "@/components/ui/responsive-dialog"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { useLocale, useTranslations } from "@/i18n/provider"
 import type { MessageKey } from "@/i18n/translator"
 import { pluralSuffix } from "@/i18n/translator"
@@ -45,15 +44,12 @@ const GROUP_KEYS: Record<PageGroup, MessageKey<"urlImport">> = {
   legal: "groupLegal",
 }
 const GROUP_ORDER: PageGroup[] = ["home", "navigation", "pages", "blog", "legal"]
+/** Chaque page choisie est capturée sur ordinateur et sur mobile. */
 const DEVICES: CaptureDevice[] = ["desktop", "mobile"]
-const DEVICE_ICONS = { desktop: Monitor, mobile: Smartphone } satisfies Record<
-  CaptureDevice,
-  unknown
->
 /** Au-delà, un champ de filtre aide à retrouver une page. */
 const FILTER_THRESHOLD = 8
-/** Plafond réglable du nombre de captures lancées d'un coup. */
-const MAX_PER_RUN = 5
+/** Pages choisies d'un coup : 3 pages × 2 appareils remplissent la galerie. */
+const MAX_PAGES = 3
 
 type UrlImportProps = {
   /** Id du champ d'adresse : les libellés de la galerie pointent dessus. */
@@ -252,9 +248,6 @@ function PagePicker({
   const pages = useMemo(() => [...result.pages, ...extra], [result.pages, extra])
   const home = pages.find((page) => page.group === "home")
   const [selected, setSelected] = useState<Set<string>>(() => new Set(home ? [home.url] : []))
-  const [devices, setDevices] = useState<CaptureDevice[]>(DEVICES)
-  // Par défaut, de quoi remplir la galerie ; réglable de 1 à MAX_PER_RUN.
-  const [limit, setLimit] = useState(() => Math.max(1, Math.min(remaining, MAX_PER_RUN)))
   const [query, setQuery] = useState("")
   const [addingPath, setAddingPath] = useState(false)
   const [path, setPath] = useState("")
@@ -279,11 +272,11 @@ function PagePicker({
   })).filter((entry) => entry.pages.length > 0)
 
   const chosen = pages.filter((page) => selected.has(page.url))
-  const count = chosen.length * devices.length
-  // Une page de plus doit tenir dans le plafond choisi.
-  const full = (chosen.length + 1) * Math.max(devices.length, 1) > limit
-  const overLimit = count > limit
-  const overGallery = count > remaining
+  const count = chosen.length * DEVICES.length
+  // 3 pages au plus, et pas plus que la galerie ne peut en recevoir.
+  const allowed = Math.min(MAX_PAGES, Math.floor(remaining / DEVICES.length))
+  const full = chosen.length >= allowed
+  const overGallery = chosen.length > allowed
   const done = jobs.filter((job) => job.status !== "pending").length
   const added = jobs.filter((job) => job.status === "done").length
   const failed = jobs.filter((job) => job.status === "error").length
@@ -319,9 +312,9 @@ function PagePicker({
 
   async function capture() {
     const list: Job[] = chosen.flatMap((page) =>
-      devices.map((device) => ({ key: `${device} ${page.url}`, page, device, status: "pending" }))
+      DEVICES.map((device) => ({ key: `${device} ${page.url}`, page, device, status: "pending" }))
     )
-    if (list.length === 0 || list.length > limit || list.length > remaining) return
+    if (list.length === 0 || list.length > remaining) return
     controller.current?.abort()
     const current = new AbortController()
     controller.current = current
@@ -388,10 +381,10 @@ function PagePicker({
           <span
             className={cn(
               "rounded-full px-2 py-0.5 text-xs font-medium tabular-nums",
-              overLimit ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"
+              full && allowed > 0 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
             )}
           >
-            {t("selectionSummary", { count, max: limit })}
+            {t("selectionSummary", { count: chosen.length, max: allowed })}
           </span>
         </div>
 
@@ -480,72 +473,6 @@ function PagePicker({
       </div>
 
       <div className="flex shrink-0 flex-col gap-3 border-t bg-muted/40 px-4 py-3">
-        <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
-          <div className="flex min-w-48 flex-1 flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">{t("devicesLabel")}</span>
-            <ToggleGroup
-              multiple
-              variant="outline"
-              spacing={0}
-              value={devices}
-              disabled={running}
-              onValueChange={(next) =>
-                setDevices(DEVICES.filter((device) => next.includes(device)))
-              }
-              className="w-full bg-background"
-            >
-              {DEVICES.map((device) => {
-                const Icon = DEVICE_ICONS[device]
-                return (
-                  <ToggleGroupItem
-                    key={device}
-                    value={device}
-                    className="h-9 flex-1 gap-1.5 data-[pressed]:bg-primary/10 data-[pressed]:text-primary"
-                  >
-                    <Icon />
-                    {t(device)}
-                  </ToggleGroupItem>
-                )
-              })}
-            </ToggleGroup>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <span id="capture-limit-label" className="text-xs font-medium text-muted-foreground">
-              {t("limitLabel")}
-            </span>
-            <div
-              role="group"
-              aria-labelledby="capture-limit-label"
-              className="flex h-9 items-center rounded-lg border bg-background"
-            >
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                aria-label={t("decrease")}
-                disabled={running || limit <= 1}
-                onClick={() => setLimit((value) => Math.max(1, value - 1))}
-              >
-                <Minus />
-              </Button>
-              <output
-                aria-live="polite"
-                className="w-8 text-center text-sm font-semibold tabular-nums"
-              >
-                {limit}
-              </output>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                aria-label={t("increase")}
-                disabled={running || limit >= MAX_PER_RUN}
-                onClick={() => setLimit((value) => Math.min(MAX_PER_RUN, value + 1))}
-              >
-                <Plus />
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {running ? (
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
@@ -565,30 +492,31 @@ function PagePicker({
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <p className="min-w-0 flex-1 text-xs text-muted-foreground">
-              {count === 0
-                ? t("noSelection")
-                : overLimit
-                  ? t("overLimit", { count, max: limit })
-                  : full
-                    ? t("limitReached", { max: limit })
-                    : t("hint")}
-            </p>
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-xs">
+              <p className="flex items-center gap-1.5 text-muted-foreground">
+                <Monitor className="size-3.5 shrink-0" />
+                <Smartphone className="size-3.5 shrink-0" />
+                {t("hint")}
+              </p>
+              {allowed === 0 ? (
+                <p role="alert" className="text-destructive">
+                  {t("noRoom")}
+                </p>
+              ) : chosen.length === 0 ? (
+                <p className="text-muted-foreground">{t("noSelection")}</p>
+              ) : (
+                full && <p className="text-primary">{t("pagesLimitReached", { max: allowed })}</p>
+              )}
+            </div>
             <Button
               size="lg"
               className="px-4"
               onClick={capture}
-              disabled={count === 0 || overLimit || overGallery}
+              disabled={count === 0 || overGallery}
             >
               {t("captureCount", { count })}
             </Button>
           </div>
-        )}
-
-        {!running && overGallery && !overLimit && (
-          <p role="alert" className="text-xs text-destructive">
-            {t(`tooMany${pluralSuffix(locale, remaining)}`, { count: remaining })}
-          </p>
         )}
         {!running && added > 0 && (
           <p role="status" className="flex items-center gap-1.5 text-xs font-medium text-primary">
@@ -646,7 +574,6 @@ function PageRow({
 }) {
   const t = useTranslations("urlImport")
   const [open, setOpen] = useState(false)
-  const inputId = `page-${page.url}`
 
   return (
     <li
@@ -656,28 +583,23 @@ function PageRow({
         disabled && !checked && "opacity-55"
       )}
     >
-      <div className="flex items-center gap-3 px-3 py-2">
-        <input
-          id={inputId}
-          type="checkbox"
-          checked={checked}
-          disabled={disabled}
-          onChange={onToggle}
-          className="size-4 shrink-0 cursor-pointer accent-primary disabled:cursor-not-allowed"
-        />
+      <div className="flex items-center gap-2 pr-2">
+        {/* Toute la zone texte coche la case ; le bouton d'aperçu reste à part. */}
         <label
-          htmlFor={inputId}
           className={cn(
-            "min-w-0 flex-1 py-0.5",
+            "flex min-w-0 flex-1 items-center gap-3 py-2 pl-3",
             disabled ? "cursor-not-allowed" : "cursor-pointer"
           )}
         >
-          <span className="block truncate text-sm font-medium">{label}</span>
-          {label !== page.path && (
-            <span className="block truncate font-mono text-[11px] text-muted-foreground">
-              {page.path}
-            </span>
-          )}
+          <Checkbox checked={checked} disabled={disabled} onCheckedChange={onToggle} />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-sm font-medium">{label}</span>
+            {label !== page.path && (
+              <span className="block truncate font-mono text-[11px] text-muted-foreground">
+                {page.path}
+              </span>
+            )}
+          </span>
         </label>
         <Button
           variant={open ? "secondary" : "ghost"}

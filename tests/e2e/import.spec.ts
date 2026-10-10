@@ -36,13 +36,16 @@ test.describe("accueil", () => {
     await expect(page.getByRole("button", { name: en("landing", "createButton") })).toBeDisabled()
   })
 
-  test("accepte jusqu'à trois captures, puis masque l'ajout", async ({ page }) => {
+  test("accepte jusqu'à six captures, puis masque l'ajout", async ({ page }) => {
     await page.goto("/en")
-    await page
-      .locator("#landing-image")
-      .setInputFiles([DESKTOP_SCREENSHOT(), MOBILE_SCREENSHOT(), screenshot("mobile-2.png", 200, 420, [234, 88, 12])])
+    const extra = ["mobile-2", "desktop-2", "mobile-3", "desktop-3"].map((name) =>
+      name.startsWith("mobile")
+        ? screenshot(`${name}.png`, 200, 420, [234, 88, 12])
+        : screenshot(`${name}.png`, 640, 400, [22, 163, 74])
+    )
+    await page.locator("#landing-image").setInputFiles([DESKTOP_SCREENSHOT(), MOBILE_SCREENSHOT(), ...extra])
 
-    for (const name of ["desktop.png", "mobile.png", "mobile-2.png"]) {
+    for (const name of ["desktop.png", "mobile.png", "mobile-2.png", "desktop-2.png", "mobile-3.png", "desktop-3.png"]) {
       await expect(page.getByRole("button", { name: en("gallery", "remove").replace("{name}", name) })).toBeVisible()
     }
     await expect(page.locator("#landing-image")).toHaveCount(0)
@@ -54,13 +57,15 @@ test.describe("accueil", () => {
     await page
       .locator("#landing-image")
       .setInputFiles(
-        ["a", "b", "c", "d"].map((name) => screenshot(`${name}.png`, 640, 400, [37, 99, 235]))
+        ["a", "b", "c", "d", "e", "f", "g"].map((name) =>
+          screenshot(`${name}.png`, 640, 400, [37, 99, 235])
+        )
       )
 
     await expect(
-      page.getByRole("alert").filter({ hasText: en("gallery", "limit").replace("{max}", "3") })
+      page.getByRole("alert").filter({ hasText: en("gallery", "limit").replace("{max}", "6") })
     ).toBeVisible()
-    await expect(page.getByRole("button", { name: en("gallery", "remove").replace("{name}", "d.png") })).toHaveCount(0)
+    await expect(page.getByRole("button", { name: en("gallery", "remove").replace("{name}", "g.png") })).toHaveCount(0)
   })
 })
 
