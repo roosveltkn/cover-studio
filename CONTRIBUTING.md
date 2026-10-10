@@ -43,9 +43,31 @@ pnpm dev
    pnpm format
    ```
 
+   Si vous touchez au service de capture (`capture/`), lancez aussi `pnpm capture:typecheck`
+   et `pnpm capture:test`.
+
    `pnpm test:e2e` construit le site puis lance Playwright ; au premier lancement, installez le navigateur avec `pnpm exec playwright install chromium`. La CI exécute toutes ces commandes (sauf `format`) ; une PR ne peut être fusionnée que si elles passent. Les tests vivent dans `tests/` : un nouveau template est couvert automatiquement par les tests de contrat et d'export, il suffit qu'il passe.
 4. Ouvrez une PR vers `develop` (la branche de preview ; `main` ne reçoit que les releases) en remplissant le modèle. Pour tout changement visuel, joignez une
    capture d'écran ou une cover exportée avant / après.
+
+## Service de capture d'URL
+
+La capture depuis une URL repose sur un projet Vercel séparé, dans `capture/` : un Chrome headless
+qui liste les pages d'un site et en fait des captures. L'app reste un export statique et ne
+l'appelle que si `NEXT_PUBLIC_CAPTURE_ENDPOINT` est défini ; sans cette variable, la fonctionnalité
+est masquée.
+
+Pour travailler dessus en local :
+
+1. Copiez `capture/.env.example` vers `capture/.env.local` et renseignez `CHROME_PATH` (le Chrome
+   installé : le Chromium du service ne tourne que sous Linux).
+2. Lancez `pnpm capture:dev` (service sur <http://localhost:3001>).
+3. Dans `.env.local` à la racine : `NEXT_PUBLIC_CAPTURE_ENDPOINT=http://localhost:3001`, puis
+   `pnpm dev`.
+
+Le contrat d'API, les règles de sécurité (filtre anti-SSRF) et le déploiement sont décrits dans
+[docs/CAPTURE.md](./docs/CAPTURE.md). Les tests E2E simulent le service avec `page.route` :
+aucun Chrome distant n'est nécessaire en CI.
 
 ## Conventions
 

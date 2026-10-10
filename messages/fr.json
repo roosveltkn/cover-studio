@@ -55,7 +55,7 @@
     "q1": "Cover Studio est-il vraiment gratuit ?",
     "a1": "Oui. C'est un projet open source sous licence MIT : pas de compte, pas de filigrane et pas de limite d'exports.",
     "q2": "Mes captures sont-elles envoyées sur un serveur ?",
-    "a2": "Non. L'import, la mise en page et l'export PNG se font entièrement dans votre navigateur. Aucune image n'est transmise.",
+    "a2": "Non. L'import, la mise en page et l'export PNG se font entièrement dans votre navigateur. Aucune image n'est transmise. Seule exception, facultative : si vous capturez votre site depuis son adresse, cette adresse est envoyée à notre service de capture, qui renvoie les images.",
     "q3": "Quels formats puis-je exporter ?",
     "a3": "Des PNG : 2400 × 1500 pour une cover, ou les formats Open Graph, GitHub, X / Twitter, Product Hunt et carré, avec une option haute résolution 2×.",
     "q4": "Puis-je l'héberger moi-même ou contribuer ?",

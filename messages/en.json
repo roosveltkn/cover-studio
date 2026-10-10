@@ -55,7 +55,7 @@
     "q1": "Is Cover Studio really free?",
     "a1": "Yes. It is an open-source project under the MIT license: no account, no watermark and no export limit.",
     "q2": "Are my screenshots sent to a server?",
-    "a2": "No. Import, layout and PNG export all happen in your browser. No image is ever uploaded.",
+    "a2": "No. Import, layout and PNG export all happen in your browser. No image is ever uploaded. The one optional exception: if you capture your site from its address, that address is sent to our capture service, which sends the images back.",
     "q3": "Which formats can I export?",
     "a3": "PNG files: 2400 × 1500 for a cover, or Open Graph, GitHub, X / Twitter, Product Hunt and square formats, with an optional 2× high-resolution mode.",
     "q4": "Can I self-host it or contribute?",
