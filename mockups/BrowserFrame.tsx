@@ -2,6 +2,7 @@ import { ImageIcon, Lock } from "lucide-react"
 import type { CSSProperties } from "react"
 
 import { useTranslations } from "@/i18n/provider"
+import { CoverImage } from "@/mockups/CoverImage"
 import type { ImageAsset } from "@/types/cover"
 
 const THEMES = {
@@ -122,18 +123,7 @@ export function BrowserFrame({
       </div>
       <div style={{ height: fitHeight, position: "relative" }}>
         {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image.dataUrl}
-            alt=""
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: `50% ${cropY * 100}%`,
-              display: "block",
-            }}
-          />
+          <CoverImage src={image.dataUrl} position={`50% ${cropY * 100}%`} />
         ) : (
           <Placeholder
             color={t.placeholderText}

@@ -2,6 +2,7 @@ import type { CSSProperties } from "react"
 
 import { useTranslations } from "@/i18n/provider"
 import { Placeholder } from "@/mockups/BrowserFrame"
+import { CoverImage } from "@/mockups/CoverImage"
 import type { ImageAsset } from "@/types/cover"
 
 export const PHONE_SIZE = { width: 402, height: 920 }
@@ -58,18 +59,7 @@ export function PhoneFrame({ image, scale = 1, imagePosition = "top", style }: P
         >
           <div style={{ position: "absolute", top: s(STATUS_AREA), left: 0, right: 0, bottom: 0 }}>
             {image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={image.dataUrl}
-                alt=""
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: `50% ${imagePosition}`,
-                  display: "block",
-                }}
-              />
+              <CoverImage src={image.dataUrl} position={`50% ${imagePosition}`} />
             ) : (
               <Placeholder color="#a0a0a8" label={t("mobilePlaceholder")} iconSize={s(48)} />
             )}
