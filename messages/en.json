@@ -1,30 +1,30 @@
 {
   "meta": {
     "siteTitle": "Cover Studio · Free open-source app cover generator",
-    "siteDescription": "Generate a pro cover for your app, README or LinkedIn from your screenshots. Free, open source, no account, 100% in your browser.",
-    "keywords": "cover generator, app cover, app mockup, screenshot, README, Open Graph, open source, free",
+    "siteDescription": "Generate a pro cover for your app, README or LinkedIn from your screenshots or your website's address. Free, open source, no account.",
+    "keywords": "cover generator, app cover, app mockup, screenshot, website screenshot, README, Open Graph, open source, free",
     "ogImageAlt": "Cover Studio: generate a pro cover for your app",
     "editorTitle": "Editor",
-    "appFeatures": "Automatic layout from a screenshot, 5 templates, brand color derived from your interface, PNG export in several formats (optional 2× resolution), no data upload"
+    "appFeatures": "Automatic layout from your screenshots, website capture from its address (desktop and mobile), multiple templates, brand color derived from your interface, PNG export in several formats (optional 2× resolution), images processed in the browser"
   },
   "localeSwitcher": {
     "label": "Language"
   },
   "landing": {
-    "heroTitle": "A pro cover for your app, built from your screenshots",
-    "heroText": "Import a screenshot of your app: the layout, mockups and colors are generated for you. All that's left is to write the text.",
-    "startTitle": "Start with a screenshot",
-    "startText": "Desktop or mobile, up to 4 screenshots. Add your logo and pick the brand color, or let it come from your first screenshot.",
+    "heroTitle": "A pro cover for your app, built from your screenshots or your website",
+    "heroText": "Import your screenshots or paste your website's address: the layout, mockups and colors are generated for you, with {count} templates to choose from. All that's left is to write the text.",
+    "startTitle": "Start with your screenshots",
+    "startText": "Up to 4 screenshots, desktop or mobile: import them, or paste your website's address to capture it on desktop and mobile. Add your logo and pick the brand color, or let it come from your first screenshot.",
     "imageLabel": "Screenshots of your app ({max} maximum)",
     "createButton": "Create my cover",
     "useScreenshotColor": "Screenshot color",
     "howTitle": "How it works",
-    "step1Title": "Import a screenshot",
-    "step1Text": "Then add more and choose their order in the editor.",
+    "step1Title": "Import or capture",
+    "step1Text": "Drop in your screenshots, or paste your website's address and pick the pages to capture.",
     "step2Title": "Customize",
-    "step2Text": "Name, description, features and brand color.",
+    "step2Text": "Choose a template, then the name, description, features and brand color.",
     "step3Title": "Download",
-    "step3Text": "A PNG ready for your README, portfolio, LinkedIn or social networks, in the size of your choice.",
+    "step3Text": "A PNG ready for your README, Product Hunt, LinkedIn or social networks, in the size of your choice.",
     "github": "GitHub",
     "toggleTheme": "Toggle theme",
     "githubAria": "View the source code on GitHub (opens in a new tab)",
@@ -33,7 +33,7 @@
     "osFreeTitle": "Free, no limits",
     "osFreeText": "No account, no watermark, no export quota.",
     "osPrivateTitle": "Private by design",
-    "osPrivateText": "Everything is generated in your browser: your screenshots never leave your device.",
+    "osPrivateText": "Your screenshots are processed in your browser and never leave your device. Capturing a website, which is optional, only sends its address.",
     "osContribTitle": "Open to contributions",
     "osContribText": "New templates, translations, fixes: pull requests are welcome.",
     "viewOnGithub": "View on GitHub",
@@ -59,11 +59,13 @@
     "q3": "Which formats can I export?",
     "a3": "PNG files: 2400 × 1500 for a cover, or Open Graph, GitHub, X / Twitter, Product Hunt and square formats, with an optional 2× high-resolution mode.",
     "q4": "Can I self-host it or contribute?",
-    "a4": "Yes. The site is fully static: clone the GitHub repository, run the build and host the generated folder anywhere. Contributions are welcome."
+    "a4": "Yes. The site is fully static: clone the GitHub repository, run the build and host the generated folder anywhere. Contributions are welcome.",
+    "q5": "Can I capture my website directly?",
+    "a5": "Yes. Paste its address: Cover Studio lists its pages, you pick 2 (captured on desktop and mobile) or up to 4 on a single device, and the screenshots land in the gallery. Pages behind a login and sites that block robots can't be captured: import your screenshots instead."
   },
   "footer": {
     "navLabel": "Project links",
-    "tagline": "A pro cover for your app, built from your screenshots. Free and open source.",
+    "tagline": "A pro cover for your app, built from your screenshots or your website. Free and open source.",
     "projectTitle": "Project",
     "github": "Source code on GitHub",
     "issues": "Report an issue",
