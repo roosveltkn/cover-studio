@@ -1,6 +1,5 @@
-import { getFontEmbedCSS, toBlob } from "html-to-image"
+import { domToBlob } from "modern-screenshot"
 
-import { getFont } from "@/lib/fonts"
 import type { CoverConfig } from "@/types/cover"
 
 export const EXPORT_NODE_ID = "cover-export-node"
@@ -10,22 +9,6 @@ export class ExportError extends Error {
   constructor(readonly code: "previewNotFound" | "captureRefused") {
     super(code)
   }
-}
-
-/** Seule la police choisie est embarquée, une fois par session et par police. */
-const fontCSS = new Map<string, Promise<string>>()
-
-function templateFontCSS(node: HTMLElement, fontId: string | undefined) {
-  const { family } = getFont(fontId)
-  let css = fontCSS.get(family)
-  if (!css) {
-    const pattern = new RegExp(`font-family:\\s*['"]?${family}['"]?\\s*;`, "i")
-    css = getFontEmbedCSS(node).then((all) =>
-      (all.match(/@font-face\s*{[^}]*}/g) ?? []).filter((rule) => pattern.test(rule)).join("\n")
-    )
-    fontCSS.set(family, css)
-  }
-  return css
 }
 
 export function coverFilename(content: CoverConfig["content"], sizeId = "cover") {
@@ -38,20 +21,6 @@ export function coverFilename(content: CoverConfig["content"], sizeId = "cover")
   return `${base || "cover"}-${sizeId}.png`
 }
 
-type CaptureOptions = NonNullable<Parameters<typeof toBlob>[1]>
-
-/** Décode les images du nœud puis fait un rendu jeté, avec un canevas réduit. */
-async function warmUp(node: HTMLElement, options: CaptureOptions) {
-  await Promise.all(
-    Array.from(node.querySelectorAll("img")).map((img) => img.decode().catch(() => undefined))
-  )
-  try {
-    await toBlob(node, { ...options, canvasWidth: 64, canvasHeight: 40 })
-  } catch {
-    // le vrai rendu signalera l'échec
-  }
-}
-
 /**
  * Capture le canevas à sa taille native, puis le dessine aux dimensions du
  * format (`output` × `scale`). La prévisualisation applique son `scale()` sur
@@ -61,30 +30,23 @@ export async function exportCover(
   canvas: { width: number; height: number },
   output: { width: number; height: number },
   filename: string,
-  scale: 1 | 2 = 1,
-  fontId?: string
+  scale: 1 | 2 = 1
 ) {
   const node = document.getElementById(EXPORT_NODE_ID)
   if (!node) throw new ExportError("previewNotFound")
 
   await document.fonts.ready
-  const fontEmbedCSS = await templateFontCSS(node, fontId)
-
-  const options = {
-    ...canvas,
-    canvasWidth: output.width * scale,
-    canvasHeight: output.height * scale,
-    pixelRatio: 1,
-    fontEmbedCSS,
-    cacheBust: false,
-  }
 
   let blob: Blob | null
   try {
-    // Safari/iOS rend les images (data URL) vides tant qu'elles n'ont pas été
-    // dessinées une première fois dans le SVG : on fait un rendu à blanc.
-    await warmUp(node, options)
-    blob = await toBlob(node, options)
+    // modern-screenshot redessine les images plusieurs fois (`drawImageInterval`),
+    // ce dont Safari/iOS a besoin pour ne pas les laisser vides ; il n'embarque
+    // que les polices réellement utilisées par le nœud.
+    blob = await domToBlob(node, {
+      ...canvas,
+      scale: (output.width * scale) / canvas.width,
+      type: "image/png",
+    })
   } catch {
     blob = null
   }

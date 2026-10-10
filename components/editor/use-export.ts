@@ -27,7 +27,7 @@ export function useExport() {
     setExporting(true)
     const started = performance.now()
     try {
-      await exportCover(canvas, output, filename, scale, config.style.fontFamily)
+      await exportCover(canvas, output, filename, scale)
       trackCoverGenerated({ template: config.template, size: output.id, scale })
       const seconds = new Intl.NumberFormat(locale, {
         minimumFractionDigits: 1,
