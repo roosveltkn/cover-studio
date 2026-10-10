@@ -28,7 +28,7 @@ Les développeurs ont besoin de visuels de présentation pour leurs applications
 - Autres ratios d'export
 - ~~Localisation / multi-langues~~ : livrée en fr/en, voir [I18N.md](./I18N.md)
 - CLI et GitHub Action
-- Comptes utilisateurs, sauvegarde cloud, backend
+- Comptes utilisateurs, sauvegarde cloud, backend applicatif (seul le service de capture d'URL, facultatif et sans état, fait exception : voir 6.7)
 
 ### 2.3 Non-objectifs
 - Ce n'est pas un éditeur de design libre (pas de drag & drop d'éléments)
@@ -36,7 +36,7 @@ Les développeurs ont besoin de visuels de présentation pour leurs applications
 
 ## 3. Principes
 
-1. **100 % côté client** : aucune image n'est envoyée à un serveur.
+1. **100 % côté client** : aucune image n'est envoyée à un serveur. Seule exception, facultative : la capture depuis une URL (6.7) envoie l'**adresse saisie** au service de capture. Les images importées, elles, ne quittent jamais le navigateur.
 2. **Sans compte** : l'utilisateur ouvre la page et exporte.
 3. **Un seul champ obligatoire de style** : la couleur de marque. Le reste est dérivé.
 4. **Template = composant + schéma de props**, pour permettre la contribution par PR plus tard.
@@ -163,6 +163,21 @@ Une couleur de marque en entrée (color picker + saisie hex). Le template en dé
 - Ratios d'export supplémentaires : 1:1, 1.91:1 (image OG), 16:9
 - Plusieurs templates
 - Facteur d'échelle 2×
+
+### 6.7 Capture depuis une URL
+
+L'utilisateur colle l'adresse de son site au lieu d'importer des fichiers.
+
+1. **Analyse** : le service liste les pages du site (sitemap, puis liens de la page d'accueil, puis rendu Chrome si le site est une SPA). Un seul niveau, 50 pages au plus, groupées (accueil, navigation, pages, blog, légal).
+2. **Choix** : l'utilisateur coche les pages et les appareils (desktop, mobile). Un clic sur « Aperçu » affiche la capture desktop réduite ; elle est gardée en mémoire et réutilisée si la page est cochée.
+3. **Capture** : une image WebP par page et par appareil, qui suit ensuite le même chemin qu'un fichier importé (`readImage`, galerie, placement par orientation).
+
+Contraintes :
+- Le service est un projet Vercel séparé (`capture/`), sans état ; l'app reste un export statique.
+- La fonctionnalité n'apparaît que si `NEXT_PUBLIC_CAPTURE_ENDPOINT` est défini : un fork reste 100 % local.
+- Les pages derrière connexion et les sites protégés contre les robots ne sont pas capturables ; l'import manuel reste la voie de repli.
+
+Contrat d'API, sécurité et déploiement : [CAPTURE.md](./CAPTURE.md).
 
 ## 7. Dérivation de la palette
 
@@ -292,6 +307,7 @@ Un template ajouté = un dossier dans `src/templates/` + une entrée dans le reg
 | Export lent ou en échec sur mobile | Mauvaise expérience | Message d'erreur explicite, recommander desktop pour l'export |
 | Un seul template : peu d'intérêt pour la communauté | Faible adoption | Soigner le template V1, documenter la contribution dès V1 |
 | Divergence entre rendu preview et export | Perte de confiance | Rendre la preview à partir du même composant que l'export |
+| Service de capture détourné (SSRF, abus) | Accès au réseau interne, coûts | Filtre d'adresses à chaque requête et redirection, origines autorisées, rate limiting Vercel, plafond de dépense |
 
 ## 15. Questions ouvertes
 
