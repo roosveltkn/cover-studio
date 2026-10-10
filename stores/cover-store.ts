@@ -18,7 +18,7 @@ type CoverState = {
   activePanel: PanelId
   setActivePanel: (panel: PanelId) => void
   setField: (path: string, value: unknown) => void
-  startFrom: (image: ImageAsset) => void
+  startFrom: (images: ImageAsset[]) => void
   /** Passe les textes d'exemple dans la langue de la page, sans toucher à ceux modifiés. */
   applyLocale: (locale: Locale) => void
 }
@@ -42,12 +42,13 @@ export const useCoverStore = create<CoverState>()(
               : { ...state.config, content },
           }
         }),
-      // Point de départ de l'éditeur : la capture importée sur l'accueil, dont on
-      // reprend la couleur dominante comme couleur de marque.
-      startFrom: (image) =>
+      // Point de départ de l'éditeur : les captures importées sur l'accueil. La
+      // couleur dominante de la première devient la couleur de marque.
+      startFrom: (images) =>
         set((state) => {
-          // Une capture portrait appelle le template dédié au mobile.
-          const template = isPortrait(image)
+          const image = images[0]
+          // Des captures toutes en portrait appellent le template dédié au mobile.
+          const template = images.every(isPortrait)
             ? "mobile-trio"
             : state.config.template === "mobile-trio"
               ? DEFAULT_TEMPLATE
@@ -56,10 +57,10 @@ export const useCoverStore = create<CoverState>()(
             config: {
               ...state.config,
               template,
-              style: image.dominant
+              style: image?.dominant
                 ? { ...state.config.style, brandColor: image.dominant }
                 : state.config.style,
-              mockups: { ...state.config.mockups, images: [image] },
+              mockups: { ...state.config.mockups, images },
             },
           }
         }),

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 
 import { openEditor, openPanel } from "./helpers/editor"
 import { en, text } from "./helpers/messages"
-import { DESKTOP_SCREENSHOT, MOBILE_SCREENSHOT } from "./helpers/png"
+import { DESKTOP_SCREENSHOT, MOBILE_SCREENSHOT, screenshot } from "./helpers/png"
 
 test.describe("accueil", () => {
   test("le bouton de création attend une capture", async ({ page }) => {
@@ -32,8 +32,35 @@ test.describe("accueil", () => {
     await page.goto("/en")
     await page.locator("#landing-image").setInputFiles(DESKTOP_SCREENSHOT())
 
-    await page.getByRole("button", { name: en("fileInput", "remove").replace("{name}", "desktop.png") }).click()
+    await page.getByRole("button", { name: en("gallery", "remove").replace("{name}", "desktop.png") }).click()
     await expect(page.getByRole("button", { name: en("landing", "createButton") })).toBeDisabled()
+  })
+
+  test("accepte jusqu'à trois captures, puis masque l'ajout", async ({ page }) => {
+    await page.goto("/en")
+    await page
+      .locator("#landing-image")
+      .setInputFiles([DESKTOP_SCREENSHOT(), MOBILE_SCREENSHOT(), screenshot("mobile-2.png", 200, 420, [234, 88, 12])])
+
+    for (const name of ["desktop.png", "mobile.png", "mobile-2.png"]) {
+      await expect(page.getByRole("button", { name: en("gallery", "remove").replace("{name}", name) })).toBeVisible()
+    }
+    await expect(page.locator("#landing-image")).toHaveCount(0)
+    await expect(page.getByRole("button", { name: en("landing", "createButton") })).toBeEnabled()
+  })
+
+  test("refuse les captures au-delà de la limite", async ({ page }) => {
+    await page.goto("/en")
+    await page
+      .locator("#landing-image")
+      .setInputFiles(
+        ["a", "b", "c", "d"].map((name) => screenshot(`${name}.png`, 640, 400, [37, 99, 235]))
+      )
+
+    await expect(
+      page.getByRole("alert").filter({ hasText: en("gallery", "limit").replace("{max}", "3") })
+    ).toBeVisible()
+    await expect(page.getByRole("button", { name: en("gallery", "remove").replace("{name}", "d.png") })).toHaveCount(0)
   })
 })
 
@@ -41,6 +68,18 @@ test.describe("éditeur", () => {
   test("s'ouvre avec la capture importée", async ({ page }) => {
     await openEditor(page)
     await expect(page.getByRole("region", { name: en("editor", "previewLabel") })).toBeVisible()
+  })
+
+  test("s'ouvre avec toutes les captures importées sur l'accueil", async ({ page }) => {
+    await page.goto("/en")
+    await page.locator("#landing-image").setInputFiles([DESKTOP_SCREENSHOT(), MOBILE_SCREENSHOT()])
+    await page.getByRole("button", { name: en("landing", "createButton") }).click()
+    await expect(page).toHaveURL(/\/en\/editor/)
+
+    await openPanel(page, "railMockups")
+    for (const name of ["desktop.png", "mobile.png"]) {
+      await expect(page.getByRole("button", { name: en("gallery", "remove").replace("{name}", name) })).toBeVisible()
+    }
   })
 
   test("une capture portrait ouvre le template mobile", async ({ page }) => {
